@@ -1,11 +1,13 @@
+import Auth from "./pages/Auth";
+
 function App() {
     return (
         <div
             className={
-                "w-full min-h-screen flex justify-center items-center text-white text-3xl bg-gray-900"
+                "font-sans w-full min-h-screen text-on-background text-3xl bg-background dark"
             }
         >
-            mooooo 🐮
+            <Auth />
         </div>
     );
 }
