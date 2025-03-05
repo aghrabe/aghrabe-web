@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
 
-import { TabItemsType } from "../types/tab";
+import { TabItems } from "../types/tab";
 import { AuthType } from "../types/auth";
 
 interface Props {
-    tabItems: TabItemsType[];
+    tabItems: TabItems[];
     activeTab: AuthType;
     setActiveTab: Dispatch<SetStateAction<AuthType>>;
 }
