@@ -1,19 +1,12 @@
-import { useState } from "react";
-
-import Tabs from "../components/Tabs";
 import AuthForm from "../components/AuthForm";
-import { AuthType, LoginValueType } from "../types/auth";
-import { TabItemsType } from "../types/tab";
 import Button from "../components/Button";
+import { useAuthContext } from "../context/AuthContext";
+import { LoginValueType } from "../types/auth";
 
 export default function Auth() {
-    const [activeTab, setActiveTab] = useState<AuthType>("register");
-    const tabItems: TabItemsType[] = [
-        { key: "login", label: "Login" },
-        { key: "register", label: "Register" },
-    ];
-    const dontHaveAcc =
-        activeTab === "login"
+    const { authType, setAuthType } = useAuthContext();
+    const authTogglePrompt =
+        authType === "login"
             ? "Don't have an account?"
             : "Already Have an account?";
 
@@ -29,11 +22,19 @@ export default function Auth() {
                     "w-full max-w-xl flex flex-col items-center justify-center p-6"
                 }
             >
-                <AuthForm type={activeTab} onSubmit={handleAuth} />
+                <AuthForm type={authType} onSubmit={handleAuth} />
                 <span className={"text-lg text-on-background-varient"}>
-                    {dontHaveAcc}
-                    <Button size={"medium"} variant={"text"}>
-                        {activeTab === "login" ? "Sign Up" : "Login"}
+                    {authTogglePrompt}
+                    <Button
+                        size={"medium"}
+                        variant={"text"}
+                        onClick={() => {
+                            setAuthType((prev) =>
+                                prev === "login" ? "register" : "login",
+                            );
+                        }}
+                    >
+                        {authType === "login" ? "Sign Up" : "Login"}
                     </Button>
                 </span>
             </div>
