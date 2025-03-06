@@ -1,5 +1,5 @@
 import AuthPage from "../components/Auth/AuthPage";
 
 export default function Register() {
-    return <AuthPage type="register" />;
+    return <AuthPage type={"register"} />;
 }

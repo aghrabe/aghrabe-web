@@ -16,6 +16,11 @@ function ProtectedRoute() {
     return user ? <Outlet /> : <Navigate to={"/login"} replace />;
 }
 
+function RedirectToDashboard() {
+    const { user } = useAuthContext();
+    return <Navigate to={`/dashboard/${user?.id}`} replace />;
+}
+
 function App() {
     return (
         <div
@@ -26,8 +31,11 @@ function App() {
             <BrowserRouter>
                 <Routes>
                     <Route element={<ProtectedRoute />}>
-                        <Route path={"/"} element={<Dashboard />} />
-                        <Route path={"/dashboard"} element={<Dashboard />} />
+                        <Route path={"/"} element={<RedirectToDashboard />} />
+                        <Route
+                            path={"/dashboard/:id"}
+                            element={<Dashboard />}
+                        />
                     </Route>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />

@@ -38,12 +38,18 @@ export default function AuthForm({ type, onSubmit }: Props) {
     });
 
     async function submitHandler(data: LoginSchemaType | RegisterSchemaType) {
-        if (isLogin) {
-            await onSubmit(data as LoginSchemaType);
-        } else {
-            await onSubmit(data as RegisterSchemaType);
+        try {
+            if (isLogin) {
+                await onSubmit(data as LoginSchemaType);
+            } else {
+                await onSubmit(data as RegisterSchemaType);
+            }
+            reset();
+        } catch (err) {
+            throw new Error(
+                `Error while ${isLogin ? "logging in" : "registering"}: ${err}`,
+            );
         }
-        reset();
     }
 
     return (

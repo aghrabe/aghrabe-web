@@ -26,28 +26,21 @@ export default function AuthPage({ type }: AuthPageProps) {
 
     useEffect(() => {
         if (user) {
-            navigate("/dashboard");
+            navigate(`/dashboard/${user.id}`);
         }
-    });
+    }, [user, navigate]);
 
     async function handleSubmit(values: LoginSchemaType | RegisterSchemaType) {
-        try {
-            if (isLogin) {
-                await login(
-                    (values as LoginSchemaType).email,
-                    (values as LoginSchemaType).password,
-                );
-            } else {
-                await register(
-                    (values as RegisterSchemaType).email,
-                    (values as RegisterSchemaType).password,
-                    (values as RegisterSchemaType).passwordConfirm,
-                );
-            }
-            navigate("/dashboard");
-        } catch (err) {
-            throw new Error(
-                `Error while ${isLogin ? "logging in" : "registering"}: ${err}`,
+        if (isLogin) {
+            await login(
+                (values as LoginSchemaType).email,
+                (values as LoginSchemaType).password,
+            );
+        } else {
+            await register(
+                (values as RegisterSchemaType).email,
+                (values as RegisterSchemaType).password,
+                (values as RegisterSchemaType).passwordConfirm,
             );
         }
     }
