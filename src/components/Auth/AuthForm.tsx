@@ -1,109 +1,98 @@
-import { useEffect, useRef, useState } from "react";
-
-import {
-    AuthPayload,
-    AuthType,
-    LoginPayload,
-    RegisterPayload,
-} from "../../types/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FieldErrors, useForm } from "react-hook-form";
 import Button from "../Button";
 import InputField from "../InputField";
+import {
+    loginSchema,
+    LoginSchemaType,
+    registerSchema,
+    RegisterSchemaType,
+} from "../../types/auth";
 
 interface LoginProps {
     type: "login";
-    onSubmit: (values: LoginPayload) => Promise<void>;
+    onSubmit: (values: LoginSchemaType) => Promise<void>;
 }
 
 interface RegisterProps {
     type: "register";
-    onSubmit: (values: RegisterPayload) => Promise<void>;
+    onSubmit: (values: RegisterSchemaType) => Promise<void>;
 }
 
 type Props = LoginProps | RegisterProps;
 
-const initialPayloads: Record<AuthType, AuthPayload> = {
-    login: { email: "", password: "" },
-    register: { email: "", password: "", passwordConfirm: "" },
-};
-
 export default function AuthForm({ type, onSubmit }: Props) {
-    const payloadRef = useRef<AuthPayload>(initialPayloads[type]);
-    const [, forceRender] = useState(false);
     const isLogin = type === "login";
+    const schema = isLogin ? loginSchema : registerSchema;
 
-    useEffect(() => {
-        payloadRef.current = initialPayloads[type];
-        forceRender((prev) => !prev);
-    }, [type]);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+        reset,
+    } = useForm<LoginSchemaType | RegisterSchemaType>({
+        resolver: zodResolver(schema),
+        mode: "onBlur",
+    });
 
-    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const { id, value } = e.target;
-
-        if (id === "password-confirmation") {
-            (payloadRef.current as RegisterPayload).passwordConfirm = value;
+    async function submitHandler(data: LoginSchemaType | RegisterSchemaType) {
+        if (isLogin) {
+            await onSubmit(data as LoginSchemaType);
         } else {
-            payloadRef.current[id as keyof AuthPayload] = value;
+            await onSubmit(data as RegisterSchemaType);
         }
 
-        forceRender((prev) => !prev);
-    }
-
-    function SubmitHandler(e: React.FormEvent) {
-        e.preventDefault();
-        if (type === "login") {
-            onSubmit(payloadRef.current as LoginPayload);
-        } else {
-            onSubmit(payloadRef.current as RegisterPayload);
-        }
+        reset();
     }
 
     return (
         <form
             className={
-                "flex flex-col gap-12 bg-surface text-on-surface p-14 rounded-3xl shadow-lg w-full"
+                "flex flex-col gap-12 md:bg-surface text-on-background md:text-on-surface p-8 md:p-14 rounded-3xl md:shadow-lg w-full"
             }
-            onSubmit={SubmitHandler}
+            onSubmit={handleSubmit(submitHandler)}
         >
-            <h2 className={"text-4xl text-on-surface font-bold"}>
+            <h2
+                className={
+                    "text-4xl text-on-background md:text-on-surface font-bold"
+                }
+            >
                 {isLogin ? "Login" : "Sign Up"}
             </h2>
 
             <div className={"space-y-6"}>
                 <InputField
+                    {...register("email")}
+                    error={errors.email?.message}
                     id={"email"}
                     type={"email"}
-                    label={"Email"}
                     placeholder={"Email"}
-                    value={payloadRef.current.email}
-                    onChange={handleChange}
                 />
 
                 <InputField
+                    {...register("password")}
+                    error={errors.password?.message}
                     id={"password"}
                     type={"password"}
-                    label={"Password"}
                     placeholder={"Password"}
-                    value={payloadRef.current.password}
-                    onChange={handleChange}
                 />
 
                 {!isLogin && (
                     <InputField
+                        {...register("passwordConfirm")}
+                        error={
+                            (errors as FieldErrors<RegisterSchemaType>)
+                                .passwordConfirm?.message
+                        }
                         id={"password-confirmation"}
                         type={"password"}
-                        label={"Password Confirmation"}
                         placeholder={"Password Confirmation"}
-                        value={
-                            (payloadRef.current as RegisterPayload)
-                                .passwordConfirm
-                        }
-                        onChange={handleChange}
                     />
                 )}
 
                 <div className={"space-y-2"}>
                     <Button type={"submit"} size={"large"} fullWidth>
-                        Submit
+                        {isSubmitting ? "Submitting..." : "Submit"}
                     </Button>
                     {type === "login" && (
                         <Button

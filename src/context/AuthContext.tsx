@@ -1,5 +1,6 @@
-import PocketBase, { RecordModel } from "pocketbase";
 import { useEffect, useState } from "react";
+import PocketBase, { RecordModel } from "pocketbase";
+
 import { ContextProviderProps } from "../types/context";
 import ContextGenerator from "./ContextGenerator";
 
@@ -27,7 +28,7 @@ export default function AuthProvider({ children }: ContextProviderProps) {
             setUser(pb.authStore.record);
         });
 
-        return unsubscribe();
+        return unsubscribe;
     }, []);
 
     async function login(email: string, password: string) {

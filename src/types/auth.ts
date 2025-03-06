@@ -1,23 +1,41 @@
+import { z } from "zod";
+
 export type AuthType = "register" | "login";
 
-export interface LoginPayload {
-    email: string;
-    password: string;
-}
+const errorMessages = {
+    required: (label: string) => `${label} is required.`,
+    invalid: (label: string, hint?: string) => `${label} is Invalid. ${hint}`,
+    min: (label: string, minHint: number) =>
+        `${label} must be at least ${minHint} characters long.`,
+    max: (label: string, maxHint: number) =>
+        `${label} must be maximum ${maxHint} characters long.`,
+};
 
-export interface RegisterPayload extends LoginPayload {
-    passwordConfirm: string;
-}
+export const loginSchema = z.object({
+    email: z
+        .string({
+            required_error: errorMessages.required("Email"),
+            invalid_type_error: errorMessages.invalid("Email"),
+        })
+        .email({ message: "Invalid email address" }),
+    password: z
+        .string({
+            required_error: errorMessages.required("Password"),
+            invalid_type_error: errorMessages.invalid("Password"),
+        })
+        .min(6, {
+            message: errorMessages.min("Password", 6),
+        }),
+});
 
-export type AuthPayload = LoginPayload | RegisterPayload;
+export const registerSchema = loginSchema
+    .extend({
+        passwordConfirm: z.string(),
+    })
+    .refine((data) => data.password === data.passwordConfirm, {
+        message: "Passwords do not match",
+        path: ["passwordConfirm"],
+    });
 
-export interface User {
-    id: string;
-    password: string;
-    tokenKey: string;
-    email: string;
-    name: string;
-    avatar: string;
-    created: Date;
-    updated: Date;
-}
+export type LoginSchemaType = z.infer<typeof loginSchema>;
+export type RegisterSchemaType = z.infer<typeof registerSchema>;

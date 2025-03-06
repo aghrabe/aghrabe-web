@@ -1,10 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
+
 import { useAuthContext } from "../../context/AuthContext";
+import {
+    AuthType,
+    LoginSchemaType,
+    RegisterSchemaType,
+} from "../../types/auth";
 import AuthForm from "./AuthForm";
-import { AuthPayload, LoginPayload, RegisterPayload } from "../../types/auth";
 
 interface AuthPageProps {
-    type: "login" | "register";
+    type: AuthType;
 }
 
 export default function AuthPage({ type }: AuthPageProps) {
@@ -12,25 +17,24 @@ export default function AuthPage({ type }: AuthPageProps) {
     const navigate = useNavigate();
 
     const isLogin = type === "login";
-
     const text = isLogin
         ? "Don't have an account? "
         : "Already have an account? ";
     const linkText = isLogin ? "Sign Up" : "Login";
     const linkTo = isLogin ? "/register" : "/login";
 
-    async function handleSubmit(values: AuthPayload) {
+    async function handleSubmit(values: LoginSchemaType | RegisterSchemaType) {
         try {
             if (isLogin) {
                 await login(
-                    (values as LoginPayload).email,
-                    (values as LoginPayload).password,
+                    (values as LoginSchemaType).email,
+                    (values as LoginSchemaType).password,
                 );
             } else {
                 await register(
-                    (values as RegisterPayload).email,
-                    (values as RegisterPayload).password,
-                    (values as RegisterPayload).passwordConfirm,
+                    (values as RegisterSchemaType).email,
+                    (values as RegisterSchemaType).password,
+                    (values as RegisterSchemaType).passwordConfirm,
                 );
             }
             navigate("/dashboard");
@@ -45,7 +49,7 @@ export default function AuthPage({ type }: AuthPageProps) {
         <div className={"w-full min-h-screen flex justify-center items-center"}>
             <div
                 className={
-                    "w-full max-w-xl flex flex-col items-center justify-center p-6 gap-4"
+                    "w-full max-w-xl flex flex-col items-center justify-center md:p-6 gap-4"
                 }
             >
                 <AuthForm type={type} onSubmit={handleSubmit} />
