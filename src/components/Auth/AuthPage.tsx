@@ -7,13 +7,14 @@ import {
     RegisterSchemaType,
 } from "../../types/auth";
 import AuthForm from "./AuthForm";
+import { useEffect } from "react";
 
 interface AuthPageProps {
     type: AuthType;
 }
 
 export default function AuthPage({ type }: AuthPageProps) {
-    const { login, register } = useAuthContext();
+    const { user, login, register } = useAuthContext();
     const navigate = useNavigate();
 
     const isLogin = type === "login";
@@ -22,6 +23,12 @@ export default function AuthPage({ type }: AuthPageProps) {
         : "Already have an account? ";
     const linkText = isLogin ? "Sign Up" : "Login";
     const linkTo = isLogin ? "/register" : "/login";
+
+    useEffect(() => {
+        if (user) {
+            navigate("/dashboard");
+        }
+    });
 
     async function handleSubmit(values: LoginSchemaType | RegisterSchemaType) {
         try {
