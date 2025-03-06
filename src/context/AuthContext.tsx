@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import PocketBase, { RecordModel } from "pocketbase";
+import { RecordModel } from "pocketbase";
 
 import { ContextProviderProps } from "../types/context";
 import ContextGenerator from "./ContextGenerator";
-
-const pb = new PocketBase("http://localhost:8090");
+import { usePocketBaseContext } from "./PocketBaseContext";
 
 interface IAuthContext {
     user: RecordModel | null;
@@ -21,6 +20,7 @@ const { Provider, useContextValue: useAuthContext } =
     ContextGenerator<IAuthContext>("AuthContext");
 
 export default function AuthProvider({ children }: ContextProviderProps) {
+    const pb = usePocketBaseContext();
     const [user, setUser] = useState(pb.authStore.record);
 
     useEffect(() => {
@@ -29,7 +29,7 @@ export default function AuthProvider({ children }: ContextProviderProps) {
         });
 
         return unsubscribe;
-    }, []);
+    }, [pb.authStore]);
 
     async function login(email: string, password: string) {
         await pb.collection("users").authWithPassword(email, password);

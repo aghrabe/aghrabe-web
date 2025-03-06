@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 import { useAuthContext } from "../../context/AuthContext";
 import {
@@ -7,7 +8,6 @@ import {
     RegisterSchemaType,
 } from "../../types/auth";
 import AuthForm from "./AuthForm";
-import { useEffect } from "react";
 
 interface AuthPageProps {
     type: AuthType;
