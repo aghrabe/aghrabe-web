@@ -1,15 +1,10 @@
-import { Dispatch, SetStateAction } from "react";
+//interface Props {
+//    tabItems: TabItemsType[];
+//    activeTab: AuthType;
+//    setActiveTab: Dispatch<SetStateAction<AuthType>>;
+//}
 
-import { TabItemsType } from "../types/tab";
-import { AuthType } from "../types/auth";
-
-interface Props {
-    tabItems: TabItemsType[];
-    activeTab: AuthType;
-    setActiveTab: Dispatch<SetStateAction<AuthType>>;
-}
-
-export default function Tabs({ tabItems, activeTab, setActiveTab }: Props) {
+export default function Tabs() {
     return (
         <>
             <div>Tabs</div>
