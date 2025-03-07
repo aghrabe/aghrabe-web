@@ -1,22 +1,35 @@
-import { FC } from "react";
 import { clsx } from "clsx";
 
 interface CircularProgressProps {
     progress: number;
-    size?: number;
+    size?: "small" | "medium" | "large";
     strokeWidth?: number;
     color?: string;
     trackColor?: string;
 }
+
 export default function CircularProgress({
     progress,
-    size = 120,
-    strokeWidth = 8,
+    size = "medium",
+    strokeWidth,
     color = "text-primary",
     trackColor = "stroke-outline",
 }: CircularProgressProps) {
-    const center = size / 2;
-    const radius = center - strokeWidth / 2;
+    const defaultSizes = {
+        small: { diameter: 100, strokeWidth: 6, textClass: "text-sm" },
+        medium: { diameter: 200, strokeWidth: 8, textClass: "text-2xl" },
+        large: { diameter: 400, strokeWidth: 16, textClass: "text-5xl" },
+    };
+
+    const {
+        diameter,
+        textClass,
+        strokeWidth: defaultStroke,
+    } = defaultSizes[size];
+    const effectiveStroke = strokeWidth ?? defaultStroke;
+
+    const center = diameter / 2;
+    const radius = center - effectiveStroke / 2;
     const circumference = 2 * Math.PI * radius;
     const normalizedProgress = Math.min(Math.max(progress, 0), 100);
     const strokeDashoffset =
@@ -24,11 +37,11 @@ export default function CircularProgress({
 
     return (
         <div className={"relative inline-block"}>
-            <svg width={size} height={size}>
+            <svg width={diameter} height={diameter}>
                 {/* background track */}
                 <circle
                     className={trackColor}
-                    strokeWidth={strokeWidth}
+                    strokeWidth={effectiveStroke}
                     stroke={"currentColor"}
                     fill={"transparent"}
                     cx={center}
@@ -41,7 +54,7 @@ export default function CircularProgress({
                         color,
                         "transition-all duration-500 ease-in-out",
                     )}
-                    strokeWidth={strokeWidth}
+                    strokeWidth={effectiveStroke}
                     strokeLinecap={"round"}
                     stroke={"currentColor"}
                     fill={"transparent"}
@@ -53,11 +66,11 @@ export default function CircularProgress({
                     transform={`rotate(-90 ${center} ${center})`}
                 />
             </svg>
-            {/* display progress text in the center */}
+            {/* centered progress text */}
             <div
                 className={"absolute inset-0 flex items-center justify-center"}
             >
-                <span className={"text-xl font-bold"}>
+                <span className={clsx(textClass, "font-bold")}>
                     {normalizedProgress.toFixed(2)}%
                 </span>
             </div>

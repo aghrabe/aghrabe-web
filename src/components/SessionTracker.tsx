@@ -5,7 +5,7 @@ import CircularProgress from "./CircularProgress";
 import Button from "./Button";
 
 export default function SessionTracker() {
-    const totalSeconds = 2 * 60;
+    const totalSeconds = 1 * 60;
     const [elapsed, setElapsed] = useState<number>(0);
     const [message, setMessage] = useState<string>("enjoy the game");
     const [resetKey, setResetKey] = useState<number>(0);
@@ -43,7 +43,9 @@ export default function SessionTracker() {
                 {minutes}:{seconds} elapsed
             </div>
             <ProgressBar progress={progress} />
-            <CircularProgress progress={progress} size={400} />
+            <CircularProgress progress={progress} size={"large"} />
+            <CircularProgress progress={progress} size={"medium"} />
+            <CircularProgress progress={progress} size={"small"} />
             <div className={"mt-4"}>
                 <Button onClick={handleReset} variant={"contained"} fullWidth>
                     Reset
