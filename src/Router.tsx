@@ -10,10 +10,17 @@ import { useAuthContext } from "./context/AuthContext";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Layout from "./pages/Layout";
 
 function ProtectedRoute() {
     const { user } = useAuthContext();
-    return user ? <Outlet /> : <Navigate to={"/login"} replace />;
+    return user ? (
+        <Layout>
+            <Outlet />
+        </Layout>
+    ) : (
+        <Navigate to={"/login"} replace />
+    );
 }
 
 function RedirectToDashboard() {

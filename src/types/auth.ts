@@ -1,3 +1,4 @@
+import { RecordModel } from "pocketbase";
 import { z } from "zod";
 
 export type AuthType = "register" | "login";
@@ -39,3 +40,12 @@ export const registerSchema = loginSchema
 
 export type LoginSchemaType = z.infer<typeof loginSchema>;
 export type RegisterSchemaType = z.infer<typeof registerSchema>;
+
+export interface User extends RecordModel {
+    id: string;
+    email: string;
+    password: string;
+    username: string;
+    avatar?: string;
+    settings_id: string;
+}
