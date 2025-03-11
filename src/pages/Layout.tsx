@@ -9,7 +9,7 @@ export default function Layout({ children }: Props) {
     return (
         <div className={"flex min-h-screen"}>
             <Sidebar />
-            <main className={"w-full"}>{children}</main>
+            <main className={"w-full p-4"}>{children}</main>
         </div>
     );
 }

@@ -120,7 +120,11 @@ export default function Button({
             disabled={loading || props.disabled}
             {...props}
         >
-            <span className="absolute inset-0 bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-10"></span>
+            <span
+                className={
+                    "absolute inset-0 bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-10"
+                }
+            ></span>
             {children}
         </button>
     );

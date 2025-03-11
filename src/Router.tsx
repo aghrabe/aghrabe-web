@@ -11,6 +11,9 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Layout from "./pages/Layout";
+import Settings from "./pages/Settings";
+import Stats from "./pages/Stats";
+import SessionHistory from "./pages/SessionHistory";
 
 function ProtectedRoute() {
     const { user } = useAuthContext();
@@ -25,7 +28,7 @@ function ProtectedRoute() {
 
 function RedirectToDashboard() {
     const { user } = useAuthContext();
-    return <Navigate to={`/dashboard/${user?.id}`} replace />;
+    return <Navigate to={`/${user?.id}/dashboard`} replace />;
 }
 
 export default function Router() {
@@ -34,7 +37,13 @@ export default function Router() {
             <Routes>
                 <Route element={<ProtectedRoute />}>
                     <Route path={"/"} element={<RedirectToDashboard />} />
-                    <Route path={"/dashboard/:id"} element={<Dashboard />} />
+                    <Route path={"/:id/dashboard"} element={<Dashboard />} />
+                    <Route
+                        path={"/:id/session-history"}
+                        element={<SessionHistory />}
+                    />
+                    <Route path={"/:id/settings"} element={<Settings />} />
+                    <Route path={"/:id/stats"} element={<Stats />} />
                 </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />

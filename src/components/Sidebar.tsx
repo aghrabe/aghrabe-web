@@ -1,6 +1,8 @@
 import { ComponentType } from "react";
 import { Link, useLocation } from "react-router-dom";
-import avatar from "../assets/photo_2023-12-14_00-00-14.jpg";
+//import avatar from "../assets/photo_2023-12-14_00-00-14.jpg";
+//import avatar from "../assets/MPM12.png";
+import avatar from "../assets/photo_2023-04-19_07-10-35.jpg";
 
 import HomeIcon from "../assets/icons/HomeIcon";
 import SessionIcon from "../assets/icons/SessionIcon";
@@ -21,28 +23,28 @@ export default function Sidebar() {
     const location = useLocation();
 
     if (!user) {
-        return <p>Unauthurized!</p>;
+        return;
     }
 
     const navItems: Array<NavItem> = [
         {
-            name: "dashboard",
-            href: `/dashboard/${user.id}`,
+            name: "Dashboard",
+            href: `/${user.id}/dashboard`,
             IconComponent: HomeIcon,
         },
         {
-            name: "session-history",
-            href: "#",
+            name: "Session history",
+            href: `/${user.id}/session-history`,
             IconComponent: SessionIcon,
         },
         {
-            name: "settings",
-            href: "#",
+            name: "Settings",
+            href: `/${user.id}/settings`,
             IconComponent: SettingsIcon,
         },
         {
-            name: "statistics",
-            href: "#",
+            name: "Statistics",
+            href: `/${user.id}/stats`,
             IconComponent: StatsIcon,
         },
     ];
@@ -53,7 +55,7 @@ export default function Sidebar() {
                 "flex flex-col items-center gap-8 bg-surface px-2 py-4 max-w-16"
             }
         >
-            <img src={avatar} className={"w-14 rounded-md object-contain"} />
+            <img src={avatar} className={"w-12 h-12 rounded-md object-cover"} />
             <IconGroup
                 direction={"col"}
                 spacing={"wide"}
@@ -61,7 +63,6 @@ export default function Sidebar() {
             >
                 {navItems.map(({ name, href, IconComponent }) => {
                     const isActive = location.pathname === href;
-
                     return (
                         <Link key={name} to={href}>
                             <Icon

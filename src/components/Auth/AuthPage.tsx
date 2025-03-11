@@ -26,7 +26,7 @@ export default function AuthPage({ type }: AuthPageProps) {
 
     useEffect(() => {
         if (user) {
-            navigate(`/dashboard/${user.id}`);
+            navigate(`/${user.id}/dashboard`);
         }
     }, [user, navigate]);
 

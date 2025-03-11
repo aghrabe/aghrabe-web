@@ -6,7 +6,7 @@ export default function Dashboard() {
     const { logout } = useAuthContext();
 
     return (
-        <div className={"border w-full"}>
+        <div className={"w-full"}>
             <p>Dashboard</p>
             <SessionTracker />
             <Button onClick={logout}>Logout</Button>
