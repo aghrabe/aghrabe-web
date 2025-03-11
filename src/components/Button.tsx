@@ -96,6 +96,7 @@ export default function Button({
         <button
             className={clsx(
                 "relative overflow-hidden rounded-md font-medium transition-all duration-300 focus:outline-none hover:cursor-pointer",
+                "inline-flex items-center justify-center",
                 fullWidth && "w-full",
                 !customColor &&
                 variant === "contained" && [
@@ -125,11 +126,13 @@ export default function Button({
             disabled={loading || props.disabled}
             {...props}
         >
-            <span
-                className={
-                    "absolute inset-0 bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-10"
-                }
-            ></span>
+            {!customColor && (
+                <span
+                    className={
+                        "absolute inset-0 bg-black opacity-0 transition-opacity duration-300 group-hover:opacity-10"
+                    }
+                ></span>
+            )}
             {children}
         </button>
     );

@@ -18,6 +18,22 @@ interface NavItem {
     IconComponent: ComponentType;
 }
 
+interface TooltipProps {
+    name: string;
+}
+
+function Tooltip({ name }: TooltipProps) {
+    return (
+        <div
+            className={
+                "absolute left-full top-1/2 -translate-y-1/2 ml-6 px-3 py-1.5 rounded-md bg-surface text-on-surface text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-200 delay-150 pointer-events-none shadow-md before:absolute before:left-0 before:top-1/2 before:-translate-x-full before:-translate-y-1/2 before:border-8 before:border-transparent before:border-r-surface-container"
+            }
+        >
+            {name}
+        </div>
+    );
+}
+
 export default function Sidebar() {
     const { user } = useAuthContext();
     const location = useLocation();
@@ -82,28 +98,25 @@ export default function Sidebar() {
                                     >
                                         <IconComponent />
                                     </Icon>
-                                    <div
-                                        className={
-                                            "absolute left-full top-1/2 -translate-y-1/2 ml-6 px-3 py-1.5 rounded-md bg-surface text-on-surface text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-200 delay-150 pointer-events-none shadow-md before:absolute before:left-0 before:top-1/2 before:-translate-x-full before:-translate-y-1/2 before:border-8 before:border-transparent before:border-r-surface-container"
-                                        }
-                                    >
-                                        {name}
-                                    </div>
+                                    <Tooltip name={name} />
                                 </div>
                             </Link>
                         );
                     })}
                 </IconGroup>
             </div>
-            <Button
-                customColor
-                variant={"text"}
-                className={"hover:text-on-surface-varient"}
-            >
-                <Icon size={"large"}>
-                    <SyncIcon />
-                </Icon>
-            </Button>
+            <div className={"group relative"}>
+                <Button
+                    customColor
+                    variant={"text"}
+                    className={"w-12 h-12 !p-0 hover:text-on-surface-varient"}
+                >
+                    <Icon size={"large"}>
+                        <SyncIcon />
+                    </Icon>
+                </Button>
+                <Tooltip name={"Sync"} />
+            </div>
         </aside>
     );
 }
