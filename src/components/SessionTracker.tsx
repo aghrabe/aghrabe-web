@@ -6,6 +6,7 @@ import CircularProgress from "./CircularProgress";
 type TimerStatus = "idle" | "running" | "paused" | "ended";
 
 export default function SessionTracker() {
+    // TODO: fetch this
     const totalSeconds = 1 * 60;
     const [elapsed, setElapsed] = useState<number>(0);
     const [message, setMessage] = useState<string>("enjoy the game");
@@ -33,7 +34,7 @@ export default function SessionTracker() {
                         clearInterval(timerRef.current);
                         timerRef.current = null;
                     }
-                    setMessage("Times up!");
+                    setMessage("Time's up!");
                     setStatus("ended");
                     return totalSeconds;
                 }
@@ -50,7 +51,7 @@ export default function SessionTracker() {
     }, [status, totalSeconds]);
 
     function handleStart() {
-        // send a notification if total limit reached
+        // TODO: send a notification if total limit reached
         setElapsed(0);
         setMessage("Enjoy the game!");
         setStatus("running");
@@ -70,14 +71,14 @@ export default function SessionTracker() {
 
     function handleEnd() {
         setStatus("ended");
-        setMessage("Times up!");
+        setMessage("Time's up!");
         setElapsed(0);
         if (timerRef.current) {
             clearInterval(timerRef.current);
             timerRef.current = null;
         }
-        // send notification
-        // save session data to db
+        // TODO: send notification
+        // TODO: save session data to db
     }
 
     return (
@@ -90,7 +91,7 @@ export default function SessionTracker() {
                 text={timeString}
                 size={"large"}
             />
-            <div className={"flex flex-col gap-4"}>
+            <div className={"flex flex-col gap-4 min-h-[110px]"}>
                 {(status === "idle" || status === "ended") && (
                     <Button
                         onClick={handleStart}
