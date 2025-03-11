@@ -2,6 +2,7 @@ import { clsx } from "clsx";
 
 interface CircularProgressProps {
     progress: number;
+    text?: string;
     size?: "small" | "medium" | "large";
     strokeWidth?: number;
     color?: string;
@@ -10,6 +11,7 @@ interface CircularProgressProps {
 
 export default function CircularProgress({
     progress,
+    text,
     size = "medium",
     strokeWidth,
     color = "text-primary",
@@ -71,7 +73,7 @@ export default function CircularProgress({
                 className={"absolute inset-0 flex items-center justify-center"}
             >
                 <span className={clsx(textClass, "font-bold")}>
-                    {normalizedProgress.toFixed(2)}%
+                    {text ? <>{text}</> : <>{normalizedProgress.toFixed(2)}%</>}
                 </span>
             </div>
         </div>

@@ -12,6 +12,17 @@ export default function SessionTracker() {
     const [status, setStatus] = useState<TimerStatus>("idle");
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+    const remainingTime = totalSeconds - elapsed;
+    const progress = (elapsed / totalSeconds) * 100;
+    const hours = Math.floor(remainingTime / 3600)
+        .toString()
+        .padStart(2, "0");
+    const minutes = Math.floor((remainingTime % 3600) / 60)
+        .toString()
+        .padStart(2, "0");
+    const seconds = (remainingTime % 60).toString().padStart(2, "0");
+    const timeString = `${hours}:${minutes}:${seconds}`;
+
     useEffect(() => {
         if (status !== "running") return;
 
@@ -38,16 +49,8 @@ export default function SessionTracker() {
         };
     }, [status, totalSeconds]);
 
-    const progress = (elapsed / totalSeconds) * 100;
-    const hours = Math.floor(elapsed / 3600)
-        .toString()
-        .padStart(2, "0");
-    const minutes = Math.floor((elapsed % 3600) / 60)
-        .toString()
-        .padStart(2, "0");
-    const seconds = (elapsed % 60).toString().padStart(2, "0");
-
     function handleStart() {
+        // send a notification if total limit reached
         setElapsed(0);
         setMessage("Enjoy the game!");
         setStatus("running");
@@ -79,15 +82,14 @@ export default function SessionTracker() {
 
     return (
         <div className={"flex flex-col justify-center items-center gap-8"}>
-            <div className={"space-y-4 text-center"}>
-                <p className={"text-2xl font-medium text-on-background"}>
-                    {message}
-                </p>
-                <div className={"text-lg font-medium text-on-background"}>
-                    {hours}:{minutes}:{seconds} elapsed
-                </div>
-            </div>
-            <CircularProgress progress={progress} size={"large"} />
+            <p className={"text-2xl font-medium text-on-background"}>
+                {message}
+            </p>
+            <CircularProgress
+                progress={progress}
+                text={timeString}
+                size={"large"}
+            />
             <div className={"flex flex-col gap-4"}>
                 {(status === "idle" || status === "ended") && (
                     <Button

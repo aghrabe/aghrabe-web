@@ -18,11 +18,11 @@ export default function Session() {
             </div>
             <div
                 className={
-                    "basis-2/5 h-full flex flex-col border-l-2 border-outline px-8"
+                    "basis-2/5 h-full flex flex-col border-l-2 border-outline px-8 gap-4"
                 }
             >
                 <Header header={"History"} />
-                <div className={"px-8 overflow-y-auto h-[calc(100%-45px)]"}>
+                <div className={"px-4 overflow-y-auto h-[calc(100%-45px)]"}>
                     <ProgressBar progress={10} />
                     <ProgressBar progress={10} />
                     <ProgressBar progress={10} />

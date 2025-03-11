@@ -180,3 +180,29 @@
     --color-on-info-container: #cffafe;
     --color-info-hover: #22d3ee;
 }
+
+:root {
+    --scroll-bg: transparent;
+    --scroll-thumb: rgba(100, 100, 100, 0.3);
+    --scroll-thumb-hover: rgba(100, 100, 100, 0.5);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scroll-bg);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scroll-thumb);
+    border-radius: 10px;
+    transition: background 0.3s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scroll-thumb-hover);
+}
