@@ -6,10 +6,11 @@ import CircularProgress from "./CircularProgress";
 type TimerStatus = "idle" | "running" | "paused" | "ended";
 
 export default function SessionTracker() {
-    // TODO: fetch this
+    // TODO: fetch this on mount
     const totalSeconds = 1 * 60;
+
     const [elapsed, setElapsed] = useState<number>(0);
-    const [message, setMessage] = useState<string>("enjoy the game");
+    const [message, setMessage] = useState<string>("Enjoy the game!");
     const [status, setStatus] = useState<TimerStatus>("idle");
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 

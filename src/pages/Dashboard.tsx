@@ -1,4 +1,5 @@
 import Button from "../components/Button";
+import Header from "../components/Header";
 import { useAuthContext } from "../context/AuthContext";
 
 export default function Dashboard() {
@@ -6,7 +7,7 @@ export default function Dashboard() {
 
     return (
         <div className={"w-full"}>
-            <p>Dashboard</p>
+            <Header header={"Dashboard"}></Header>
             <Button onClick={logout}>Logout</Button>
         </div>
     );

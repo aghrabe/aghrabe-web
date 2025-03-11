@@ -13,7 +13,7 @@ import Register from "./pages/Register";
 import Layout from "./pages/Layout";
 import Settings from "./pages/Settings";
 import Stats from "./pages/Stats";
-import Session from "./pages/Session/Session";
+import Session from "./pages/Session";
 import NotFound from "./pages/NotFound";
 
 function ProtectedRoute() {

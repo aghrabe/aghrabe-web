@@ -60,21 +60,36 @@ export default function Sidebar() {
                     src={avatar}
                     className={"w-12 h-12 rounded-md object-cover"}
                 />
-                <IconGroup direction={"col"} spacing={"wide"}>
+                <IconGroup direction={"col"} spacing={"normal"}>
                     {navItems.map(({ name, href, IconComponent }) => {
                         const isActive = location.pathname === href;
                         return (
-                            <Link key={name} to={href}>
-                                <Icon
-                                    size={"large"}
-                                    className={
-                                        isActive
-                                            ? "text-on-surface"
-                                            : "hover:text-on-surface-varient transition-all duration-300"
-                                    }
-                                >
-                                    <IconComponent />
-                                </Icon>
+                            <Link
+                                key={name}
+                                to={href}
+                                className={
+                                    "w-full h-12 flex items-center justify-center"
+                                }
+                            >
+                                <div className={"group relative"}>
+                                    <Icon
+                                        size={"large"}
+                                        className={
+                                            isActive
+                                                ? "text-on-surface"
+                                                : "hover:text-on-surface-varient transition-all duration-300"
+                                        }
+                                    >
+                                        <IconComponent />
+                                    </Icon>
+                                    <div
+                                        className={
+                                            "absolute left-full top-1/2 -translate-y-1/2 ml-6 px-3 py-1.5 rounded-md bg-surface text-on-surface text-sm font-medium opacity-0 group-hover:opacity-100 transition-all duration-200 delay-150 pointer-events-none shadow-md before:absolute before:left-0 before:top-1/2 before:-translate-x-full before:-translate-y-1/2 before:border-8 before:border-transparent before:border-r-surface-container"
+                                        }
+                                    >
+                                        {name}
+                                    </div>
+                                </div>
                             </Link>
                         );
                     })}

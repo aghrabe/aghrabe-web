@@ -1,8 +1,8 @@
-import MoreIcon from "../../assets/icons/MoreIcon";
-import Header from "../../components/Header";
-import Icon from "../../components/Icon";
-import ProgressBar from "../../components/ProgressBar";
-import SessionTracker from "../../components/SessionTracker";
+import MoreIcon from "../assets/icons/MoreIcon";
+import Header from "../components/Header";
+import Icon from "../components/Icon";
+import ProgressBar from "../components/ProgressBar";
+import SessionTracker from "../components/SessionTracker";
 
 export default function Session() {
     return (
