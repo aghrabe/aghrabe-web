@@ -1,7 +1,5 @@
 import { ComponentType } from "react";
 import { Link, useLocation } from "react-router-dom";
-//import avatar from "../assets/photo_2023-12-14_00-00-14.jpg";
-//import avatar from "../assets/MPM12.png";
 import avatar from "../assets/photo_2023-04-19_07-10-35.jpg";
 
 import HomeIcon from "../assets/icons/HomeIcon";
@@ -11,6 +9,8 @@ import StatsIcon from "../assets/icons/StatsIcon";
 import { useAuthContext } from "../context/AuthContext";
 import Icon from "./Icon";
 import IconGroup from "./IconGroup";
+import SyncIcon from "../assets/icons/SyncIcon";
+import Button from "./Button";
 
 interface NavItem {
     name: string;
@@ -33,8 +33,8 @@ export default function Sidebar() {
             IconComponent: HomeIcon,
         },
         {
-            name: "Session history",
-            href: `/${user.id}/session-history`,
+            name: "Session",
+            href: `/${user.id}/session`,
             IconComponent: SessionIcon,
         },
         {
@@ -52,29 +52,43 @@ export default function Sidebar() {
     return (
         <aside
             className={
-                "flex flex-col items-center gap-8 bg-surface px-2 py-4 max-w-16"
+                "flex flex-col items-center justify-between bg-surface px-2 py-6 max-w-16 min-w-16 text-outline-variant"
             }
         >
-            <img src={avatar} className={"w-12 h-12 rounded-md object-cover"} />
-            <IconGroup
-                direction={"col"}
-                spacing={"wide"}
-                className={"text-outline-variant"}
+            <div className="space-y-8">
+                <img
+                    src={avatar}
+                    className={"w-12 h-12 rounded-md object-cover"}
+                />
+                <IconGroup direction={"col"} spacing={"wide"}>
+                    {navItems.map(({ name, href, IconComponent }) => {
+                        const isActive = location.pathname === href;
+                        return (
+                            <Link key={name} to={href}>
+                                <Icon
+                                    size={"large"}
+                                    className={
+                                        isActive
+                                            ? "text-on-surface"
+                                            : "hover:text-on-surface-varient transition-all duration-300"
+                                    }
+                                >
+                                    <IconComponent />
+                                </Icon>
+                            </Link>
+                        );
+                    })}
+                </IconGroup>
+            </div>
+            <Button
+                customColor
+                variant={"text"}
+                className={"hover:text-on-surface-varient"}
             >
-                {navItems.map(({ name, href, IconComponent }) => {
-                    const isActive = location.pathname === href;
-                    return (
-                        <Link key={name} to={href}>
-                            <Icon
-                                size={"large"}
-                                className={isActive ? "text-on-surface" : ""}
-                            >
-                                <IconComponent />
-                            </Icon>
-                        </Link>
-                    );
-                })}
-            </IconGroup>
+                <Icon size={"large"}>
+                    <SyncIcon />
+                </Icon>
+            </Button>
         </aside>
     );
 }

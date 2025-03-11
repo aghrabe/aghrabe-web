@@ -7,7 +7,6 @@ export default function StatsIcon() {
             stroke={"currentColor"}
             strokeLinecap={"round"}
             strokeLinejoin={"round"}
-            //style={"--darkreader-inline-stroke: currentColor;"}
             data-darkreader-inline-stroke={""}
             className={"w-full h-full"}
             strokeWidth={"2"}

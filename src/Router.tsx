@@ -13,7 +13,8 @@ import Register from "./pages/Register";
 import Layout from "./pages/Layout";
 import Settings from "./pages/Settings";
 import Stats from "./pages/Stats";
-import SessionHistory from "./pages/SessionHistory";
+import Session from "./pages/Session/Session";
+import NotFound from "./pages/NotFound";
 
 function ProtectedRoute() {
     const { user } = useAuthContext();
@@ -38,15 +39,13 @@ export default function Router() {
                 <Route element={<ProtectedRoute />}>
                     <Route path={"/"} element={<RedirectToDashboard />} />
                     <Route path={"/:id/dashboard"} element={<Dashboard />} />
-                    <Route
-                        path={"/:id/session-history"}
-                        element={<SessionHistory />}
-                    />
+                    <Route path={"/:id/session"} element={<Session />} />
                     <Route path={"/:id/settings"} element={<Settings />} />
                     <Route path={"/:id/stats"} element={<Stats />} />
                 </Route>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                <Route path={"/login"} element={<Login />} />
+                <Route path={"/register"} element={<Register />} />
+                <Route path={"*"} element={<NotFound />} />
             </Routes>
         </BrowserRouter>
     );

@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 
-import ProgressBar from "./ProgressBar";
-import CircularProgress from "./CircularProgress";
 import Button from "./Button";
+import CircularProgress from "./CircularProgress";
 
 export default function SessionTracker() {
     const totalSeconds = 1 * 60;
@@ -26,7 +25,12 @@ export default function SessionTracker() {
     }, [totalSeconds, resetKey]);
 
     const progress = (elapsed / totalSeconds) * 100;
-    const minutes = Math.floor(elapsed / 60);
+    const hours = Math.floor(elapsed / 3600)
+        .toString()
+        .padStart(2, "0");
+    const minutes = Math.floor(elapsed / 60)
+        .toString()
+        .padStart(2, "0");
     const seconds = (elapsed % 60).toString().padStart(2, "0");
 
     function handleReset() {
@@ -34,23 +38,21 @@ export default function SessionTracker() {
     }
 
     return (
-        <>
-            <div>SessionTracker</div>
-            <div className={"text-lg font-medium text-on-background"}>
+        <div
+            className={"flex flex-col justify-center items-center border gap-4"}
+        >
+            <p className={"text-xl font-medium text-on-background"}>
                 {message}
-            </div>
+            </p>
             <div className={"text-lg font-medium text-on-background"}>
-                {minutes}:{seconds} elapsed
+                {hours}:{minutes}:{seconds} elapsed
             </div>
-            <ProgressBar progress={progress} />
             <CircularProgress progress={progress} size={"large"} />
-            <CircularProgress progress={progress} size={"medium"} />
-            <CircularProgress progress={progress} size={"small"} />
-            <div className={"mt-4"}>
+            <div className={""}>
                 <Button onClick={handleReset} variant={"contained"} fullWidth>
                     Reset
                 </Button>
             </div>
-        </>
+        </div>
     );
 }

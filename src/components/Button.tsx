@@ -7,6 +7,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     loading?: boolean;
     fullWidth?: boolean;
     color?: "success" | "error" | "info" | "primary";
+    customColor?: boolean;
 }
 
 export default function Button({
@@ -16,6 +17,7 @@ export default function Button({
     loading = false,
     fullWidth = false,
     color = "primary",
+    customColor,
     className,
     ...props
 }: ButtonProps) {
@@ -95,6 +97,7 @@ export default function Button({
             className={clsx(
                 "relative overflow-hidden rounded-md font-medium transition-all duration-300 focus:outline-none hover:cursor-pointer",
                 fullWidth && "w-full",
+                !customColor &&
                 variant === "contained" && [
                     colors[color].contained.bg,
                     colors[color].contained.text,
@@ -102,12 +105,14 @@ export default function Button({
                     colors[color].contained.active,
                     "shadow-md",
                 ],
+                !customColor &&
                 variant === "outlined" && [
                     colors[color].outlined.border,
                     colors[color].outlined.text,
                     colors[color].outlined.hover,
                     "border",
                 ],
+                !customColor &&
                 variant === "text" && [
                     colors[color].text.text,
                     colors[color].text.hover,

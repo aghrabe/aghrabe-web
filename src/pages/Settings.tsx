@@ -1,7 +1,7 @@
 export default function Settings() {
     return (
         <>
-            <div>Settings</div>
+            <div className={"text-2xl font-bold"}>Settings</div>
         </>
     );
 }

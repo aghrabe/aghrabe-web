@@ -1,7 +1,7 @@
 export default function Stats() {
     return (
         <>
-            <div>Stats</div>
+            <div className={"text-2xl font-bold"}>Stats</div>
         </>
     );
 }
