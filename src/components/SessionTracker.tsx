@@ -68,16 +68,19 @@ export default function SessionTracker() {
     function handleEnd() {
         setStatus("ended");
         setMessage("Times up!");
+        setElapsed(0);
         if (timerRef.current) {
             clearInterval(timerRef.current);
             timerRef.current = null;
         }
+        // send notification
+        // save session data to db
     }
 
     return (
         <div className={"flex flex-col justify-center items-center gap-8"}>
             <div className={"space-y-4 text-center"}>
-                <p className={"text-xl font-medium text-on-background"}>
+                <p className={"text-2xl font-medium text-on-background"}>
                     {message}
                 </p>
                 <div className={"text-lg font-medium text-on-background"}>
