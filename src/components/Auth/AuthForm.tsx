@@ -10,6 +10,7 @@ import {
     RegisterSchemaType,
 } from "../../types/auth";
 import LoadingSpinner from "../LoadingSpinner";
+import Icon from "../Icon";
 
 interface LoginProps {
     type: "login";
@@ -99,7 +100,13 @@ export default function AuthForm({ type, onSubmit }: Props) {
 
                 <div className={"space-y-2"}>
                     <Button type={"submit"} size={"large"} fullWidth>
-                        {isSubmitting ? <LoadingSpinner /> : "Submit"}
+                        {isSubmitting ? (
+                            <Icon size={"medium"}>
+                                <LoadingSpinner />
+                            </Icon>
+                        ) : (
+                            "Submit"
+                        )}
                     </Button>
                     {type === "login" && (
                         <Button

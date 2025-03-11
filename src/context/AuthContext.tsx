@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { RecordModel } from "pocketbase";
 
+import { User } from "../types/auth";
 import { ContextProviderProps } from "../types/context";
 import ContextGenerator from "./ContextGenerator";
 import { usePocketBaseContext } from "./PocketBaseContext";
 
 interface IAuthContext {
-    user: RecordModel | null;
+    user: User | null;
     login: (email: string, password: string) => Promise<void>;
     register: (
         email: string,
@@ -21,11 +21,11 @@ const { Provider, useContextValue: useAuthContext } =
 
 export default function AuthProvider({ children }: ContextProviderProps) {
     const pb = usePocketBaseContext();
-    const [user, setUser] = useState(pb.authStore.record);
+    const [user, setUser] = useState<User | null>(pb.authStore.record as User);
 
     useEffect(() => {
         const unsubscribe = pb.authStore.onChange(() => {
-            setUser(pb.authStore.record);
+            setUser(pb.authStore.record as User);
         });
 
         return unsubscribe;
@@ -33,7 +33,7 @@ export default function AuthProvider({ children }: ContextProviderProps) {
 
     async function login(email: string, password: string) {
         await pb.collection("users").authWithPassword(email, password);
-        setUser(pb.authStore.record);
+        setUser(pb.authStore.record as User);
     }
 
     async function register(
