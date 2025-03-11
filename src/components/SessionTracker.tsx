@@ -1,57 +1,127 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Button from "./Button";
 import CircularProgress from "./CircularProgress";
+
+type TimerStatus = "idle" | "running" | "paused" | "ended";
 
 export default function SessionTracker() {
     const totalSeconds = 1 * 60;
     const [elapsed, setElapsed] = useState<number>(0);
     const [message, setMessage] = useState<string>("enjoy the game");
-    const [resetKey, setResetKey] = useState<number>(0);
+    const [status, setStatus] = useState<TimerStatus>("idle");
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
-        setElapsed(0);
-        setMessage("enjoy the game");
-        const timer = setInterval(() => {
+        if (status !== "running") return;
+
+        timerRef.current = setInterval(() => {
             setElapsed((prev) => {
                 if (prev >= totalSeconds) {
-                    clearInterval(timer);
+                    if (timerRef.current) {
+                        clearInterval(timerRef.current);
+                        timerRef.current = null;
+                    }
                     setMessage("Times up!");
+                    setStatus("ended");
                     return totalSeconds;
                 }
                 return prev + 1;
             });
         }, 1000);
-    }, [totalSeconds, resetKey]);
+
+        return () => {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+            }
+        };
+    }, [status, totalSeconds]);
 
     const progress = (elapsed / totalSeconds) * 100;
     const hours = Math.floor(elapsed / 3600)
         .toString()
         .padStart(2, "0");
-    const minutes = Math.floor(elapsed / 60)
+    const minutes = Math.floor((elapsed % 3600) / 60)
         .toString()
         .padStart(2, "0");
     const seconds = (elapsed % 60).toString().padStart(2, "0");
 
-    function handleReset() {
-        setResetKey((prev) => prev + 1);
+    function handleStart() {
+        setElapsed(0);
+        setMessage("Enjoy the game!");
+        setStatus("running");
+    }
+
+    function handleStop() {
+        setStatus("paused");
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+        }
+    }
+
+    function handleContinue() {
+        setStatus("running");
+    }
+
+    function handleEnd() {
+        setStatus("ended");
+        setMessage("Times up!");
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+        }
     }
 
     return (
-        <div
-            className={"flex flex-col justify-center items-center border gap-4"}
-        >
-            <p className={"text-xl font-medium text-on-background"}>
-                {message}
-            </p>
-            <div className={"text-lg font-medium text-on-background"}>
-                {hours}:{minutes}:{seconds} elapsed
+        <div className={"flex flex-col justify-center items-center gap-8"}>
+            <div className={"space-y-4 text-center"}>
+                <p className={"text-xl font-medium text-on-background"}>
+                    {message}
+                </p>
+                <div className={"text-lg font-medium text-on-background"}>
+                    {hours}:{minutes}:{seconds} elapsed
+                </div>
             </div>
             <CircularProgress progress={progress} size={"large"} />
-            <div className={""}>
-                <Button onClick={handleReset} variant={"contained"} fullWidth>
-                    Reset
-                </Button>
+            <div className={"flex flex-col gap-4"}>
+                {(status === "idle" || status === "ended") && (
+                    <Button
+                        onClick={handleStart}
+                        variant={"contained"}
+                        size={"medium"}
+                    >
+                        Start
+                    </Button>
+                )}
+                {status === "running" && (
+                    <Button
+                        onClick={handleStop}
+                        variant={"contained"}
+                        size={"medium"}
+                    >
+                        Stop
+                    </Button>
+                )}
+                {status === "paused" && (
+                    <>
+                        <Button
+                            onClick={handleContinue}
+                            variant={"contained"}
+                            size={"medium"}
+                        >
+                            Continue
+                        </Button>
+                        <Button
+                            onClick={handleEnd}
+                            variant={"outlined"}
+                            size={"medium"}
+                        >
+                            End
+                        </Button>
+                    </>
+                )}
             </div>
         </div>
     );

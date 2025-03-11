@@ -117,9 +117,9 @@ export default function Button({
                     colors[color].text.text,
                     colors[color].text.hover,
                 ],
-                size === "small" && "px-3 py-1 text-sm",
-                size === "medium" && "px-4 py-2 text-base",
-                size === "large" && "px-6 py-3 text-xl",
+                size === "small" && "px-6 py-2 text-sm",
+                size === "medium" && "px-8 py-2 text-lg",
+                size === "large" && "px-12 py-3 text-xl",
                 className,
             )}
             disabled={loading || props.disabled}
