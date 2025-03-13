@@ -1,68 +1,125 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
+import { AuthError } from "@supabase/supabase-js";
+import safeExecute from "../lib/safeExecute";
 import supabase from "../services/supabaseClient";
 import { User } from "../types/auth";
 import { ContextProviderProps } from "../types/context";
 import ContextGenerator from "./ContextGenerator";
 
+interface PasswordMismatchError {
+    message: "Passwords do not match";
+}
+interface LogoutError {
+    message: "Logging out failed!";
+    cause?: unknown;
+}
+interface NetworkError {
+    message: "Network request failed";
+    cause?: unknown;
+}
+interface StateUpdateError {
+    message: "Attempted to update state after component unmount";
+}
+interface SubscriptionError {
+    message: "Failed to set up auth listener";
+    cause?: unknown;
+}
+
+type AuthProviderError =
+    | AuthError
+    | PasswordMismatchError
+    | StateUpdateError
+    | LogoutError
+    | NetworkError
+    | SubscriptionError;
+
 interface IAuthContext {
     user: User | null;
-    login: (email: string, password: string) => Promise<void>;
+    login: (
+        email: string,
+        password: string,
+    ) => Promise<AuthProviderError | void>;
     register: (
         email: string,
         password: string,
         passwordConfirm: string,
-    ) => Promise<void>;
-    logout: () => void;
+    ) => Promise<AuthProviderError | void>;
+    logout: () => Promise<AuthProviderError | void>;
+    getUser: () => Promise<void>;
 }
 
 const { Provider, useContextValue: useAuthContext } =
     ContextGenerator<IAuthContext>("AuthContext");
 
+// TODO: instead of logging certain errors return them to the consumer so they decide what to do with them
 export default function AuthProvider({ children }: ContextProviderProps) {
     const [user, setUser] = useState<User | null>(null);
 
-    async function getUser() {
-        const { data, error } = await supabase.auth.getUser();
+    function normalizeAuthError(err: unknown): AuthProviderError {
+        if (err instanceof AuthError) return err;
+        return {
+            message: "Network request failed",
+            cause: err,
+        } as NetworkError;
+    }
 
-        if (error || !data.user) {
+    const getUser = useCallback(async () => {
+        const [result, error] = await safeExecute(
+            () => supabase.auth.getUser(),
+            normalizeAuthError,
+        );
+
+        if (error || !result?.data?.user) {
+            console.error("Error fetching user:", error);
             setUser(null);
             return;
         }
-
         setUser({
-            id: data.user.id,
-            email: data.user.email!,
+            id: result.data.user.id,
+            email: result.data.user.email!,
         });
-    }
+    }, []);
 
     useEffect(() => {
         getUser();
 
         const { data: authListener } = supabase.auth.onAuthStateChange(
-            async (_event, session) => {
-                if (!session?.user) {
-                    setUser(null);
-                    return;
-                }
-                await getUser();
+            (_event, session) => {
+                setUser(
+                    session?.user
+                        ? { id: session.user.id, email: session.user.email! }
+                        : null,
+                );
             },
         );
 
         return () => {
-            authListener.subscription.unsubscribe();
+            try {
+                authListener.subscription.unsubscribe();
+            } catch (err) {
+                console.error({
+                    message: "Failed to clean up auth listener",
+                    cause: err,
+                });
+            }
         };
-    }, []);
+    }, [getUser]);
 
-    async function login(email: string, password: string) {
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
+    async function login(
+        email: string,
+        password: string,
+    ): Promise<AuthProviderError | void> {
+        const [result, error] = await safeExecute(
+            () => supabase.auth.signInWithPassword({ email, password }),
+            normalizeAuthError,
+        );
 
-        // TODO: maybe a global error handler to show notifications if needed
-        if (error) throw error;
-
+        if (error || (result && result.error)) {
+            const err = error || result!.error;
+            console.error("Login error:", err);
+            return err!;
+        }
         await getUser();
     }
 
@@ -70,24 +127,41 @@ export default function AuthProvider({ children }: ContextProviderProps) {
         email: string,
         password: string,
         passwordConfirm: string,
-    ) {
+    ): Promise<AuthProviderError | void> {
         if (password !== passwordConfirm) {
-            throw new Error("Passwords do not match");
+            return {
+                message: "Passwords do not match",
+            } as PasswordMismatchError;
         }
 
-        const { error } = await supabase.auth.signUp({
-            email,
-            password,
-        });
+        const [result, error] = await safeExecute(
+            () =>
+                supabase.auth.signUp({
+                    email,
+                    password,
+                }),
+            normalizeAuthError,
+        );
 
-        // TODO: refactor
-        if (error) throw error;
-
+        if (error || (result && result.error)) {
+            const err = error || result!.error;
+            return err!;
+        }
         await getUser();
     }
 
-    async function logout() {
-        await supabase.auth.signOut();
+    async function logout(): Promise<AuthProviderError | void> {
+        const [error] = await safeExecute(
+            () => supabase.auth.signOut(),
+            normalizeAuthError,
+        );
+
+        if (error) {
+            return {
+                message: "Logging out failed!",
+                cause: error,
+            } as LogoutError;
+        }
         setUser(null);
     }
 
@@ -98,6 +172,7 @@ export default function AuthProvider({ children }: ContextProviderProps) {
                 login,
                 register,
                 logout,
+                getUser,
             }}
         >
             {children}
