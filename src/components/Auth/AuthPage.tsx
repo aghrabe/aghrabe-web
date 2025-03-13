@@ -8,14 +8,16 @@ import {
     RegisterSchemaType,
 } from "../../lib/types/auth";
 import AuthForm from "./AuthForm";
+import LoadingPage from "../../pages/LoadingPage";
 
 interface AuthPageProps {
     type: AuthType;
 }
 
 export default function AuthPage({ type }: AuthPageProps) {
-    const { user, login, register } = useAuthContext();
+    const { user, isLoading, login, register } = useAuthContext();
     const [error, setError] = useState<string | null>(null);
+    const [isRedirecting, setIsRedirecting] = useState(false);
     const navigate = useNavigate();
 
     const isLogin = type === "login";
@@ -26,10 +28,15 @@ export default function AuthPage({ type }: AuthPageProps) {
     const linkTo = isLogin ? "/register" : "/login";
 
     useEffect(() => {
-        if (user) {
+        if (!isLoading && user) {
+            setIsRedirecting(true);
             navigate(`/${user.id}/dashboard`);
         }
-    }, [user, navigate]);
+    }, [user, isLoading, navigate]);
+
+    if (isLoading || isRedirecting) {
+        return <LoadingPage />;
+    }
 
     async function handleSubmit(values: LoginSchemaType | RegisterSchemaType) {
         setError(null);
