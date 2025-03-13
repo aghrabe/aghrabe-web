@@ -8,7 +8,7 @@ import {
     LoginSchemaType,
     registerSchema,
     RegisterSchemaType,
-} from "../../types/auth";
+} from "../../lib/types/auth";
 import LoadingSpinner from "../LoadingSpinner";
 import Icon from "../Icon";
 

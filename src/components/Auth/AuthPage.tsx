@@ -6,7 +6,7 @@ import {
     AuthType,
     LoginSchemaType,
     RegisterSchemaType,
-} from "../../types/auth";
+} from "../../lib/types/auth";
 import AuthForm from "./AuthForm";
 
 interface AuthPageProps {

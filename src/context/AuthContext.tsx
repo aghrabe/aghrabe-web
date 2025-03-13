@@ -1,38 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
-
 import { AuthError } from "@supabase/supabase-js";
+
+import {
+    AuthProviderError,
+    BaseError,
+    ERROR_MESSAGES,
+} from "../lib/constants/authErrors";
 import safeExecute from "../lib/safeExecute";
 import supabase from "../services/supabaseClient";
-import { User } from "../types/auth";
-import { ContextProviderProps } from "../types/context";
+import { User } from "../lib/types/auth";
+import { ContextProviderProps } from "../lib/types/context";
 import ContextGenerator from "./ContextGenerator";
-
-interface PasswordMismatchError {
-    message: "Passwords do not match";
-}
-interface LogoutError {
-    message: "Logging out failed!";
-    cause?: unknown;
-}
-interface NetworkError {
-    message: "Network request failed";
-    cause?: unknown;
-}
-interface StateUpdateError {
-    message: "Attempted to update state after component unmount";
-}
-interface SubscriptionError {
-    message: "Failed to set up auth listener";
-    cause?: unknown;
-}
-
-type AuthProviderError =
-    | AuthError
-    | PasswordMismatchError
-    | StateUpdateError
-    | LogoutError
-    | NetworkError
-    | SubscriptionError;
 
 interface IAuthContext {
     user: User | null;
@@ -59,9 +37,9 @@ export default function AuthProvider({ children }: ContextProviderProps) {
     function normalizeAuthError(err: unknown): AuthProviderError {
         if (err instanceof AuthError) return err;
         return {
-            message: "Network request failed",
+            message: ERROR_MESSAGES.NETWORK_REQUEST_FAILED,
             cause: err,
-        } as NetworkError;
+        } as BaseError;
     }
 
     const getUser = useCallback(async () => {
@@ -99,7 +77,7 @@ export default function AuthProvider({ children }: ContextProviderProps) {
                 authListener.subscription.unsubscribe();
             } catch (err) {
                 console.error({
-                    message: "Failed to clean up auth listener",
+                    message: ERROR_MESSAGES.SUBSCRIPTION_FAILED,
                     cause: err,
                 });
             }
@@ -117,7 +95,6 @@ export default function AuthProvider({ children }: ContextProviderProps) {
 
         if (error || (result && result.error)) {
             const err = error || result!.error;
-            console.error("Login error:", err);
             return err!;
         }
         await getUser();
@@ -129,9 +106,7 @@ export default function AuthProvider({ children }: ContextProviderProps) {
         passwordConfirm: string,
     ): Promise<AuthProviderError | void> {
         if (password !== passwordConfirm) {
-            return {
-                message: "Passwords do not match",
-            } as PasswordMismatchError;
+            return { message: ERROR_MESSAGES.PASSWORD_MISMATCH } as BaseError;
         }
 
         const [result, error] = await safeExecute(
@@ -158,9 +133,9 @@ export default function AuthProvider({ children }: ContextProviderProps) {
 
         if (error) {
             return {
-                message: "Logging out failed!",
+                message: ERROR_MESSAGES.LOGOUT_FAILED,
                 cause: error,
-            } as LogoutError;
+            } as BaseError;
         }
         setUser(null);
     }
