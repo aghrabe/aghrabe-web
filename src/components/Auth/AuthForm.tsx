@@ -9,20 +9,26 @@ import {
 } from "../../lib/types/auth";
 import Button from "../Button";
 import InputField from "../InputField";
+import Icon from "../Icon";
+import GoogleIcon from "../../assets/icons/GoogleIcon";
+import { OAuthResponse } from "@supabase/supabase-js";
+import { AuthProviderError } from "../../lib/constants/authErrors";
 
 interface LoginProps {
     type: "login";
     onSubmit: (values: LoginSchemaType) => Promise<void>;
+    onOAuth?: () => Promise<AuthProviderError | OAuthResponse | null>;
 }
 
 interface RegisterProps {
     type: "register";
     onSubmit: (values: RegisterSchemaType) => Promise<void>;
+    onOAuth?: () => Promise<AuthProviderError | OAuthResponse | null>;
 }
 
 type Props = LoginProps | RegisterProps;
 
-export default function AuthForm({ type, onSubmit }: Props) {
+export default function AuthForm({ type, onSubmit, onOAuth }: Props) {
     const isLogin = type === "login";
     const schema = isLogin ? loginSchema : registerSchema;
 
@@ -116,6 +122,31 @@ export default function AuthForm({ type, onSubmit }: Props) {
                         </Button>
                     )}
                 </div>
+
+                <div className={"flex items-center"}>
+                    <hr className={"flex-grow border-t border-outline"} />
+                    <span className={"mx-2 text-outline-variant text-sm"}>
+                        or
+                    </span>
+                    <hr className={"flex-grow border-t border-outline"} />
+                </div>
+
+                <Button
+                    type={"button"}
+                    onClick={onOAuth}
+                    variant={"contained"}
+                    size={"large"}
+                    className={
+                        "bg-google-btn-bg text-google-btn-text border border-google-btn-border hover:bg-google-btn-hover-bg flex items-center justify-center gap-2"
+                    }
+                    customColor
+                    fullWidth
+                >
+                    <Icon className={"w-6 h-6"}>
+                        <GoogleIcon />
+                    </Icon>
+                    <span>Sign in with Google</span>
+                </Button>
             </div>
         </form>
     );

@@ -1,5 +1,5 @@
+import { AuthError, OAuthResponse } from "@supabase/supabase-js";
 import { useCallback, useEffect, useState } from "react";
-import { AuthError } from "@supabase/supabase-js";
 
 import {
     AuthProviderError,
@@ -7,14 +7,15 @@ import {
     ERROR_MESSAGES,
 } from "../lib/constants/authErrors";
 import safeExecute from "../lib/safeExecute";
-import supabase from "../services/supabaseClient";
 import { User } from "../lib/types/auth";
 import { ContextProviderProps } from "../lib/types/context";
+import supabase from "../services/supabaseClient";
 import ContextGenerator from "./ContextGenerator";
 
 interface IAuthContext {
     user: User | null;
     isLoading: boolean;
+    signInWithGoogle(): Promise<AuthProviderError | OAuthResponse | null>;
     login: (
         email: string,
         password: string,
@@ -87,6 +88,26 @@ export default function AuthProvider({ children }: ContextProviderProps) {
         };
     }, [getUser]);
 
+    async function signInWithGoogle(): Promise<
+        AuthProviderError | OAuthResponse | null
+    > {
+        const [result, error] = await safeExecute(
+            () =>
+                supabase.auth.signInWithOAuth({
+                    provider: "google",
+                    options: {
+                        redirectTo: `${window.location.origin}/`,
+                    },
+                }),
+            normalizeAuthError,
+        );
+
+        if (error) {
+            return error;
+        }
+        return result;
+    }
+
     async function login(
         email: string,
         password: string,
@@ -152,6 +173,7 @@ export default function AuthProvider({ children }: ContextProviderProps) {
                 register,
                 logout,
                 getUser,
+                signInWithGoogle,
             }}
         >
             {children}

@@ -4,7 +4,7 @@ function App() {
     return (
         <div
             className={
-                "font-sans w-full min-h-screen text-on-background bg-background dark"
+                "font-sans w-full min-h-screen text-on-background bg-background"
             }
         >
             <Router />

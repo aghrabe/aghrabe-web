@@ -7,15 +7,16 @@ import {
     LoginSchemaType,
     RegisterSchemaType,
 } from "../../lib/types/auth";
-import AuthForm from "./AuthForm";
 import LoadingPage from "../../pages/LoadingPage";
+import AuthForm from "./AuthForm";
 
 interface AuthPageProps {
     type: AuthType;
 }
 
 export default function AuthPage({ type }: AuthPageProps) {
-    const { user, isLoading, login, register } = useAuthContext();
+    const { user, isLoading, signInWithGoogle, login, register } =
+        useAuthContext();
     const [error, setError] = useState<string | null>(null);
     const [isRedirecting, setIsRedirecting] = useState(false);
     const navigate = useNavigate();
@@ -77,7 +78,11 @@ export default function AuthPage({ type }: AuthPageProps) {
                     TODO: send notifications instead
                 */}
                 {error && <p className={"text-error text-2xl"}>{error}</p>}
-                <AuthForm type={type} onSubmit={handleSubmit} />
+                <AuthForm
+                    type={type}
+                    onSubmit={handleSubmit}
+                    onOAuth={signInWithGoogle}
+                />
                 <span className={"text-lg text-on-background-varient"}>
                     {text}
                     <Link

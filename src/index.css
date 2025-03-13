@@ -141,10 +141,22 @@
     /*--color-info-800: #005f78;*/
     /*--color-info-900: #104e64;*/
     /*--color-info-950: #053345;*/
+
+    --color-google-btn-bg: #ffffff;
+    --color-google-btn-text: #000000;
+    --color-google-btn-border: #dadce0;
+    --color-google-btn-hover-bg: #f7f7f7;
+    --color-google-btn-hover-border: #c6c6c6;
 }
 
 /* Manual Dark Mode */
 .dark {
+    --color-google-btn-bg: #ffffff;
+    --color-google-btn-text: #000000;
+    --color-google-btn-border: transparent;
+    --color-google-btn-hover-bg: #d1d5dc;
+    --color-google-btn-hover-border: transparent;
+
     --color-background: #1a1a1a;
     --color-on-background: #e0e0e0;
     --color-on-background-varient: #b0b0b0;
