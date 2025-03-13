@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
+import supabase from "../services/supabaseClient";
 import { User } from "../types/auth";
 import { ContextProviderProps } from "../types/context";
 import ContextGenerator from "./ContextGenerator";
-import { usePocketBaseContext } from "./PocketBaseContext";
 
 interface IAuthContext {
     user: User | null;
@@ -20,20 +20,50 @@ const { Provider, useContextValue: useAuthContext } =
     ContextGenerator<IAuthContext>("AuthContext");
 
 export default function AuthProvider({ children }: ContextProviderProps) {
-    const pb = usePocketBaseContext();
-    const [user, setUser] = useState<User | null>(pb.authStore.record as User);
+    const [user, setUser] = useState<User | null>(null);
+
+    async function getUser() {
+        const { data, error } = await supabase.auth.getUser();
+
+        if (error || !data.user) {
+            setUser(null);
+            return;
+        }
+
+        setUser({
+            id: data.user.id,
+            email: data.user.email!,
+        });
+    }
 
     useEffect(() => {
-        const unsubscribe = pb.authStore.onChange(() => {
-            setUser(pb.authStore.record as User);
-        });
+        getUser();
 
-        return unsubscribe;
-    }, [pb.authStore]);
+        const { data: authListener } = supabase.auth.onAuthStateChange(
+            async (_event, session) => {
+                if (!session?.user) {
+                    setUser(null);
+                    return;
+                }
+                await getUser();
+            },
+        );
+
+        return () => {
+            authListener.subscription.unsubscribe();
+        };
+    }, []);
 
     async function login(email: string, password: string) {
-        await pb.collection("users").authWithPassword(email, password);
-        setUser(pb.authStore.record as User);
+        const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        // TODO: maybe a global error handler to show notifications if needed
+        if (error) throw error;
+
+        await getUser();
     }
 
     async function register(
@@ -41,14 +71,23 @@ export default function AuthProvider({ children }: ContextProviderProps) {
         password: string,
         passwordConfirm: string,
     ) {
-        await pb
-            .collection("users")
-            .create({ email, password, passwordConfirm });
-        await login(email, password);
+        if (password !== passwordConfirm) {
+            throw new Error("Passwords do not match");
+        }
+
+        const { error } = await supabase.auth.signUp({
+            email,
+            password,
+        });
+
+        // TODO: refactor
+        if (error) throw error;
+
+        await getUser();
     }
 
-    function logout() {
-        pb.authStore.clear();
+    async function logout() {
+        await supabase.auth.signOut();
         setUser(null);
     }
 
