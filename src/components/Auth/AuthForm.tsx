@@ -9,7 +9,6 @@ import {
 } from "../../lib/types/auth";
 import Button from "../Button";
 import InputField from "../InputField";
-import LoadingSpinner from "../LoadingSpinner";
 
 interface LoginProps {
     type: "login";
