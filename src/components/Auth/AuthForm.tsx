@@ -1,16 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldErrors, useForm } from "react-hook-form";
 
-import Button from "../Button";
-import InputField from "../InputField";
 import {
     loginSchema,
     LoginSchemaType,
     registerSchema,
     RegisterSchemaType,
 } from "../../lib/types/auth";
+import Button from "../Button";
+import InputField from "../InputField";
 import LoadingSpinner from "../LoadingSpinner";
-import Icon from "../Icon";
 
 interface LoginProps {
     type: "login";
@@ -101,9 +100,7 @@ export default function AuthForm({ type, onSubmit }: Props) {
                 <div className={"space-y-2"}>
                     <Button type={"submit"} size={"large"} fullWidth>
                         {isSubmitting ? (
-                            <Icon size={"medium"}>
-                                <LoadingSpinner />
-                            </Icon>
+                            <LoadingSpinner color={"onPrimary"} />
                         ) : (
                             "Submit"
                         )}

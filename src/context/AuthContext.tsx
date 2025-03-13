@@ -14,6 +14,7 @@ import ContextGenerator from "./ContextGenerator";
 
 interface IAuthContext {
     user: User | null;
+    isLoading: boolean;
     login: (
         email: string,
         password: string,
@@ -30,9 +31,9 @@ interface IAuthContext {
 const { Provider, useContextValue: useAuthContext } =
     ContextGenerator<IAuthContext>("AuthContext");
 
-// TODO: instead of logging certain errors return them to the consumer so they decide what to do with them
 export default function AuthProvider({ children }: ContextProviderProps) {
     const [user, setUser] = useState<User | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     function normalizeAuthError(err: unknown): AuthProviderError {
         if (err instanceof AuthError) return err;
@@ -43,6 +44,7 @@ export default function AuthProvider({ children }: ContextProviderProps) {
     }
 
     const getUser = useCallback(async () => {
+        setIsLoading(true);
         const [result, error] = await safeExecute(
             () => supabase.auth.getUser(),
             normalizeAuthError,
@@ -51,12 +53,13 @@ export default function AuthProvider({ children }: ContextProviderProps) {
         if (error || !result?.data?.user) {
             console.error("Error fetching user:", error);
             setUser(null);
-            return;
+        } else {
+            setUser({
+                id: result.data.user.id,
+                email: result.data.user.email!,
+            });
         }
-        setUser({
-            id: result.data.user.id,
-            email: result.data.user.email!,
-        });
+        setIsLoading(false);
     }, []);
 
     useEffect(() => {
@@ -144,6 +147,7 @@ export default function AuthProvider({ children }: ContextProviderProps) {
         <Provider
             value={{
                 user,
+                isLoading,
                 login,
                 register,
                 logout,

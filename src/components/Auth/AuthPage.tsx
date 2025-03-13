@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 import { useAuthContext } from "../../context/AuthContext";
 import {
@@ -15,6 +15,7 @@ interface AuthPageProps {
 
 export default function AuthPage({ type }: AuthPageProps) {
     const { user, login, register } = useAuthContext();
+    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
     const isLogin = type === "login";
@@ -31,17 +32,24 @@ export default function AuthPage({ type }: AuthPageProps) {
     }, [user, navigate]);
 
     async function handleSubmit(values: LoginSchemaType | RegisterSchemaType) {
+        setError(null);
+
+        let authError;
         if (isLogin) {
-            await login(
+            authError = await login(
                 (values as LoginSchemaType).email,
                 (values as LoginSchemaType).password,
             );
         } else {
-            await register(
+            authError = await register(
                 (values as RegisterSchemaType).email,
                 (values as RegisterSchemaType).password,
                 (values as RegisterSchemaType).passwordConfirm,
             );
+        }
+
+        if (authError) {
+            setError(authError.message);
         }
     }
 
@@ -52,6 +60,10 @@ export default function AuthPage({ type }: AuthPageProps) {
                     "w-full max-w-xl flex flex-col items-center justify-center md:p-6 gap-4"
                 }
             >
+                {/*
+                    TODO: send notifications instead
+                */}
+                {error && <p className={"text-error text-2xl"}>{error}</p>}
                 <AuthForm type={type} onSubmit={handleSubmit} />
                 <span className={"text-lg text-on-background-varient"}>
                     {text}

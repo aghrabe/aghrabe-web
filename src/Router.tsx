@@ -6,18 +6,29 @@ import {
     Routes,
 } from "react-router-dom";
 
+import { useEffect } from "react";
 import { useAuthContext } from "./context/AuthContext";
 import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
 import Layout from "./pages/Layout";
+import LoadingPage from "./pages/LoadingPage";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
+import Register from "./pages/Register";
+import Session from "./pages/Session";
 import Settings from "./pages/Settings";
 import Stats from "./pages/Stats";
-import Session from "./pages/Session";
-import NotFound from "./pages/NotFound";
 
 function ProtectedRoute() {
-    const { user } = useAuthContext();
+    const { user, isLoading } = useAuthContext();
+
+    useEffect(() => {
+        console.log(isLoading);
+    }, [isLoading]);
+
+    if (isLoading) {
+        return <LoadingPage />;
+    }
+
     return user ? (
         <Layout>
             <Outlet />
@@ -28,7 +39,12 @@ function ProtectedRoute() {
 }
 
 function RedirectToDashboard() {
-    const { user } = useAuthContext();
+    const { user, isLoading } = useAuthContext();
+
+    if (isLoading) {
+        return <LoadingPage />;
+    }
+
     return <Navigate to={`/${user?.id}/dashboard`} replace />;
 }
 
