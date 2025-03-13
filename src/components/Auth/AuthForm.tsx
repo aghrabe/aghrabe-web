@@ -98,12 +98,13 @@ export default function AuthForm({ type, onSubmit }: Props) {
                 )}
 
                 <div className={"space-y-2"}>
-                    <Button type={"submit"} size={"large"} fullWidth>
-                        {isSubmitting ? (
-                            <LoadingSpinner color={"onPrimary"} />
-                        ) : (
-                            "Submit"
-                        )}
+                    <Button
+                        type={"submit"}
+                        size={"large"}
+                        loading={isSubmitting}
+                        fullWidth
+                    >
+                        Submit
                     </Button>
                     {type === "login" && (
                         <Button

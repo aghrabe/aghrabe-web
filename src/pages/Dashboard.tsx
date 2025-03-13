@@ -3,12 +3,14 @@ import Header from "../components/Header";
 import { useAuthContext } from "../context/AuthContext";
 
 export default function Dashboard() {
-    const { logout } = useAuthContext();
+    const { logout, isLoading } = useAuthContext();
 
     return (
         <div className={"w-full"}>
             <Header header={"Dashboard"}></Header>
-            <Button onClick={logout}>Logout</Button>
+            <Button onClick={logout} loading={isLoading}>
+                Logout
+            </Button>
         </div>
     );
 }

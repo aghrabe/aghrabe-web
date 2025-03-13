@@ -50,6 +50,12 @@ export default function AuthPage({ type }: AuthPageProps) {
 
         if (authError) {
             setError(authError.message);
+        } else {
+            if (type === "register") {
+                navigate("/check-email", {
+                    state: { email: (values as RegisterSchemaType).email },
+                });
+            }
         }
     }
 

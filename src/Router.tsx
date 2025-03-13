@@ -6,7 +6,6 @@ import {
     Routes,
 } from "react-router-dom";
 
-import { useEffect } from "react";
 import { useAuthContext } from "./context/AuthContext";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./pages/Layout";
@@ -17,13 +16,10 @@ import Register from "./pages/Register";
 import Session from "./pages/Session";
 import Settings from "./pages/Settings";
 import Stats from "./pages/Stats";
+import CheckEmail from "./pages/CheckEmail";
 
 function ProtectedRoute() {
     const { user, isLoading } = useAuthContext();
-
-    useEffect(() => {
-        console.log(isLoading);
-    }, [isLoading]);
 
     if (isLoading) {
         return <LoadingPage />;
@@ -61,6 +57,7 @@ export default function Router() {
                 </Route>
                 <Route path={"/login"} element={<Login />} />
                 <Route path={"/register"} element={<Register />} />
+                <Route path={"/check-email"} element={<CheckEmail />} />
                 <Route path={"*"} element={<NotFound />} />
             </Routes>
         </BrowserRouter>
