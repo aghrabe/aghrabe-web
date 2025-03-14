@@ -193,6 +193,93 @@
     --color-info-hover: #22d3ee;
 }
 
+/* Catppuccin Theme */
+.catppuccin {
+    --color-google-btn-bg: #ffffff;
+    --color-google-btn-text: #000000;
+    --color-google-btn-border: transparent;
+    --color-google-btn-hover-bg: #d1d5dc;
+    --color-google-btn-hover-border: transparent;
+
+    --color-background: #1e1e2e;
+    --color-on-background: #cdd6f4;
+    --color-on-background-varient: #bac2de;
+
+    --color-surface: #313244;
+    --color-on-surface: #ffffff;
+    --color-on-surface-varient: #a6adc8;
+
+    --color-outline: #6c7086;
+    --color-outline-variant: #9399b2;
+
+    --color-primary: #89b4fa;
+    --color-on-primary: #1e1e2e;
+    --color-primary-container: #1e40af;
+    --color-on-primary-container: #dbeafe;
+    --color-primary-hover: #74c7ec;
+
+    --color-error: #f38ba8;
+    --color-on-error: #ffffff;
+    --color-error-container: #450a0a;
+    --color-on-error-container: #fee2e2;
+    --color-error-hover: #eba0ac;
+
+    --color-success: #a6e3a1;
+    --color-on-success: #1e1e2e;
+    --color-success-container: #022c22;
+    --color-on-success-container: #d1fae5;
+    --color-success-hover: #94e2d5;
+
+    --color-info: #89dceb;
+    --color-on-info: #1e1e2e;
+    --color-info-container: #083344;
+    --color-on-info-container: #cffafe;
+    --color-info-hover: #74c7ec;
+}
+
+.tokyonight {
+    --color-google-btn-bg: #ffffff;
+    --color-google-btn-text: #000000;
+    --color-google-btn-border: transparent;
+    --color-google-btn-hover-bg: #d1d5dc;
+    --color-google-btn-hover-border: transparent;
+
+    --color-background: #1a1b26;
+    --color-on-background: #c0caf5;
+    --color-on-background-variant: #a9b1d6;
+
+    --color-surface: #292e42;
+    --color-on-surface: #ffffff;
+    --color-on-surface-variant: #565f89;
+
+    --color-outline: #737aa2;
+    --color-outline-variant: #545c7e;
+
+    --color-primary: #7aa2f7;
+    --color-on-primary: #1a1b26;
+    --color-primary-container: #3d59a1;
+    --color-on-primary-container: #dbeafe;
+    --color-primary-hover: #2ac3de;
+
+    --color-error: #f7768e;
+    --color-on-error: #ffffff;
+    --color-error-container: #450a0a;
+    --color-on-error-container: #fee2e2;
+    --color-error-hover: #db4b4b;
+
+    --color-success: #9ece6a;
+    --color-on-success: #1a1b26;
+    --color-success-container: #022c22;
+    --color-on-success-container: #d1fae5;
+    --color-success-hover: #73daca;
+
+    --color-info: #7dcfff;
+    --color-on-info: #1a1b26;
+    --color-info-container: #083344;
+    --color-on-info-container: #cffafe;
+    --color-info-hover: #0db9d7;
+}
+
 :root {
     --scroll-bg: transparent;
     --scroll-thumb: rgba(100, 100, 100, 0.3);

@@ -44,3 +44,9 @@ export interface User {
     id: string;
     email: string;
 }
+
+export interface Profile {
+    id: string;
+    email: string;
+    display_name: string;
+}
