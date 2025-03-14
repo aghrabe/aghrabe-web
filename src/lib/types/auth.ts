@@ -40,13 +40,7 @@ export const registerSchema = loginSchema
 export type LoginSchemaType = z.infer<typeof loginSchema>;
 export type RegisterSchemaType = z.infer<typeof registerSchema>;
 
-export interface User {
+export interface IUser {
     id: string;
     email: string;
-}
-
-export interface Profile {
-    id: string;
-    email: string;
-    display_name: string;
 }

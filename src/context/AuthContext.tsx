@@ -7,13 +7,13 @@ import {
     ERROR_MESSAGES,
 } from "../lib/constants/authErrors";
 import safeExecute from "../lib/safeExecute";
-import { User } from "../lib/types/auth";
+import { IUser } from "../lib/types/auth";
 import { ContextProviderProps } from "../lib/types/context";
 import supabase from "../services/supabaseClient";
 import ContextGenerator from "./ContextGenerator";
 
 interface IAuthContext {
-    user: User | null;
+    user: IUser | null;
     isLoading: boolean;
     signInWithGoogle(): Promise<AuthProviderError | OAuthResponse | null>;
     login: (
@@ -33,7 +33,7 @@ const { Provider, useContextValue: useAuthContext } =
     ContextGenerator<IAuthContext>("AuthContext");
 
 export default function AuthProvider({ children }: ContextProviderProps) {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<IUser | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     function normalizeAuthError(err: unknown): AuthProviderError {
