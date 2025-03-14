@@ -1,7 +1,9 @@
+import Header from "../components/Header";
+
 export default function Stats() {
     return (
         <>
-            <div className={"text-2xl font-bold"}>Stats</div>
+            <Header header={"Stats"}></Header>
         </>
     );
 }
