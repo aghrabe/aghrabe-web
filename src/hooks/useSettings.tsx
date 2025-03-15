@@ -33,10 +33,33 @@ export default function useSettings() {
         return data!;
     }, [user?.id]);
 
-    const { state: settingsState } = useQuery<ISettings>(
+    const { state: settingsState, refetch } = useQuery<ISettings>(
         `settings.${user?.id}`,
         getSettings,
     );
 
-    return { settingsState, errorMessage };
+    const updateSettings = useCallback(
+        async (newSettings: Partial<ISettings>): Promise<void> => {
+            if (!user?.id) return;
+
+            const [, error] = await safeExecute<void, Error>(async () => {
+                const result = await supabase
+                    .from("settings")
+                    .update(newSettings)
+                    .eq("user_id", user.id);
+
+                if (result.error) {
+                    throw result.error;
+                }
+            });
+
+            if (error) {
+                setErrorMessage(error.message);
+            }
+            refetch(true);
+        },
+        [refetch, user?.id],
+    );
+
+    return { settingsState, errorMessage, updateSettings };
 }
