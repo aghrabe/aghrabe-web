@@ -1,13 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 
+import useSettings from "../hooks/useSettings";
 import Button from "./Button";
 import CircularProgress from "./CircularProgress";
+import LoadingSpinner from "./LoadingSpinner";
 
 type TimerStatus = "idle" | "running" | "paused" | "ended";
 
 export default function SessionTracker() {
-    // TODO: fetch this on mount
-    const totalSeconds = 1 * 60;
+    const { settingsState, errorMessage } = useSettings();
+
+    const totalSeconds = settingsState.data?.session_limit_minutes
+        ? settingsState.data?.session_limit_minutes * 60
+        : 50 * 60;
 
     const [elapsed, setElapsed] = useState<number>(0);
     const [message, setMessage] = useState<string>("Enjoy the game!");
@@ -84,52 +89,62 @@ export default function SessionTracker() {
 
     return (
         <div className={"flex flex-col justify-center items-center gap-8"}>
-            <p className={"text-2xl font-medium text-on-background"}>
-                {message}
-            </p>
-            <CircularProgress
-                progress={progress}
-                text={timeString}
-                size={"large"}
-            />
-            <div className={"flex flex-col gap-4 min-h-[110px]"}>
-                {(status === "idle" || status === "ended") && (
-                    <Button
-                        onClick={handleStart}
-                        variant={"contained"}
-                        size={"medium"}
-                    >
-                        Start
-                    </Button>
-                )}
-                {status === "running" && (
-                    <Button
-                        onClick={handleStop}
-                        variant={"contained"}
-                        size={"medium"}
-                    >
-                        Stop
-                    </Button>
-                )}
-                {status === "paused" && (
-                    <>
-                        <Button
-                            onClick={handleContinue}
-                            variant={"contained"}
-                            size={"medium"}
-                        >
-                            Continue
-                        </Button>
-                        <Button
-                            onClick={handleEnd}
-                            variant={"outlined"}
-                            size={"medium"}
-                        >
-                            End
-                        </Button>
-                    </>
-                )}
-            </div>
+            {errorMessage && (
+                <p className={"text-2xl text-error"}>{errorMessage}</p>
+            )}
+            {settingsState.isLoading ? (
+                <LoadingSpinner size={"large"} />
+            ) : (
+                <>
+                    <p className={"text-2xl font-medium text-on-background"}>
+                        {message}
+                    </p>
+                    <CircularProgress
+                        progress={progress}
+                        text={timeString}
+                        size={"large"}
+                    />
+
+                    <div className={"flex flex-col gap-4 min-h-[110px]"}>
+                        {(status === "idle" || status === "ended") && (
+                            <Button
+                                onClick={handleStart}
+                                variant={"contained"}
+                                size={"medium"}
+                            >
+                                Start
+                            </Button>
+                        )}
+                        {status === "running" && (
+                            <Button
+                                onClick={handleStop}
+                                variant={"contained"}
+                                size={"medium"}
+                            >
+                                Stop
+                            </Button>
+                        )}
+                        {status === "paused" && (
+                            <>
+                                <Button
+                                    onClick={handleContinue}
+                                    variant={"contained"}
+                                    size={"medium"}
+                                >
+                                    Continue
+                                </Button>
+                                <Button
+                                    onClick={handleEnd}
+                                    variant={"outlined"}
+                                    size={"medium"}
+                                >
+                                    End
+                                </Button>
+                            </>
+                        )}
+                    </div>
+                </>
+            )}
         </div>
     );
 }
