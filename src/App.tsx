@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import Router from "./Router";
-import useSettings from "./hooks/useSettings";
+import { useTheme } from "./context/ThemeContext";
 
 function App() {
-    const { globalTheme } = useSettings();
+    const { globalTheme } = useTheme();
 
     useEffect(() => {
         console.log(globalTheme.toLowerCase());

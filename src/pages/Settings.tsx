@@ -102,6 +102,13 @@ export default function Settings() {
                         error={errors.break_duration_minutes?.message}
                     />
 
+                    <div className={"col-span-2 space-y-1"}>
+                        <label className={"block text-xl font-medium"}>
+                            Theme
+                        </label>
+                        <ThemeSelector />
+                    </div>
+
                     <div className={"flex items-center justify-between"}>
                         <label className={"block text-xl font-medium"}>
                             Notifications
@@ -113,10 +120,6 @@ export default function Settings() {
                             }
                             size={"medium"}
                         />
-                    </div>
-
-                    <div className={"col-span-2"}>
-                        <ThemeSelector />
                     </div>
 
                     <div className={"flex gap-4"}>

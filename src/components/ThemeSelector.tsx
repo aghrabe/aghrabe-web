@@ -1,26 +1,46 @@
-import useSettings from "../hooks/useSettings";
+import { useTheme } from "../context/ThemeContext";
 
 const availableThemes = [
     {
-        themeName: "Default",
-        colors: ["bg-surface", "text-on-surface", "bg-primary"],
+        themeName: "Light",
+        colors: [
+            "bg-[#ffffff]",
+            "bg-[#2563eb]",
+            "bg-[#dc2626]",
+            "bg-[#059669]",
+        ],
     },
     {
         themeName: "Dark",
-        colors: ["bg-surface", "text-on-surface", "bg-primary"],
+        colors: [
+            "bg-[#2d2d2d]",
+            "bg-[#3b82f6]",
+            "bg-[#10b981]",
+            "bg-[#ef4444]",
+        ],
     },
     {
         themeName: "Catppuccin",
-        colors: ["bg-surface", "text-on-surface", "bg-primary"],
+        colors: [
+            "bg-[#313244]",
+            "bg-[#89b4fa]",
+            "bg-[#f38ba8]",
+            "bg-[#a6e3a1]",
+        ],
     },
     {
         themeName: "Tokyonight",
-        colors: ["bg-surface", "text-on-surface", "bg-primary"],
+        colors: [
+            "bg-[#292e42]",
+            "bg-[#7aa2f7]",
+            "bg-[#f7768e]",
+            "bg-[#9ece6a]",
+        ],
     },
 ];
 
 export default function ThemeSelector() {
-    const { globalTheme, setGlobalTheme } = useSettings();
+    const { globalTheme, setGlobalTheme } = useTheme();
 
     return (
         <div className={"grid grid-cols-2 gap-4"}>
@@ -30,9 +50,9 @@ export default function ThemeSelector() {
                     className={`flex flex-col items-center border-[2px] ${
                         theme.themeName.toLowerCase() ===
                         globalTheme.toLowerCase()
-                            ? "border-accent"
-                            : "border-greytext"
-                    } rounded-md p-4 transition-opacity duration-150 ease-in-out hover:border-icon`}
+                            ? "border-primary"
+                            : "border-outline"
+                    } rounded-md p-4 transition-opacity duration-150 ease-in-out hover:border-icon cursor-pointer`}
                     onClick={() => setGlobalTheme(theme.themeName)}
                 >
                     <h4 className={"text-md md:text-lg"}>{theme.themeName}</h4>

@@ -1,22 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
-import safeExecute from "../lib/safeExecute";
-import supabase from "../services/supabaseClient";
-import { ISettings } from "../lib/types/settings";
-import useQuery from "./useQuery";
 import { useAuthContext } from "../context/AuthContext";
+import safeExecute from "../lib/safeExecute";
+import { ISettings } from "../lib/types/settings";
+import supabase from "../services/supabaseClient";
+import useQuery from "./useQuery";
 
 export default function useSettings() {
     const { user } = useAuthContext();
     const [errorMessage, setErrorMessage] = useState<string>("");
-
-    const [globalTheme, setGlobalTheme] = useState<string>(() => {
-        return localStorage.getItem("globalTheme") || "Default";
-    });
-
-    useEffect(() => {
-        localStorage.setItem("globalTheme", globalTheme);
-    }, [globalTheme]);
 
     const getSettings = useCallback(async (): Promise<ISettings> => {
         const [data, error] = await safeExecute<ISettings, Error>(async () => {
@@ -82,7 +74,5 @@ export default function useSettings() {
         settingsState,
         errorMessage,
         updateSettings,
-        globalTheme,
-        setGlobalTheme,
     };
 }
