@@ -14,16 +14,17 @@ import GoogleIcon from "../../assets/icons/GoogleIcon";
 import { OAuthResponse } from "@supabase/supabase-js";
 import { AuthProviderError } from "../../lib/constants/authErrors";
 
-interface LoginProps {
-    type: "login";
+interface AuthProps {
     onSubmit: (values: LoginSchemaType) => Promise<void>;
     onOAuth?: () => Promise<AuthProviderError | OAuthResponse | null>;
 }
 
-interface RegisterProps {
+interface LoginProps extends AuthProps {
+    type: "login";
+}
+
+interface RegisterProps extends AuthProps {
     type: "register";
-    onSubmit: (values: RegisterSchemaType) => Promise<void>;
-    onOAuth?: () => Promise<AuthProviderError | OAuthResponse | null>;
 }
 
 type Props = LoginProps | RegisterProps;

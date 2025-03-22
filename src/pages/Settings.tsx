@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import Button from "../components/Button";
@@ -43,8 +43,8 @@ export default function Settings() {
         }
     }, [settingsState.data, reset]);
 
-    function onSubmit(data: SettingsSchemaType) {
-        updateSettings(data);
+    async function onSubmit(data: SettingsSchemaType) {
+        await updateSettings(data);
     }
 
     return (
@@ -60,16 +60,14 @@ export default function Settings() {
                 <LoadingSpinner />
             ) : (
                 <form
-                    className={
-                        "max-w-md mx-auto bg-surface text-on-surface shadow rounded-lg p-6 space-y-6"
-                    }
+                    className={"text-on-background p-6 space-y-6"}
                     onSubmit={handleSubmit(onSubmit)}
                 >
-                    <div>
-                        <label className={"block text-sm font-medium"}>
+                    <div className={"space-y-1"}>
+                        <label className={"block text-xl font-medium"}>
                             Email
                         </label>
-                        <p className={"mt-1"}>{profileState.data?.email}</p>
+                        <p className={"text-xl"}>{profileState.data?.email}</p>
                     </div>
 
                     <InputField
@@ -104,7 +102,7 @@ export default function Settings() {
                     />
 
                     <div className={"flex items-center justify-between"}>
-                        <label className={"block text-sm font-medium"}>
+                        <label className={"block text-xl font-medium"}>
                             Notifications
                         </label>
                         <Switch

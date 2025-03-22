@@ -44,16 +44,15 @@ export default function Switch({ checked, onChange, size }: SwitchProps) {
     return (
         <label className="inline-flex items-center">
             <div
-                className={`relative inline-block transition duration-300 ease-in-out rounded-full cursor-pointer ${
-                    sizes[size].container
-                } ${checked ? "bg-primary-500" : "bg-outline"}`}
+                className={`relative inline-block transition duration-300 ease-in-out rounded-full cursor-pointer ${sizes[size].container
+                    } ${checked ? "bg-primary" : "bg-outline"}`}
             >
                 <button
-                    className={`absolute block bg-white rounded-full shadow-md cursor-pointer transition-transform duration-300 ease-in-out transform ${
-                        checked
+                    type={"button"}
+                    className={`absolute block bg-white rounded-full shadow-md cursor-pointer transition-transform duration-300 ease-in-out transform ${checked
                             ? "ltr:translate-x-full rtl:-translate-x-full border border-primary"
                             : "translate-x-0 border border-outline"
-                    } ${sizes[size].toggle}`}
+                        } ${sizes[size].toggle}`}
                     style={{
                         insetInlineStart: "0%",
                         insetInlineEnd: "auto",

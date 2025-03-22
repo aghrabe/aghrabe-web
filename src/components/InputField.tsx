@@ -10,7 +10,7 @@ export default function InputField({ error, label, id, ref, ...props }: Props) {
     return (
         <div className={"flex flex-col gap-2"}>
             {label && (
-                <label htmlFor={id} className={"block text-sm font-medium"}>
+                <label htmlFor={id} className={"block text-xl font-medium"}>
                     {label}
                 </label>
             )}

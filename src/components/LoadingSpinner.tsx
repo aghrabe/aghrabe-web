@@ -9,7 +9,7 @@ interface LoadingSpinnerProps {
 
 const sizeClasses = {
     small: "w-4 h-4",
-    medium: "w-6 h-6",
+    medium: "w-7 h-7",
     large: "w-10 h-10",
     xlarge: "w-14 h-14",
     xxlarge: "w-18 h-18",

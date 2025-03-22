@@ -100,25 +100,25 @@ export default function Button({
                 "inline-flex items-center justify-center",
                 fullWidth && "w-full",
                 !customColor &&
-                    variant === "contained" && [
-                        colors[color].contained.bg,
-                        colors[color].contained.text,
-                        colors[color].contained.hover,
-                        colors[color].contained.active,
-                        "shadow-md",
-                    ],
+                variant === "contained" && [
+                    colors[color].contained.bg,
+                    colors[color].contained.text,
+                    colors[color].contained.hover,
+                    colors[color].contained.active,
+                    "shadow-md",
+                ],
                 !customColor &&
-                    variant === "outlined" && [
-                        colors[color].outlined.border,
-                        colors[color].outlined.text,
-                        colors[color].outlined.hover,
-                        "border",
-                    ],
+                variant === "outlined" && [
+                    colors[color].outlined.border,
+                    colors[color].outlined.text,
+                    colors[color].outlined.hover,
+                    "border",
+                ],
                 !customColor &&
-                    variant === "text" && [
-                        colors[color].text.text,
-                        colors[color].text.hover,
-                    ],
+                variant === "text" && [
+                    colors[color].text.text,
+                    colors[color].text.hover,
+                ],
                 size === "small" && "px-6 py-2 text-sm",
                 size === "medium" && "px-8 py-2 text-lg",
                 size === "large" && "px-12 py-3 text-xl",
