@@ -10,26 +10,43 @@ export default function useProfile() {
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const getProfileData = useCallback(async (): Promise<IProfile> => {
-        const [data, error] = await safeExecute<IProfile, Error>(
-            async () => {
-                const result = await supabase
+        const [data, error] = await safeExecute<IProfile, Error>(async () => {
+            const result = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", user?.id)
+                .single();
+
+            if (result.error && result.error.code !== "PGRST116") {
+                // 'PGRST116' means no data found
+                throw result.error;
+            }
+
+            if (!result.data) {
+                const { error: insertError } = await supabase
                     .from("profiles")
-                    .select("*")
-                    .eq("id", user?.id)
+                    .insert({
+                        id: user?.id,
+                        email: user?.email,
+                        display_name: user?.email?.split("@")[0],
+                    })
                     .single();
 
-                // throw result.error letting safeExecute catch it
-                if (result.error) {
-                    throw result.error;
-                }
-                return result.data;
-            },
-            // INFO: we can write a custom error normalizer
-        );
+                if (insertError) throw insertError;
+
+                return {
+                    id: user?.id,
+                    email: user?.email,
+                    display_name: user?.email?.split("@")[0],
+                };
+            }
+
+            return result.data;
+        });
 
         if (error) setErrorMessage(error.message);
         return data!;
-    }, [user?.id]);
+    }, [user?.id, user?.email]);
 
     const { state: profileState } = useQuery<IProfile>(
         `profile.${user?.id}`,

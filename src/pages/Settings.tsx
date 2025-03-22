@@ -10,6 +10,7 @@ import Switch from "../components/Switch";
 import useProfile from "../hooks/useProfile";
 import useSettings from "../hooks/useSettings";
 import { settingsSchema, SettingsSchemaType } from "../lib/types/settings";
+import ThemeSelector from "../components/ThemeSelector";
 
 export default function Settings() {
     const { profileState, errorMessage: profileErrorMessage } = useProfile();
@@ -112,6 +113,10 @@ export default function Settings() {
                             }
                             size={"medium"}
                         />
+                    </div>
+
+                    <div className={"col-span-2"}>
+                        <ThemeSelector />
                     </div>
 
                     <div className={"flex gap-4"}>

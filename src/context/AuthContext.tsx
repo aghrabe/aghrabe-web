@@ -121,6 +121,7 @@ export default function AuthProvider({ children }: ContextProviderProps) {
             const err = error || result!.error;
             return err!;
         }
+
         await getUser();
     }
 
@@ -146,6 +147,7 @@ export default function AuthProvider({ children }: ContextProviderProps) {
             const err = error || result!.error;
             return err!;
         }
+
         await getUser();
     }
 

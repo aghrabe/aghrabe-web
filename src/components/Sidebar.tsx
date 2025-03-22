@@ -68,7 +68,7 @@ export default function Sidebar() {
     return (
         <aside
             className={
-                "flex flex-col items-center justify-between bg-surface px-2 py-6 max-w-16 min-w-16 text-outline-variant"
+                "hidden md:flex flex-col items-center justify-between bg-surface px-2 py-6 max-w-16 min-w-16 text-outline-variant"
             }
         >
             <div className="space-y-8">
