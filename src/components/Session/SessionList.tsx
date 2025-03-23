@@ -3,9 +3,13 @@ import SessionCard from "./SessionCard";
 
 interface SessionListProps {
     sessions: ISession[];
+    onSessionClick: (session: ISession) => void;
 }
 
-export default function SessionList({ sessions = [] }: SessionListProps) {
+export default function SessionList({
+    sessions,
+    onSessionClick,
+}: SessionListProps) {
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleString("en-US", {
@@ -25,6 +29,7 @@ export default function SessionList({ sessions = [] }: SessionListProps) {
                         key={session.id}
                         session={session}
                         formatDate={formatDate}
+                        onClick={() => onSessionClick(session)}
                     />
                 ))}
             </div>

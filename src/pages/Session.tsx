@@ -5,6 +5,8 @@ import Icon from "../components/Icon";
 import SessionList from "../components/Session/SessionList";
 import SessionTracker from "../components/Session/SessionTracker";
 import { ISession } from "../lib/types/sessions";
+import Modal from "../components/Modal";
+import Button from "../components/Button";
 
 export default function Session() {
     const gameTitles = [
@@ -125,6 +127,9 @@ export default function Session() {
     };
 
     const [sessions] = useState<ISession[]>(generateSessions());
+    const [selectedSession, setSelectedSession] = useState<ISession | null>(
+        null,
+    );
 
     return (
         <div className={"flex w-full h-full gap-8"}>
@@ -144,9 +149,57 @@ export default function Session() {
             >
                 <Header header={"History"} />
                 <div className={"overflow-y-auto h-[calc(100%-45px)]"}>
-                    <SessionList sessions={sessions} />
+                    <SessionList
+                        sessions={sessions}
+                        onSessionClick={setSelectedSession}
+                    />
                 </div>
             </div>
+
+            {selectedSession && (
+                <Modal isOpen={true} onClose={() => setSelectedSession(null)}>
+                    <div className={"p-4"}>
+                        <h2 className={"text-xl font-bold mb-4"}>
+                            Session Details
+                        </h2>
+                        <p>
+                            <span className={"font-medium"}>ID:</span>{" "}
+                            {selectedSession.id}
+                        </p>
+                        <p>
+                            <span className={"font-medium"}>Game:</span>{" "}
+                            {selectedSession.game_id}
+                        </p>
+                        <p>
+                            <span className={"font-medium"}>Started:</span>{" "}
+                            {new Date(
+                                selectedSession.start_time,
+                            ).toLocaleString()}
+                        </p>
+                        {selectedSession.end_time && (
+                            <p>
+                                <span className={"font-medium"}>Ended:</span>{" "}
+                                {new Date(
+                                    selectedSession.end_time,
+                                ).toLocaleString()}
+                            </p>
+                        )}
+                        <p>
+                            <span className={"font-medium"}>Duration:</span>{" "}
+                            {selectedSession.duration_minutes} minutes
+                        </p>
+                        <div className={"mt-4"}>
+                            <Button
+                                onClick={() => setSelectedSession(null)}
+                                variant={"contained"}
+                                fullWidth
+                            >
+                                Close
+                            </Button>
+                        </div>
+                    </div>
+                </Modal>
+            )}
         </div>
     );
 }

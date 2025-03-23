@@ -5,6 +5,34 @@
     /* font */
     --font-sans: "Inter", "system-ui", "sans-serif";
 
+    /* animations */
+    @keyframes modalOpen {
+        0% {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes modalClose {
+        0% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        100% {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+    }
+
+    --animate-modal-open: modalOpen 0.3s forwards;
+    --animate-modal-close: modalClose 0.3s forwards;
+
     /* Background Colors */
     --color-background: #f3f4f6;
     --color-on-background: #364153;

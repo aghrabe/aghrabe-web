@@ -1,5 +1,6 @@
+import { Link } from "react-router-dom";
 import { ISession } from "../../lib/types/sessions";
-import { Clock, Calendar, GamepadIcon as GameController } from "lucide-react";
+import { Clock, Calendar, Gamepad2 as GameController } from "lucide-react";
 
 interface RowProps {
     icon: React.ElementType;
@@ -10,6 +11,7 @@ interface RowProps {
 interface Props {
     session: ISession;
     formatDate: (date: string) => string;
+    onClick?: () => void;
 }
 
 function Row({ icon: Icon, label, value }: RowProps) {
@@ -23,9 +25,11 @@ function Row({ icon: Icon, label, value }: RowProps) {
     );
 }
 
-export default function SessionCard({ session, formatDate }: Props) {
+export default function SessionCard({ session, formatDate, onClick }: Props) {
     return (
-        <div
+        <Link
+            to={"#"}
+            onClick={onClick}
             className={
                 "bg-surface text-on-surface rounded-lg shadow-md transition-all duration-200 ease-in-out hover:translate-y-[-4px] hover:shadow-lg cursor-pointer"
             }
@@ -40,28 +44,28 @@ export default function SessionCard({ session, formatDate }: Props) {
                 <div className={"flex flex-col space-y-3"}>
                     <Row
                         icon={GameController}
-                        label="Game"
+                        label={"Game"}
                         value={session.game_id}
                     />
                     <Row
                         icon={Calendar}
-                        label="Started"
+                        label={"Started"}
                         value={formatDate(session.start_time)}
                     />
                     {session.end_time && (
                         <Row
                             icon={Calendar}
-                            label="Ended"
+                            label={"Ended"}
                             value={formatDate(session.end_time)}
                         />
                     )}
                     <Row
                         icon={Clock}
-                        label="Duration"
+                        label={"Duration"}
                         value={`${session.duration_minutes} minutes`}
                     />
                 </div>
             </div>
-        </div>
+        </Link>
     );
 }
