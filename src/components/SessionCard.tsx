@@ -1,4 +1,4 @@
-import { ISession } from "../../lib/types/sessions";
+import { ISession } from "../lib/types/sessions";
 import { Clock, Calendar, GamepadIcon as GameController } from "lucide-react";
 
 interface RowProps {

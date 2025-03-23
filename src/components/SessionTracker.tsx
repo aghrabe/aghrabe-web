@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 
-import useSettings from "../../hooks/useSettings";
-import Button from "../Button";
-import CircularProgress from "../CircularProgress";
-import LoadingSpinner from "../LoadingSpinner";
+import useSettings from "../hooks/useSettings";
+import Button from "./Button";
+import CircularProgress from "./CircularProgress";
+import LoadingSpinner from "./LoadingSpinner";
 
 type TimerStatus = "idle" | "running" | "paused" | "ended";
 

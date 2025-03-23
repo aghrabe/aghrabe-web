@@ -1,5 +1,5 @@
-import { ISession } from "../../lib/types/sessions";
-import SessionCard from "./Session/SessionCardd";
+import { ISession } from "../lib/types/sessions";
+import SessionCard from "./SessionCard";
 
 interface SessionListProps {
     sessions: ISession[];

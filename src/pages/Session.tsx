@@ -124,7 +124,7 @@ export default function Session() {
         });
     };
 
-    const [sessions, setSessions] = useState<ISession[]>(generateSessions());
+    const [sessions] = useState<ISession[]>(generateSessions());
 
     return (
         <div className={"flex w-full h-full gap-8"}>
