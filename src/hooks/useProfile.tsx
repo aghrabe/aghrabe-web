@@ -51,6 +51,7 @@ export default function useProfile() {
     const { state: profileState } = useQuery<IProfile>(
         `profile.${user?.id}`,
         getProfileData,
+        30 * 60 * 1000, // 30 min
     );
 
     return { profileState, errorMessage };

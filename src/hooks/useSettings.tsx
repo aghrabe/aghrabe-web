@@ -45,6 +45,7 @@ export default function useSettings() {
     const { state: settingsState, refetch } = useQuery<ISettings>(
         `settings.${user?.id}`,
         getSettings,
+        30 * 60 * 1000, // 30 min
     );
 
     const updateSettings = useCallback(

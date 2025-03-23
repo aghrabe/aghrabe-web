@@ -15,8 +15,8 @@ const availableThemes = [
         colors: [
             "bg-[#2d2d2d]",
             "bg-[#3b82f6]",
-            "bg-[#10b981]",
             "bg-[#ef4444]",
+            "bg-[#10b981]",
         ],
     },
     {
@@ -46,6 +46,7 @@ export default function ThemeSelector() {
         <div className={"grid grid-cols-2 gap-4"}>
             {availableThemes.map((theme) => (
                 <button
+                    type={"button"}
                     key={theme.themeName}
                     className={`flex flex-col items-center border-[2px] ${
                         theme.themeName.toLowerCase() ===
