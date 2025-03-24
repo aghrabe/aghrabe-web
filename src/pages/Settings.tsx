@@ -123,7 +123,11 @@ export default function Settings() {
                             onChange={(checked) =>
                                 setValue("notifications_enabled", checked)
                             }
-                            size={"medium"}
+                            size={
+                                width < TAILWIND_BREAKPOINTS.md
+                                    ? "medium"
+                                    : "large"
+                            }
                         />
                     </div>
 

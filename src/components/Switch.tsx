@@ -28,16 +28,16 @@ interface SwitchProps {
 export default function Switch({ checked, onChange, size }: SwitchProps) {
     const sizes = {
         small: {
-            container: "w-8 h-4",
-            toggle: "w-4 h-4",
+            container: "w-10 h-5",
+            toggle: "w-5 h-5",
         },
         medium: {
             container: "w-12 h-6",
             toggle: "w-6 h-6",
         },
         large: {
-            container: "w-16 h-8",
-            toggle: "w-8 h-8",
+            container: "w-14 h-7",
+            toggle: "w-7 h-7",
         },
     };
 

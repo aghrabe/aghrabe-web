@@ -25,8 +25,13 @@ function Row({ icon: Icon, label, value }: RowProps) {
                 size={width < TAILWIND_BREAKPOINTS.md ? 18 : 19}
                 className={"text-on-background-variant"}
             />
-            <span className={"text-sm md:text-base text-on-background-variant"}>
-                {label}: <span className={"text-on-surface"}>{value}</span>
+            <span
+                className={
+                    "text-sm font-bold md:text-base text-on-background-variant"
+                }
+            >
+                {label}:{" "}
+                <span className={"text-on-surface font-normal"}>{value}</span>
             </span>
         </div>
     );

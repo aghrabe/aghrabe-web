@@ -25,14 +25,18 @@ export default function SessionTracker() {
     }
 
     return (
-        <div className={"flex flex-col justify-center items-center gap-8"}>
+        <div
+            className={
+                "flex flex-col justify-center items-center gap-6 md:gap-8"
+            }
+        >
             {errorMessage && (
                 <p className={"text-xl md:text-2xl text-error"}>
                     {errorMessage}
                 </p>
             )}
 
-            <p className={"text-xl md:text-2xl font-medium text-on-background"}>
+            <p className={"text-lg md:text-2xl font-medium text-on-background"}>
                 {message}
             </p>
             <CircularProgress
