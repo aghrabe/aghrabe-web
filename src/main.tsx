@@ -5,15 +5,18 @@ import "./index.css";
 import AuthProvider from "./context/AuthContext.tsx";
 import { ThemeProvider } from "./context/ThemeContext.tsx";
 import { SessionProvider } from "./context/SessionContext.tsx";
+import { BreakpointProvider } from "./context/BreakpointContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
-        <ThemeProvider>
-            <AuthProvider>
-                <SessionProvider>
-                    <App />
-                </SessionProvider>
-            </AuthProvider>
-        </ThemeProvider>
+        <BreakpointProvider>
+            <ThemeProvider>
+                <AuthProvider>
+                    <SessionProvider>
+                        <App />
+                    </SessionProvider>
+                </AuthProvider>
+            </ThemeProvider>
+        </BreakpointProvider>
     </StrictMode>,
 );

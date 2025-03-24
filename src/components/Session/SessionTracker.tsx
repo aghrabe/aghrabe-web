@@ -1,3 +1,4 @@
+import { useBreakpoint } from "../../context/BreakpointContext";
 import { useSession } from "../../context/SessionContext";
 import useSettings from "../../hooks/useSettings";
 import Button from "../Button";
@@ -16,6 +17,7 @@ export default function SessionTracker() {
         continueSession,
         endSession,
     } = useSession();
+    const { width } = useBreakpoint();
 
     if (settingsState.isLoading || !settingsState.data?.session_limit_minutes) {
         return <LoadingSpinner size={"large"} />;
@@ -33,7 +35,7 @@ export default function SessionTracker() {
             <CircularProgress
                 progress={progress}
                 text={timeString}
-                size={"large"}
+                size={width < 1000 ? "medium" : "large"}
             />
 
             <div className={"flex flex-col gap-4 min-h-[110px]"}>

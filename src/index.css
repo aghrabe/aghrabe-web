@@ -75,101 +75,11 @@
     --color-on-info-container: #155e75;
     --color-info-hover: #0e7490;
 
-    /* Primary Color Palette */
-    --color-primary-100: #dbeafe;
-    --color-primary-200: #bfdbfe;
-    --color-primary-300: #93c5fd;
-    --color-primary-400: #60a5fa;
-    --color-primary-500: #3b82f6;
-    --color-primary-600: #2563eb;
-    --color-primary-700: #1d4ed8;
-    --color-primary-800: #1e40af;
-    --color-primary-900: #1e3a8a;
-    --color-primary-950: #172554;
-
-    /*--color-primary-50: #eef2ff;*/
-    /*--color-primary-100: #e0e7ff;*/
-    /*--color-primary-200: #c6d2ff;*/
-    /*--color-primary-300: #a3b3ff;*/
-    /*--color-primary-400: #7c86ff;*/
-    /*--color-primary-500: #615fff;*/
-    /*--color-primary-600: #4f39f6;*/
-    /*--color-primary-700: #432dd7;*/
-    /*--color-primary-800: #372aac;*/
-    /*--color-primary-900: #312c85;*/
-    /*--color-primary-950: #1e1a4d;*/
-
-    /* Success Color Palette */
-    --color-success-100: #d1fae5;
-    --color-success-200: #a7f3d0;
-    --color-success-300: #6ee7b7;
-    --color-success-400: #34d399;
-    --color-success-500: #10b981;
-    --color-success-600: #059669;
-    --color-success-700: #047857;
-    --color-success-800: #065f46;
-    --color-success-900: #064e3b;
-    --color-success-950: #022c22;
-
-    /*--color-success-50: #ecfdf5;*/
-    /*--color-success-100: #d0fae5;*/
-    /*--color-success-200: #a4f4cf;*/
-    /*--color-success-300: #5ee9b5;*/
-    /*--color-success-400: #00d492;*/
-    /*--color-success-500: #00bc7d;*/
-    /*--color-success-600: #009966;*/
-    /*--color-success-700: #007a55;*/
-    /*--color-success-800: #006045;*/
-    /*--color-success-900: #004f3b;*/
-    /*--color-success-950: #002c22;*/
-
-    /* Error Color Palette */
-    --color-error-100: #fee2e2;
-    --color-error-200: #fecaca;
-    --color-error-300: #fca5a5;
-    --color-error-400: #f87171;
-    --color-error-500: #ef4444;
-    --color-error-600: #dc2626;
-    --color-error-700: #b91c1c;
-    --color-error-800: #991b1b;
-    --color-error-900: #7f1d1d;
-    --color-error-950: #450a0a;
-
-    /*--color-error-50: #fdf2f8;*/
-    /*--color-error-100: #fce7f3;*/
-    /*--color-error-200: #fccee8;*/
-    /*--color-error-300: #fda5d5;*/
-    /*--color-error-400: #fb64b6;*/
-    /*--color-error-500: #f6339a;*/
-    /*--color-error-600: #e60076;*/
-    /*--color-error-700: #c6005c;*/
-    /*--color-error-800: #a3004c;*/
-    /*--color-error-900: #861043;*/
-    /*--color-error-950: #510424;*/
-
-    /* Info Color Palette */
-    --color-info-100: #cffafe;
-    --color-info-200: #a5f3fc;
-    --color-info-300: #67e8f9;
-    --color-info-400: #22d3ee;
-    --color-info-500: #06b6d4;
-    --color-info-600: #0891b2;
-    --color-info-700: #0e7490;
-    --color-info-800: #155e75;
-    --color-info-900: #164e63;
-    --color-info-950: #083344;
-
-    /*--color-info-50: #ecfeff;*/
-    /*--color-info-100: #cefafe;*/
-    /*--color-info-200: #a2f4fd;*/
-    /*--color-info-300: #53eafd;*/
-    /*--color-info-400: #00d3f2;*/
-    /*--color-info-500: #00b8db;*/
-    /*--color-info-600: #0092b8;*/
-    /*--color-info-700: #007595;*/
-    /*--color-info-800: #005f78;*/
-    /*--color-info-900: #104e64;*/
-    /*--color-info-950: #053345;*/
+    --color-mood-red: #dc2626;
+    --color-mood-orange: #f97316;
+    --color-mood-yellow: #facc15;
+    --color-mood-blue: #2563eb;
+    --color-mood-green: #059669;
 
     --color-google-btn-bg: #ffffff;
     --color-google-btn-text: #000000;
@@ -180,12 +90,6 @@
 
 /* Manual Dark Mode */
 .dark {
-    --color-google-btn-bg: #ffffff;
-    --color-google-btn-text: #000000;
-    --color-google-btn-border: transparent;
-    --color-google-btn-hover-bg: #d1d5dc;
-    --color-google-btn-hover-border: transparent;
-
     --color-background: #1a1a1a;
     --color-on-background: #e0e0e0;
     --color-on-background-varient: #b0b0b0;
@@ -220,16 +124,22 @@
     --color-info-container: #083344;
     --color-on-info-container: #cffafe;
     --color-info-hover: #22d3ee;
-}
 
-/* Catppuccin Theme */
-.catppuccin {
+    --color-mood-red: #ef4444;
+    --color-mood-orange: #f97316;
+    --color-mood-yellow: #facc15;
+    --color-mood-blue: #3b82f6;
+    --color-mood-green: #10b981;
+
     --color-google-btn-bg: #ffffff;
     --color-google-btn-text: #000000;
     --color-google-btn-border: transparent;
     --color-google-btn-hover-bg: #d1d5dc;
     --color-google-btn-hover-border: transparent;
+}
 
+/* Catppuccin Theme */
+.catppuccin {
     --color-background: #1e1e2e;
     --color-on-background: #cdd6f4;
     --color-on-background-varient: #bac2de;
@@ -264,15 +174,21 @@
     --color-info-container: #083344;
     --color-on-info-container: #cffafe;
     --color-info-hover: #74c7ec;
-}
 
-.tokyonight {
+    --color-mood-red: #f38ba8;
+    --color-mood-orange: #f5a97f;
+    --color-mood-yellow: #f9e2af;
+    --color-mood-blue: #89b4fa;
+    --color-mood-green: #a6e3a1;
+
     --color-google-btn-bg: #ffffff;
     --color-google-btn-text: #000000;
     --color-google-btn-border: transparent;
     --color-google-btn-hover-bg: #d1d5dc;
     --color-google-btn-hover-border: transparent;
+}
 
+.tokyonight {
     --color-background: #1a1b26;
     --color-on-background: #c0caf5;
     --color-on-background-variant: #a9b1d6;
@@ -307,6 +223,18 @@
     --color-info-container: #083344;
     --color-on-info-container: #cffafe;
     --color-info-hover: #0db9d7;
+
+    --color-mood-red: #f7768e;
+    --color-mood-orange: #ff9e64;
+    --color-mood-yellow: #e0af68;
+    --color-mood-blue: #7aa2f7;
+    --color-mood-green: #9ece6a;
+
+    --color-google-btn-bg: #ffffff;
+    --color-google-btn-text: #000000;
+    --color-google-btn-border: transparent;
+    --color-google-btn-hover-bg: #d1d5dc;
+    --color-google-btn-hover-border: transparent;
 }
 
 :root {

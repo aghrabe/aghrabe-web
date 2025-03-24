@@ -7,7 +7,7 @@ interface Props {
 
 export default function Layout({ children }: Props) {
     return (
-        <div className={"flex min-h-screen"}>
+        <div className={"flex h-full"}>
             <Sidebar />
             <main className={"w-full h-screen box-border py-6 px-8"}>
                 {children}

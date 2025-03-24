@@ -19,7 +19,7 @@ export default function CircularProgress({
 }: CircularProgressProps) {
     const defaultSizes = {
         small: { diameter: 100, strokeWidth: 6, textClass: "text-sm" },
-        medium: { diameter: 200, strokeWidth: 8, textClass: "text-2xl" },
+        medium: { diameter: 320, strokeWidth: 8, textClass: "text-4xl" },
         large: { diameter: 400, strokeWidth: 12, textClass: "text-5xl" },
     };
 

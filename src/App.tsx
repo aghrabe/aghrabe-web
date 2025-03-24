@@ -1,7 +1,10 @@
 import Router from "./Router";
 import { useTheme } from "./context/ThemeContext";
+import useWidowWidth from "./hooks/useWindowWidth";
 
 function App() {
+    useWidowWidth();
+
     const { globalTheme } = useTheme();
 
     return (
