@@ -70,7 +70,7 @@ export default function SessionDetailsModal({
         <Modal isOpen={true} onClose={onClose}>
             <div
                 className={
-                    "max-h-[80vh] space-y-4 md:space-y-6 overflow-y-auto p-6"
+                    "max-h-[80vh] space-y-4 md:space-y-6 overflow-y-auto p-0 md:p-6"
                 }
             >
                 <div className={"flex items-center justify-between"}>
