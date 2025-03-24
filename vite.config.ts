@@ -17,7 +17,7 @@ export default defineConfig({
                 name: "Aghrabe",
                 short_name: "Aghrabe",
                 description: "Mindful gaming tracker",
-                theme_color: cssVars["--color-primary"] || "#2563eb",
+                theme_color: cssVars["--color-primary"] || "#000000",
                 background_color: cssVars["--color-background"] || "#ffffff",
                 display: "standalone",
                 start_url: "/",
