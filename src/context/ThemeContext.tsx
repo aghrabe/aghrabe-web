@@ -6,14 +6,10 @@ interface ThemeContextType {
     setGlobalTheme: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const { Provider: ThemeProvider, useContextValue: useTheme } =
+const { Provider, useContextValue: useTheme } =
     ContextGenerator<ThemeContextType>("Theme");
 
-export function ThemeContextProvider({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const [globalTheme, setGlobalTheme] = useState<string>(() => {
         return localStorage.getItem("globalTheme") || "Light";
     });
@@ -23,9 +19,7 @@ export function ThemeContextProvider({
     }, [globalTheme]);
 
     return (
-        <ThemeProvider value={{ globalTheme, setGlobalTheme }}>
-            {children}
-        </ThemeProvider>
+        <Provider value={{ globalTheme, setGlobalTheme }}>{children}</Provider>
     );
 }
 

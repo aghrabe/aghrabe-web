@@ -28,7 +28,7 @@ function Row({ icon: Icon, label, value }: RowProps) {
 export default function SessionCard({ session, formatDate, onClick }: Props) {
     return (
         <Link
-            to={"#"}
+            to={`?card=${session.id}`}
             onClick={onClick}
             className={
                 "bg-surface text-on-surface rounded-lg shadow-md transition-all duration-200 ease-in-out hover:translate-y-[-4px] hover:shadow-lg cursor-pointer"

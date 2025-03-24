@@ -7,6 +7,7 @@ import SessionTracker from "../components/Session/SessionTracker";
 import { ISession } from "../lib/types/sessions";
 import Modal from "../components/Modal";
 import Button from "../components/Button";
+import { useNavigate } from "react-router-dom";
 
 export default function Session() {
     const gameTitles = [
@@ -130,6 +131,12 @@ export default function Session() {
     const [selectedSession, setSelectedSession] = useState<ISession | null>(
         null,
     );
+    const navigate = useNavigate();
+
+    function handleModalClose() {
+        setSelectedSession(null);
+        navigate("");
+    }
 
     return (
         <div className={"flex w-full h-full gap-8"}>
@@ -157,7 +164,7 @@ export default function Session() {
             </div>
 
             {selectedSession && (
-                <Modal isOpen={true} onClose={() => setSelectedSession(null)}>
+                <Modal isOpen={true} onClose={handleModalClose}>
                     <div className={"p-4"}>
                         <h2 className={"text-xl font-bold mb-4"}>
                             Session Details
