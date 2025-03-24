@@ -119,7 +119,7 @@ export default function Button({
                     colors[color].text.text,
                     colors[color].text.hover,
                 ],
-                size === "small" && "px-6 py-2 text-sm",
+                size === "small" && "px-6 py-2 text-base",
                 size === "medium" && "px-8 py-2 text-lg",
                 size === "large" && "px-12 py-3 text-xl",
                 className,

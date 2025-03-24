@@ -1,5 +1,6 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import ContextGenerator from "./ContextGenerator";
+import { TAILWIND_BREAKPOINTS } from "../lib/constants/tailwind";
 
 interface BreakpointContextType {
     width: number;
@@ -11,20 +12,12 @@ export const { Provider, useContextValue: useBreakpoint } =
     ContextGenerator<BreakpointContextType>("Breakpoint");
 
 function getBreakpoint(width: number): string {
-    switch (true) {
-        case width < 640:
-            return "xs";
-        case width < 768:
-            return "sm";
-        case width < 1024:
-            return "md";
-        case width < 1280:
-            return "lg";
-        case width < 1536:
-            return "xl";
-        default:
-            return "2xl";
-    }
+    if (width >= TAILWIND_BREAKPOINTS["2xl"]) return "2xl";
+    if (width >= TAILWIND_BREAKPOINTS.xl) return "xl";
+    if (width >= TAILWIND_BREAKPOINTS.lg) return "lg";
+    if (width >= TAILWIND_BREAKPOINTS.md) return "md";
+    if (width >= TAILWIND_BREAKPOINTS.sm) return "sm";
+    return "xs";
 }
 
 export const BreakpointProvider: React.FC<{ children: ReactNode }> = ({

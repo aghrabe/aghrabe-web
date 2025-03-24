@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 import { useAuthContext } from "../context/AuthContext";
-import safeExecute from "../lib/safeExecute";
+import safeExecute from "../lib/utils/safeExecute";
 import { ISession } from "../lib/types/sessions";
 import supabase from "../services/supabaseClient";
 import useQuery from "./useQuery";

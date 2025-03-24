@@ -6,7 +6,7 @@ import {
     BaseError,
     ERROR_MESSAGES,
 } from "../lib/constants/authErrors";
-import safeExecute from "../lib/safeExecute";
+import safeExecute from "../lib/utils/safeExecute";
 import { IUser } from "../lib/types/auth";
 import { ContextProviderProps } from "../lib/types/context";
 import supabase from "../services/supabaseClient";

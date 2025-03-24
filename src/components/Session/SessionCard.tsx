@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { ISession } from "../../lib/types/sessions";
 import { Clock, Calendar, Gamepad2 as GameController } from "lucide-react";
+import { useBreakpoint } from "../../context/BreakpointContext";
+import { TAILWIND_BREAKPOINTS } from "../../lib/constants/tailwind";
 
 interface RowProps {
     icon: React.ElementType;
@@ -15,10 +17,15 @@ interface Props {
 }
 
 function Row({ icon: Icon, label, value }: RowProps) {
+    const { width } = useBreakpoint();
+
     return (
         <div className={"flex items-center gap-2"}>
-            <Icon size={18} className={"text-on-background-variant"} />
-            <span className={"text-sm text-on-background-variant"}>
+            <Icon
+                size={width < TAILWIND_BREAKPOINTS.md ? 18 : 19}
+                className={"text-on-background-variant"}
+            />
+            <span className={"text-sm md:text-base text-on-background-variant"}>
                 {label}: <span className={"text-on-surface"}>{value}</span>
             </span>
         </div>
@@ -35,7 +42,7 @@ export default function SessionCard({ session, formatDate, onClick }: Props) {
             }
         >
             <div className={"p-4"}>
-                <h3 className={"font-bold text-lg"}>
+                <h3 className={"font-bold text-base md:text-lg"}>
                     Session {session.id.substring(0, 8)}...
                 </h3>
 

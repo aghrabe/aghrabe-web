@@ -12,6 +12,7 @@ import useSettings from "../hooks/useSettings";
 import { settingsSchema, SettingsSchemaType } from "../lib/types/settings";
 import ThemeSelector from "../components/ThemeSelector";
 import { useBreakpoint } from "../context/BreakpointContext";
+import { TAILWIND_BREAKPOINTS } from "../lib/constants/tailwind";
 
 export default function Settings() {
     const { profileState, errorMessage: profileErrorMessage } = useProfile();
@@ -132,7 +133,11 @@ export default function Settings() {
                             variant={"contained"}
                             disabled={isSubmitting}
                             loading={isSubmitting}
-                            size={width < 1000 ? "small" : "medium"}
+                            size={
+                                width < TAILWIND_BREAKPOINTS.md
+                                    ? "small"
+                                    : "medium"
+                            }
                             fullWidth
                         >
                             Save Changes

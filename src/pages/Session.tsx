@@ -10,12 +10,15 @@ import SessionTracker from "../components/Session/SessionTracker";
 import SessionDetailsModal from "../components/SessionDetailModal";
 import useSessions from "../hooks/useSessions";
 import type { ISession } from "../lib/types/sessions";
+import { useBreakpoint } from "../context/BreakpointContext";
+import { TAILWIND_BREAKPOINTS } from "../lib/constants/tailwind";
 
 export default function Session() {
     const { sessionsState } = useSessions();
     const [selectedSession, setSelectedSession] = useState<ISession | null>(
         null,
     );
+    const { width } = useBreakpoint();
     const navigate = useNavigate();
 
     function handleModalClose() {
@@ -49,12 +52,12 @@ export default function Session() {
                     </Icon>
                 </Header>
                 <SessionTracker />
-                <div></div>
+                {width > TAILWIND_BREAKPOINTS.md && <div></div>}
             </div>
 
             <div
                 className={
-                    "flex h-full flex-1 flex-col gap-4 border-t-2 border-outline pt-12 pb-4 md:pt-0 md:px-6 md:basis-2/5 md:border-l-2 md:border-t-0"
+                    "flex h-full flex-1 flex-col gap-4 border-t-2 border-outline py-4 md:pt-0 md:px-6 md:basis-2/5 md:border-l-2 md:border-t-0"
                 }
             >
                 <Header header={"History"} />

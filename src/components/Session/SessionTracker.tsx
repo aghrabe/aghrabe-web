@@ -1,6 +1,7 @@
 import { useBreakpoint } from "../../context/BreakpointContext";
 import { useSession } from "../../context/SessionContext";
 import useSettings from "../../hooks/useSettings";
+import { TAILWIND_BREAKPOINTS } from "../../lib/constants/tailwind";
 import Button from "../Button";
 import CircularProgress from "../CircularProgress";
 import LoadingSpinner from "../LoadingSpinner";
@@ -37,15 +38,19 @@ export default function SessionTracker() {
             <CircularProgress
                 progress={progress}
                 text={timeString}
-                size={width < 1000 ? "medium" : "large"}
+                size={width < TAILWIND_BREAKPOINTS.md ? "medium" : "large"}
             />
 
-            <div className={"flex flex-col gap-4 min-h-[110px]"}>
+            <div
+                className={"flex flex-col gap-4 min-h-[60px] md:min-h-[110px]"}
+            >
                 {(status === "idle" || status === "ended") && (
                     <Button
                         onClick={startSession}
                         variant={"contained"}
-                        size={"medium"}
+                        size={
+                            width < TAILWIND_BREAKPOINTS.md ? "small" : "medium"
+                        }
                     >
                         Start
                     </Button>
@@ -54,7 +59,9 @@ export default function SessionTracker() {
                     <Button
                         onClick={stopSession}
                         variant={"contained"}
-                        size={"medium"}
+                        size={
+                            width < TAILWIND_BREAKPOINTS.md ? "small" : "medium"
+                        }
                     >
                         Stop
                     </Button>
@@ -64,14 +71,23 @@ export default function SessionTracker() {
                         <Button
                             onClick={continueSession}
                             variant={"contained"}
-                            size={"medium"}
+                            size={
+                                width < TAILWIND_BREAKPOINTS.md
+                                    ? "small"
+                                    : "medium"
+                            }
                         >
                             Continue
                         </Button>
                         <Button
                             onClick={endSession}
                             variant={"outlined"}
-                            size={"medium"}
+                            size={
+                                width < TAILWIND_BREAKPOINTS.md
+                                    ? "small"
+                                    : "medium"
+                            }
+                            className={`${width < TAILWIND_BREAKPOINTS.md ? "mb-4" : ""}`}
                         >
                             End
                         </Button>
