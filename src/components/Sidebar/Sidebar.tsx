@@ -1,16 +1,16 @@
 import { ComponentType } from "react";
 import { Link, useLocation } from "react-router-dom";
-import avatar from "../assets/photo_2023-04-19_07-10-35.jpg";
+import avatar from "../../assets/photo_2023-04-19_07-10-35.jpg";
 
-import HomeIcon from "../assets/icons/HomeIcon";
-import SessionIcon from "../assets/icons/SessionIcon";
-import SettingsIcon from "../assets/icons/SettingsIcon";
-import StatsIcon from "../assets/icons/StatsIcon";
-import { useAuthContext } from "../context/AuthContext";
-import Icon from "./Icon";
-import IconGroup from "./IconGroup";
-import SyncIcon from "../assets/icons/SyncIcon";
-import Button from "./Button";
+import HomeIcon from "../../assets/icons/HomeIcon";
+import SessionIcon from "../../assets/icons/SessionIcon";
+import SettingsIcon from "../../assets/icons/SettingsIcon";
+import StatsIcon from "../../assets/icons/StatsIcon";
+import { useAuthContext } from "../../context/AuthContext";
+import Icon from "../Icon";
+import IconGroup from "../IconGroup";
+import SyncIcon from "../../assets/icons/SyncIcon";
+import Button from "../Button";
 
 interface NavItem {
     name: string;
