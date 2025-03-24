@@ -1,8 +1,8 @@
+import { useSession } from "../../context/SessionContext";
 import useSettings from "../../hooks/useSettings";
 import Button from "../Button";
 import CircularProgress from "../CircularProgress";
 import LoadingSpinner from "../LoadingSpinner";
-import { useSession } from "../../context/SessionContext";
 
 export default function SessionTracker() {
     const { settingsState, errorMessage } = useSettings();

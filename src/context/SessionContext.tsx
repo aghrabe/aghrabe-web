@@ -90,6 +90,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     }, [status, totalSeconds]);
 
     function startSession() {
+        // TODO: send a notification if total limit reached and don't allow the startSession process
         setElapsed(0);
         setMessage("Enjoy the game!");
         setStatus("running");
@@ -117,6 +118,8 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         }
         localStorage.removeItem("sessionElapsed");
         localStorage.removeItem("sessionStatus");
+        // TODO: send notification
+        // TODO: save session data to db
     }
 
     return (

@@ -197,7 +197,7 @@ export default function Session() {
                         </p>
                         <div className={"mt-4"}>
                             <Button
-                                onClick={() => setSelectedSession(null)}
+                                onClick={handleModalClose}
                                 variant={"contained"}
                                 fullWidth
                             >
