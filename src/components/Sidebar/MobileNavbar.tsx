@@ -13,7 +13,7 @@ interface NavItem {
     IconComponent: ComponentType;
 }
 
-export default function MobileSidebar() {
+export default function MobileNavbar() {
     const { user } = useAuthContext();
     const location = useLocation();
 
