@@ -11,6 +11,7 @@ import useProfile from "../hooks/useProfile";
 import useSettings from "../hooks/useSettings";
 import { settingsSchema, SettingsSchemaType } from "../lib/types/settings";
 import ThemeSelector from "../components/ThemeSelector";
+import { useBreakpoint } from "../context/BreakpointContext";
 
 export default function Settings() {
     const { profileState, errorMessage: profileErrorMessage } = useProfile();
@@ -19,6 +20,7 @@ export default function Settings() {
         errorMessage: settingsErrorMessage,
         updateSettings,
     } = useSettings();
+    const { width } = useBreakpoint();
 
     const {
         register,
@@ -65,18 +67,14 @@ export default function Settings() {
                 <LoadingSpinner />
             ) : (
                 <form
-                    className={"text-on-background py-6 md:p-6 space-y-6"}
+                    className={
+                        "text-on-background px-2 py-6 md:p-6 space-y-6 text-base md:text-xl "
+                    }
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <div className={"space-y-1"}>
-                        <label
-                            className={"block text-lg md:text-xl font-medium"}
-                        >
-                            Email
-                        </label>
-                        <p className={"text-lg md:text-xl"}>
-                            {profileState.data?.email}
-                        </p>
+                        <label className={"block font-medium"}>Email</label>
+                        <p className={""}>{profileState.data?.email}</p>
                     </div>
 
                     <InputField
@@ -111,14 +109,12 @@ export default function Settings() {
                     />
 
                     <div className={"col-span-2 space-y-1"}>
-                        <label className={"block text-xl font-medium"}>
-                            Theme
-                        </label>
+                        <label className={"block font-medium"}>Theme</label>
                         <ThemeSelector />
                     </div>
 
                     <div className={"flex items-center justify-between"}>
-                        <label className={"block text-xl font-medium"}>
+                        <label className={"block font-medium"}>
                             Notifications
                         </label>
                         <Switch
@@ -136,6 +132,7 @@ export default function Settings() {
                             variant={"contained"}
                             disabled={isSubmitting}
                             loading={isSubmitting}
+                            size={width < 1000 ? "small" : "medium"}
                             fullWidth
                         >
                             Save Changes
