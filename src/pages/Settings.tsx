@@ -52,23 +52,31 @@ export default function Settings() {
         <>
             <Header header={"Settings"} />
             {profileErrorMessage && (
-                <p className={"text-xl text-error"}>{profileErrorMessage}</p>
+                <p className={"text-lg md:text-xl text-error"}>
+                    {profileErrorMessage}
+                </p>
             )}
             {settingsErrorMessage && (
-                <p className={"text-xl text-error"}>{settingsErrorMessage}</p>
+                <p className={"text-lg md:text-xl text-error"}>
+                    {settingsErrorMessage}
+                </p>
             )}
             {profileState.isLoading || settingsState.isLoading ? (
                 <LoadingSpinner />
             ) : (
                 <form
-                    className={"text-on-background p-6 space-y-6"}
+                    className={"text-on-background py-6 md:p-6 space-y-6"}
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <div className={"space-y-1"}>
-                        <label className={"block text-xl font-medium"}>
+                        <label
+                            className={"block text-lg md:text-xl font-medium"}
+                        >
                             Email
                         </label>
-                        <p className={"text-xl"}>{profileState.data?.email}</p>
+                        <p className={"text-lg md:text-xl"}>
+                            {profileState.data?.email}
+                        </p>
                     </div>
 
                     <InputField
