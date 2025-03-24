@@ -2,6 +2,9 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
+import { getCssVariables } from "./src/lib/utils/parseCssVars";
+
+const cssVars = getCssVariables("src/index.css");
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -14,8 +17,8 @@ export default defineConfig({
                 name: "Aghrabe",
                 short_name: "Aghrabe",
                 description: "Mindful gaming tracker",
-                theme_color: "#2563eb",
-                background_color: "#ffffff",
+                theme_color: cssVars["--color-primary"] || "#2563eb",
+                background_color: cssVars["--color-background"] || "#ffffff",
                 display: "standalone",
                 start_url: "/",
                 icons: [
