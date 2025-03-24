@@ -80,7 +80,7 @@ export default function Session() {
 
             <div
                 className={
-                    "flex h-full flex-1 flex-col gap-4 border-t-2 border-outline bg-muted/10 p-4 md:px-6 md:basis-2/5 md:border-l-2 md:border-t-0"
+                    "flex h-full flex-1 flex-col gap-4 border-t-2 border-outline p-4 md:pt-0 md:px-6 md:basis-2/5 md:border-l-2 md:border-t-0"
                 }
             >
                 <Header header={"History"} />
@@ -123,7 +123,7 @@ export default function Session() {
                             </h2>
                             <div
                                 className={
-                                    "rounded-full bg-muted px-3 py-1 text-lg font-medium"
+                                    "rounded-full px-3 py-1 text-lg font-medium"
                                 }
                             >
                                 ID: {selectedSession.id.substring(0, 8)}...
@@ -272,7 +272,7 @@ export default function Session() {
                                 <h3 className="mb-2 font-medium">
                                     Notes Before Session
                                 </h3>
-                                <p className="rounded-md bg-muted p-3 text-sm">
+                                <p className="rounded-md p-3 text-sm">
                                     {selectedSession.session_feedbacks[0]
                                         .journal_before || "No notes recorded"}
                                 </p>
@@ -282,7 +282,7 @@ export default function Session() {
                                 <h3 className="mb-2 font-medium">
                                     Notes After Session
                                 </h3>
-                                <p className="rounded-md bg-muted p-3 text-sm">
+                                <p className="rounded-md p-3 text-sm">
                                     {selectedSession.session_feedbacks[0]
                                         .journal_after || "No notes recorded"}
                                 </p>
