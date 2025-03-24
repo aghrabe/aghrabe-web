@@ -45,7 +45,7 @@ export default function SessionCard({ session, formatDate, onClick }: Props) {
                     <Row
                         icon={GameController}
                         label={"Game"}
-                        value={session.game_id}
+                        value={session.game.title}
                     />
                     <Row
                         icon={Calendar}

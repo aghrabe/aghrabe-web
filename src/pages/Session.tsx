@@ -1,133 +1,18 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MoreIcon from "../assets/icons/MoreIcon";
+import Button from "../components/Button";
 import Header from "../components/Header";
 import Icon from "../components/Icon";
+import LoadingSpinner from "../components/LoadingSpinner";
+import Modal from "../components/Modal";
 import SessionList from "../components/Session/SessionList";
 import SessionTracker from "../components/Session/SessionTracker";
+import useSessions from "../hooks/useSessions";
 import { ISession } from "../lib/types/sessions";
-import Modal from "../components/Modal";
-import Button from "../components/Button";
-import { useNavigate } from "react-router-dom";
 
 export default function Session() {
-    const gameTitles = [
-        "Monster Hunter World",
-        "Elden Ring",
-        "Dark Souls 3",
-        "Sekiro: Shadows Die Twice",
-        "The Witcher 3",
-        "Bloodborne",
-        "Ghost of Tsushima",
-        "Final Fantasy 7 Remake",
-        "Hollow Knight",
-        "Nioh 2",
-        "Dark Souls 2",
-        "Demon's Souls",
-        "Persona 5 Royal",
-        "Cyberpunk 2077",
-        "Metal Gear Solid V",
-        "Red Dead Redemption 2",
-        "God of War",
-        "Horizon Zero Dawn",
-        "Resident Evil 4 Remake",
-        "Dead Space Remake",
-        "The Last of Us Part II",
-        "Doom Eternal",
-        "Divinity: Original Sin 2",
-        "Baldur's Gate 3",
-        "Xenoblade Chronicles 3",
-        "Star Wars Jedi: Survivor",
-        "Death Stranding",
-        "Shadow of the Colossus",
-        "Control",
-        "Alan Wake 2",
-        "Returnal",
-        "Metroid Dread",
-        "Celeste",
-        "Inside",
-        "Limbo",
-        "Cuphead",
-        "Hades",
-        "Dead Cells",
-        "Slay the Spire",
-        "The Binding of Isaac",
-        "Disco Elysium",
-        "Fire Emblem: Three Houses",
-        "Tunic",
-        "Hyper Light Drifter",
-        "Transistor",
-        "Nier: Automata",
-        "Nier Replicant",
-        "The Outer Wilds",
-        "The Outer Worlds",
-        "No Man's Sky",
-        "Stardew Valley",
-        "Terraria",
-        "Factorio",
-        "RimWorld",
-        "Frostpunk",
-        "They Are Billions",
-        "Age of Empires IV",
-        "Civilization VI",
-        "Total War: Warhammer 3",
-        "Warframe",
-        "Path of Exile",
-        "Diablo IV",
-        "Guild Wars 2",
-        "Final Fantasy XIV",
-        "Monster Hunter Rise",
-        "Genshin Impact",
-        "Lost Ark",
-        "Valheim",
-        "Deep Rock Galactic",
-        "Vampire Survivors",
-        "Loop Hero",
-        "Inscryption",
-        "FTL: Faster Than Light",
-        "StarCraft II",
-        "Warcraft III",
-        "Command & Conquer Remastered",
-        "Halo Infinite",
-        "Titanfall 2",
-        "Call of Duty: Modern Warfare III",
-        "Battlefield 2042",
-        "Rainbow Six Siege",
-        "Apex Legends",
-        "Overwatch 2",
-        "Team Fortress 2",
-        "Counter-Strike 2",
-        "League of Legends",
-        "Dota 2",
-        "Smite",
-        "Rocket League",
-        "Guilty Gear Strive",
-        "Tekken 8",
-        "Street Fighter 6",
-        "Mortal Kombat 1",
-        "Soulcalibur VI",
-        "Granblue Fantasy Versus",
-        "Dragon Ball FighterZ",
-        "BlazBlue: Cross Tag Battle",
-        "King of Fighters XV",
-    ];
-
-    const generateSessions = () => {
-        return Array.from({ length: 100 }, (_, i) => {
-            const now = Date.now() - i * 7200000;
-            return {
-                id: (i + 1).toString(),
-                user_id: "user123",
-                game_id: gameTitles[i % gameTitles.length],
-                start_time: new Date(now).toISOString(),
-                end_time: new Date(now + 3600000).toISOString(),
-                duration_minutes: 60,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            };
-        });
-    };
-
-    const [sessions] = useState<ISession[]>(generateSessions());
+    const { sessionsState } = useSessions();
     const [selectedSession, setSelectedSession] = useState<ISession | null>(
         null,
     );
@@ -136,6 +21,10 @@ export default function Session() {
     function handleModalClose() {
         setSelectedSession(null);
         navigate("");
+    }
+
+    if (!sessionsState.data) {
+        return <LoadingSpinner />;
     }
 
     return (
@@ -157,7 +46,7 @@ export default function Session() {
                 <Header header={"History"} />
                 <div className={"overflow-y-auto h-[calc(100%-45px)]"}>
                     <SessionList
-                        sessions={sessions}
+                        sessions={sessionsState.data}
                         onSessionClick={setSelectedSession}
                     />
                 </div>
@@ -167,15 +56,11 @@ export default function Session() {
                 <Modal isOpen={true} onClose={handleModalClose}>
                     <div className={"p-4"}>
                         <h2 className={"text-xl font-bold mb-4"}>
-                            Session Details
+                            Session {selectedSession.id.substring(0, 8)}...
                         </h2>
                         <p>
-                            <span className={"font-medium"}>ID:</span>{" "}
-                            {selectedSession.id}
-                        </p>
-                        <p>
                             <span className={"font-medium"}>Game:</span>{" "}
-                            {selectedSession.game_id}
+                            {selectedSession.game.title}
                         </p>
                         <p>
                             <span className={"font-medium"}>Started:</span>{" "}
@@ -194,6 +79,16 @@ export default function Session() {
                         <p>
                             <span className={"font-medium"}>Duration:</span>{" "}
                             {selectedSession.duration_minutes} minutes
+                        </p>
+
+                        <p>
+                            <span className={"font-medium"}>Mood Before:</span>{" "}
+                            {selectedSession.session_feedbacks[0].mood_before}
+                        </p>
+
+                        <p>
+                            <span className={"font-medium"}>Mood After:</span>{" "}
+                            {selectedSession.session_feedbacks[0].mood_after}
                         </p>
                         <div className={"mt-4"}>
                             <Button
