@@ -4,6 +4,7 @@ import {
     Outlet,
     Route,
     Routes,
+    useLocation,
 } from "react-router-dom";
 
 import { useAuthContext } from "./context/AuthContext";
@@ -17,6 +18,17 @@ import Session from "./pages/Session";
 import Settings from "./pages/Settings";
 import Stats from "./pages/Stats";
 import CheckEmail from "./pages/CheckEmail";
+import { useEffect } from "react";
+
+function ScrollToTop() {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
+    return null;
+}
 
 function ProtectedRoute() {
     const { user, isLoading } = useAuthContext();
@@ -47,6 +59,7 @@ function RedirectToDashboard() {
 export default function Router() {
     return (
         <BrowserRouter>
+            <ScrollToTop />
             <Routes>
                 <Route element={<ProtectedRoute />}>
                     <Route path={"/"} element={<RedirectToDashboard />} />
