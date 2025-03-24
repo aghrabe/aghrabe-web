@@ -25,10 +25,10 @@ export default function Session() {
 
     if (!sessionsState.data) {
         return (
-            <div className="flex h-full w-full items-center justify-center">
-                <div className="flex flex-col items-center gap-4">
+            <div className={"flex h-full w-full items-center justify-center"}>
+                <div className={"flex flex-col items-center gap-4"}>
                     <LoadingSpinner />
-                    <p className="text-muted-foreground">
+                    <p className={"text-muted-foreground"}>
                         Loading your sessions...
                     </p>
                 </div>
@@ -54,7 +54,7 @@ export default function Session() {
 
             <div
                 className={
-                    "flex h-full flex-1 flex-col gap-4 border-t-2 border-outline p-4 md:pt-0 md:px-6 md:basis-2/5 md:border-l-2 md:border-t-0"
+                    "flex h-full flex-1 flex-col gap-4 border-t-2 border-outline py-4 md:pt-0 md:px-6 md:basis-2/5 md:border-l-2 md:border-t-0"
                 }
             >
                 <Header header={"History"} />

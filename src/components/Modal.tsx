@@ -12,10 +12,18 @@ export default function Modal({ isOpen, onClose, children }: Props) {
     useEffect(() => {
         if (isOpen) {
             setShouldRender(true);
+            document.body.style.overflow = "hidden"; // disable scroll
         } else {
-            const timer = setTimeout(() => setShouldRender(false), 300);
+            const timer = setTimeout(() => {
+                setShouldRender(false);
+                document.body.style.overflow = ""; // restore scroll
+            }, 300);
             return () => clearTimeout(timer);
         }
+
+        return () => {
+            document.body.style.overflow = ""; // ensure reset on unmount
+        };
     }, [isOpen]);
 
     useEffect(() => {
@@ -38,9 +46,8 @@ export default function Modal({ isOpen, onClose, children }: Props) {
         <div className={"fixed inset-0 z-50 flex items-center justify-center"}>
             {/* overlay */}
             <div
-                className={`fixed inset-0 bg-black transition-opacity duration-300 ${
-                    isOpen ? "opacity-70" : "opacity-0"
-                }`}
+                className={`fixed inset-0 bg-black transition-opacity duration-300 ${isOpen ? "opacity-70" : "opacity-0"
+                    }`}
                 onClick={onClose}
             ></div>
             {/* modal Content */}

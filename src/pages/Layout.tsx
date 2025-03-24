@@ -12,7 +12,7 @@ export default function Layout({ children }: Props) {
             <Sidebar />
             <main
                 className={
-                    "w-full h-full md:h-screen box-border pb-16 pt-6 md:py-6 px-8"
+                    "w-full h-full md:h-screen box-border pb-16 pt-6 md:py-6 px-4 md:px-8"
                 }
             >
                 {children}

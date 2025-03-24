@@ -78,7 +78,7 @@
     --color-mood-red: #dc2626;
     --color-mood-orange: #f97316;
     --color-mood-yellow: #facc15;
-    --color-mood-blue: #2563eb;
+    --color-mood-blue: var(--color-info);
     --color-mood-green: #059669;
 
     --color-google-btn-bg: #ffffff;
@@ -128,7 +128,7 @@
     --color-mood-red: #ef4444;
     --color-mood-orange: #f97316;
     --color-mood-yellow: #facc15;
-    --color-mood-blue: #3b82f6;
+    --color-mood-blue: var(--color-info);
     --color-mood-green: #10b981;
 
     --color-google-btn-bg: #ffffff;
@@ -178,7 +178,7 @@
     --color-mood-red: #f38ba8;
     --color-mood-orange: #f5a97f;
     --color-mood-yellow: #f9e2af;
-    --color-mood-blue: #89b4fa;
+    --color-mood-blue: var(--color-info);
     --color-mood-green: #a6e3a1;
 
     --color-google-btn-bg: #ffffff;
@@ -227,38 +227,6 @@
     --color-mood-red: #f7768e;
     --color-mood-orange: #ff9e64;
     --color-mood-yellow: #e0af68;
-    --color-mood-blue: #7aa2f7;
+    --color-mood-blue: var(--color-info);
     --color-mood-green: #9ece6a;
-
-    --color-google-btn-bg: #ffffff;
-    --color-google-btn-text: #000000;
-    --color-google-btn-border: transparent;
-    --color-google-btn-hover-bg: #d1d5dc;
-    --color-google-btn-hover-border: transparent;
-}
-
-:root {
-    --scroll-bg: transparent;
-    --scroll-thumb: rgba(100, 100, 100, 0.3);
-    --scroll-thumb-hover: rgba(100, 100, 100, 0.5);
-}
-
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--scroll-bg);
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--scroll-thumb);
-    border-radius: 10px;
-    transition: background 0.3s ease-in-out;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--scroll-thumb-hover);
 }
