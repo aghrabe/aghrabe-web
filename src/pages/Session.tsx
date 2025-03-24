@@ -40,7 +40,7 @@ export default function Session() {
         <div className={"flex h-full w-full flex-col md:flex-row md:gap-8"}>
             <div
                 className={
-                    "basis-3/5 h-full flex flex-col gap-8 md:gap-0 justify-between"
+                    "basis-3/5 h-full flex flex-col gap-4 md:gap-0 justify-between"
                 }
             >
                 <Header header={"Session"}>
@@ -54,7 +54,7 @@ export default function Session() {
 
             <div
                 className={
-                    "flex h-full flex-1 flex-col gap-4 border-t-2 border-outline py-4 md:pt-0 md:px-6 md:basis-2/5 md:border-l-2 md:border-t-0"
+                    "flex h-full flex-1 flex-col gap-4 border-t-2 border-outline pt-12 pb-4 md:pt-0 md:px-6 md:basis-2/5 md:border-l-2 md:border-t-0"
                 }
             >
                 <Header header={"History"} />
