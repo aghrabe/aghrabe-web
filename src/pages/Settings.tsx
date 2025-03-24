@@ -69,7 +69,7 @@ export default function Settings() {
             ) : (
                 <form
                     className={
-                        "text-on-background px-2 py-6 md:p-6 space-y-6 text-base md:text-xl "
+                        "text-on-background px-2 py-6 md:p-6 space-y-4 md:space-y-6 text-base md:text-xl "
                     }
                     onSubmit={handleSubmit(onSubmit)}
                 >

@@ -43,7 +43,7 @@ export default function ThemeSelector() {
     const { globalTheme, setGlobalTheme } = useTheme();
 
     return (
-        <div className={"grid grid-cols-2 gap-4"}>
+        <div className={"grid grid-cols-2 md:grid-cols-4 gap-4"}>
             {availableThemes.map((theme) => (
                 <button
                     type={"button"}
@@ -53,15 +53,15 @@ export default function ThemeSelector() {
                         globalTheme.toLowerCase()
                             ? "border-primary"
                             : "border-outline"
-                    } rounded-md p-4 transition-opacity duration-150 ease-in-out hover:border-icon cursor-pointer`}
+                    } rounded-md p-2 md:p-4 transition-opacity duration-150 ease-in-out hover:border-icon cursor-pointer`}
                     onClick={() => setGlobalTheme(theme.themeName)}
                 >
                     <h4 className={"text-md md:text-lg"}>{theme.themeName}</h4>
-                    <div className={"py-4 flex gap-2"}>
+                    <div className={"py-2 md:py-4 flex gap-2"}>
                         {theme.colors.map((color) => (
                             <div
                                 key={color}
-                                className={`w-4 h-8 ${color} rounded-sm`}
+                                className={`w-3 h-6 md:w-4 md:h-8 ${color} rounded-sm`}
                             ></div>
                         ))}
                     </div>

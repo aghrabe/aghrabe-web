@@ -21,7 +21,7 @@ export default function InputField({ error, label, id, ref, ...props }: Props) {
                 id={id}
                 name={id}
                 ref={ref}
-                className={`border rounded-md px-4 py-3 focus:ring-2 text-base md:text-xl placeholder:text-outline-variant transition outline-none ${error ? "border-error focus:ring-error focus:border-error" : "border-outline focus:ring-primary focus:border-primary"}`}
+                className={`border rounded-md px-3 py-2 md:px-4 md:py-3 focus:ring-2 text-base md:text-xl placeholder:text-outline-variant transition outline-none ${error ? "border-error focus:ring-error focus:border-error" : "border-outline focus:ring-primary focus:border-primary"}`}
                 {...props}
             />
             {error && <p className={"text-error text-sm"}>{error}</p>}
