@@ -3,13 +3,12 @@ import Button from "../components/Button";
 import {
     CalendarDays,
     Clock,
-    Frown,
     Gamepad2Icon as GameController2,
-    Meh,
-    Smile,
-    SmilePlus,
 } from "lucide-react";
 import type { ISession } from "../lib/types/sessions";
+import { useBreakpoint } from "../context/BreakpointContext";
+import { TAILWIND_BREAKPOINTS } from "../lib/constants/tailwind";
+import useMoodMapper from "../hooks/useMoodMapper";
 
 interface SessionDetailsModalProps {
     session: ISession;
@@ -28,7 +27,9 @@ function SessionDetailItem({
     return (
         <div className={"flex items-center gap-3"}>
             {icon}
-            <div className={"text-sm md:text-lg"}>
+            <div
+                className={"text-sm md:text-base flex flex-col gap-0 md:gap-0"}
+            >
                 <p className={"text-muted-foreground font-bold"}>{label}</p>
                 <p className={""}>{value}</p>
             </div>
@@ -49,22 +50,8 @@ export default function SessionDetailsModal({
     session,
     onClose,
 }: SessionDetailsModalProps) {
-    const getMoodIcon = (mood: number) => {
-        switch (mood) {
-            case 1:
-                return <Frown className={"h-5 w-5 text-mood-red"} />;
-            case 2:
-                return <Meh className={"h-5 w-5 text-mood-orange"} />;
-            case 3:
-                return <Smile className={"h-5 w-5 text-mood-yellow"} />;
-            case 4:
-                return <Smile className={"h-5 w-5 text-mood-blue"} />;
-            case 5:
-                return <SmilePlus className={"h-5 w-5 text-mood-green"} />;
-            default:
-                return <Smile className={"h-5 w-5 text-outline-variant"} />;
-        }
-    };
+    const { width } = useBreakpoint();
+    const { getMoodIcon, getMoodText } = useMoodMapper();
 
     return (
         <Modal isOpen={true} onClose={onClose}>
@@ -95,7 +82,9 @@ export default function SessionDetailsModal({
                         <SessionDetailItem
                             icon={
                                 <GameController2
-                                    className={"h-5 w-5 text-primary"}
+                                    className={
+                                        "h-5 w-5 md:h-6 md:w-6 text-primary"
+                                    }
                                 />
                             }
                             label={"Game"}
@@ -105,7 +94,9 @@ export default function SessionDetailsModal({
                         <SessionDetailItem
                             icon={
                                 <CalendarDays
-                                    className={"h-5 w-5 text-primary"}
+                                    className={
+                                        "h-5 w-5 md:h-6 md:w-6 text-primary"
+                                    }
                                 />
                             }
                             label={"Started"}
@@ -118,7 +109,9 @@ export default function SessionDetailsModal({
                             <SessionDetailItem
                                 icon={
                                     <CalendarDays
-                                        className={"h-5 w-5 text-primary"}
+                                        className={
+                                            "h-5 w-5 md:h-6 md:w-6 text-primary"
+                                        }
                                     />
                                 }
                                 label={"Ended"}
@@ -129,7 +122,13 @@ export default function SessionDetailsModal({
                         )}
 
                         <SessionDetailItem
-                            icon={<Clock className={"h-5 w-5 text-primary"} />}
+                            icon={
+                                <Clock
+                                    className={
+                                        "h-5 w-5 md:h-6 md:w-6 text-primary"
+                                    }
+                                />
+                            }
                             label={"Duration"}
                             value={`${session.duration_minutes} minutes`}
                         />
@@ -145,7 +144,9 @@ export default function SessionDetailsModal({
                                 session.session_feedbacks[0].mood_before,
                             )}
                             label={"Mood Before"}
-                            value={session.session_feedbacks[0].mood_before}
+                            value={getMoodText(
+                                session.session_feedbacks[0].mood_before,
+                            )}
                         />
 
                         <SessionDetailItem
@@ -153,7 +154,9 @@ export default function SessionDetailsModal({
                                 session.session_feedbacks[0].mood_after,
                             )}
                             label={"Mood After"}
-                            value={session.session_feedbacks[0].mood_after}
+                            value={getMoodText(
+                                session.session_feedbacks[0].mood_after,
+                            )}
                         />
                     </div>
                 </div>
@@ -181,7 +184,14 @@ export default function SessionDetailsModal({
                 </div>
 
                 <div className={"mt-6"}>
-                    <Button onClick={onClose} variant={"contained"} fullWidth>
+                    <Button
+                        onClick={onClose}
+                        variant={"contained"}
+                        size={
+                            width < TAILWIND_BREAKPOINTS.md ? "small" : "medium"
+                        }
+                        fullWidth
+                    >
                         Close
                     </Button>
                 </div>
