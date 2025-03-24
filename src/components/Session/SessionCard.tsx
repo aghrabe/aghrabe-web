@@ -1,8 +1,7 @@
+import { Calendar, Clock, Gamepad2 as GameController } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ISession } from "../../lib/types/sessions";
-import { Clock, Calendar, Gamepad2 as GameController } from "lucide-react";
 import { useBreakpoint } from "../../context/BreakpointContext";
-import { TAILWIND_BREAKPOINTS } from "../../lib/constants/tailwind";
+import { ISession } from "../../lib/types/sessions";
 
 interface RowProps {
     icon: React.ElementType;
@@ -17,12 +16,12 @@ interface Props {
 }
 
 function Row({ icon: Icon, label, value }: RowProps) {
-    const { width } = useBreakpoint();
+    const { isMobile } = useBreakpoint();
 
     return (
         <div className={"flex items-center gap-2"}>
             <Icon
-                size={width < TAILWIND_BREAKPOINTS.md ? 18 : 19}
+                size={isMobile ? 18 : 19}
                 className={"text-on-background-variant"}
             />
             <span

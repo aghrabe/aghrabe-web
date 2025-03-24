@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Bell, Clock, Coffee, Mail, Palette, Timer } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
@@ -7,12 +8,11 @@ import Header from "../components/Header";
 import InputField from "../components/InputField";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Switch from "../components/Switch";
+import ThemeSelector from "../components/ThemeSelector";
+import { useBreakpoint } from "../context/BreakpointContext";
 import useProfile from "../hooks/useProfile";
 import useSettings from "../hooks/useSettings";
 import { settingsSchema, SettingsSchemaType } from "../lib/types/settings";
-import ThemeSelector from "../components/ThemeSelector";
-import { useBreakpoint } from "../context/BreakpointContext";
-import { TAILWIND_BREAKPOINTS } from "../lib/constants/tailwind";
 
 export default function Settings() {
     const { profileState, errorMessage: profileErrorMessage } = useProfile();
@@ -21,7 +21,8 @@ export default function Settings() {
         errorMessage: settingsErrorMessage,
         updateSettings,
     } = useSettings();
-    const { width } = useBreakpoint();
+    const { isMobile } = useBreakpoint();
+    const iconSize = isMobile ? 18 : 20;
 
     const {
         register,
@@ -74,14 +75,24 @@ export default function Settings() {
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <div className={"space-y-1"}>
-                        <label className={"block font-medium"}>Email</label>
+                        <label
+                            className={"font-medium flex items-center gap-2"}
+                        >
+                            <Mail size={iconSize} />
+                            Email
+                        </label>
                         <p className={""}>{profileState.data?.email}</p>
                     </div>
 
                     <InputField
                         id={"daily-limit"}
                         type={"number"}
-                        label={"Daily Limit (minutes)"}
+                        label={
+                            <span className="flex items-center gap-2">
+                                <Clock size={iconSize} />
+                                Daily Limit (minutes)
+                            </span>
+                        }
                         placeholder={"Enter daily limit"}
                         {...register("daily_limit_minutes", {
                             valueAsNumber: true,
@@ -91,7 +102,12 @@ export default function Settings() {
                     <InputField
                         id={"session-limit"}
                         type={"number"}
-                        label={"Session Limit (minutes)"}
+                        label={
+                            <span className="flex items-center gap-2">
+                                <Timer size={iconSize} />
+                                Session Limit (minutes)
+                            </span>
+                        }
                         placeholder={"Enter session limit"}
                         {...register("session_limit_minutes", {
                             valueAsNumber: true,
@@ -101,7 +117,12 @@ export default function Settings() {
                     <InputField
                         id={"break-duration"}
                         type={"number"}
-                        label={"Break Duration (minutes)"}
+                        label={
+                            <span className="flex items-center gap-2">
+                                <Coffee size={iconSize} />
+                                Break Duration (minutes)
+                            </span>
+                        }
                         placeholder={"Enter break duration"}
                         {...register("break_duration_minutes", {
                             valueAsNumber: true,
@@ -110,12 +131,20 @@ export default function Settings() {
                     />
 
                     <div className={"col-span-2 space-y-1"}>
-                        <label className={"block font-medium"}>Theme</label>
+                        <label
+                            className={"font-medium flex items-center gap-2"}
+                        >
+                            <Palette size={iconSize} />
+                            Theme
+                        </label>
                         <ThemeSelector />
                     </div>
 
                     <div className={"flex items-center justify-between"}>
-                        <label className={"block font-medium"}>
+                        <label
+                            className={"font-medium flex items-center gap-2"}
+                        >
+                            <Bell size={iconSize} />
                             Notifications
                         </label>
                         <Switch
@@ -123,11 +152,7 @@ export default function Settings() {
                             onChange={(checked) =>
                                 setValue("notifications_enabled", checked)
                             }
-                            size={
-                                width < TAILWIND_BREAKPOINTS.md
-                                    ? "medium"
-                                    : "large"
-                            }
+                            size={isMobile ? "medium" : "large"}
                         />
                     </div>
 
@@ -137,11 +162,7 @@ export default function Settings() {
                             variant={"contained"}
                             disabled={isSubmitting}
                             loading={isSubmitting}
-                            size={
-                                width < TAILWIND_BREAKPOINTS.md
-                                    ? "small"
-                                    : "medium"
-                            }
+                            size={isMobile ? "small" : "medium"}
                             fullWidth
                         >
                             Save Changes

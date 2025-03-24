@@ -1,7 +1,6 @@
 import { useBreakpoint } from "../../context/BreakpointContext";
 import { useSession } from "../../context/SessionContext";
 import useSettings from "../../hooks/useSettings";
-import { TAILWIND_BREAKPOINTS } from "../../lib/constants/tailwind";
 import Button from "../Button";
 import CircularProgress from "../CircularProgress";
 import LoadingSpinner from "../LoadingSpinner";
@@ -18,7 +17,7 @@ export default function SessionTracker() {
         continueSession,
         endSession,
     } = useSession();
-    const { width } = useBreakpoint();
+    const { isMobile } = useBreakpoint();
 
     if (settingsState.isLoading || !settingsState.data?.session_limit_minutes) {
         return <LoadingSpinner size={"large"} />;
@@ -42,7 +41,7 @@ export default function SessionTracker() {
             <CircularProgress
                 progress={progress}
                 text={timeString}
-                size={width < TAILWIND_BREAKPOINTS.md ? "medium" : "large"}
+                size={isMobile ? "medium" : "large"}
             />
 
             <div
@@ -52,9 +51,7 @@ export default function SessionTracker() {
                     <Button
                         onClick={startSession}
                         variant={"contained"}
-                        size={
-                            width < TAILWIND_BREAKPOINTS.md ? "small" : "medium"
-                        }
+                        size={isMobile ? "small" : "medium"}
                     >
                         Start
                     </Button>
@@ -63,9 +60,7 @@ export default function SessionTracker() {
                     <Button
                         onClick={stopSession}
                         variant={"contained"}
-                        size={
-                            width < TAILWIND_BREAKPOINTS.md ? "small" : "medium"
-                        }
+                        size={isMobile ? "small" : "medium"}
                     >
                         Stop
                     </Button>
@@ -75,23 +70,15 @@ export default function SessionTracker() {
                         <Button
                             onClick={continueSession}
                             variant={"contained"}
-                            size={
-                                width < TAILWIND_BREAKPOINTS.md
-                                    ? "small"
-                                    : "medium"
-                            }
+                            size={isMobile ? "small" : "medium"}
                         >
                             Continue
                         </Button>
                         <Button
                             onClick={endSession}
                             variant={"outlined"}
-                            size={
-                                width < TAILWIND_BREAKPOINTS.md
-                                    ? "small"
-                                    : "medium"
-                            }
-                            className={`${width < TAILWIND_BREAKPOINTS.md ? "mb-4" : ""}`}
+                            size={isMobile ? "small" : "medium"}
+                            className={`${isMobile ? "mb-4" : ""}`}
                         >
                             End
                         </Button>

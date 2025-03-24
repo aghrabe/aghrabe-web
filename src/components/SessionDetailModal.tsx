@@ -1,14 +1,13 @@
-import Modal from "../components/Modal";
-import Button from "../components/Button";
 import {
     CalendarDays,
     Clock,
     Gamepad2Icon as GameController2,
 } from "lucide-react";
-import type { ISession } from "../lib/types/sessions";
+import Button from "../components/Button";
+import Modal from "../components/Modal";
 import { useBreakpoint } from "../context/BreakpointContext";
-import { TAILWIND_BREAKPOINTS } from "../lib/constants/tailwind";
 import useMoodMapper from "../hooks/useMoodMapper";
+import type { ISession } from "../lib/types/sessions";
 
 interface SessionDetailsModalProps {
     session: ISession;
@@ -50,7 +49,7 @@ export default function SessionDetailsModal({
     session,
     onClose,
 }: SessionDetailsModalProps) {
-    const { width } = useBreakpoint();
+    const { isMobile } = useBreakpoint();
     const { getMoodIcon, getMoodText } = useMoodMapper();
 
     return (
@@ -187,9 +186,7 @@ export default function SessionDetailsModal({
                     <Button
                         onClick={onClose}
                         variant={"contained"}
-                        size={
-                            width < TAILWIND_BREAKPOINTS.md ? "small" : "medium"
-                        }
+                        size={isMobile ? "small" : "medium"}
                         fullWidth
                     >
                         Close

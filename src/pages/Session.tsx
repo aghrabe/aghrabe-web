@@ -8,17 +8,16 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import SessionList from "../components/Session/SessionList";
 import SessionTracker from "../components/Session/SessionTracker";
 import SessionDetailsModal from "../components/SessionDetailModal";
+import { useBreakpoint } from "../context/BreakpointContext";
 import useSessions from "../hooks/useSessions";
 import type { ISession } from "../lib/types/sessions";
-import { useBreakpoint } from "../context/BreakpointContext";
-import { TAILWIND_BREAKPOINTS } from "../lib/constants/tailwind";
 
 export default function Session() {
     const { sessionsState } = useSessions();
     const [selectedSession, setSelectedSession] = useState<ISession | null>(
         null,
     );
-    const { width } = useBreakpoint();
+    const { isMobile } = useBreakpoint();
     const navigate = useNavigate();
 
     function handleModalClose() {
@@ -52,7 +51,7 @@ export default function Session() {
                     </Icon>
                 </Header>
                 <SessionTracker />
-                {width > TAILWIND_BREAKPOINTS.md && <div></div>}
+                {!isMobile && <div></div>}
             </div>
 
             <div

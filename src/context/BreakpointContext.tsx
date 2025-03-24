@@ -5,6 +5,7 @@ import { TAILWIND_BREAKPOINTS } from "../lib/constants/tailwind";
 interface BreakpointContextType {
     width: number;
     breakpoint: string;
+    isMobile: boolean;
     setWidth: (width: number) => void;
 }
 
@@ -25,6 +26,7 @@ export const BreakpointProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
     const [width, setWidth] = useState(window.innerWidth);
     const breakpoint = getBreakpoint(width);
+    const isMobile = width < TAILWIND_BREAKPOINTS.md;
 
     useEffect(() => {
         const handleResize = () => setWidth(window.innerWidth);
@@ -33,6 +35,8 @@ export const BreakpointProvider: React.FC<{ children: ReactNode }> = ({
     }, []);
 
     return (
-        <Provider value={{ width, breakpoint, setWidth }}>{children}</Provider>
+        <Provider value={{ width, breakpoint, isMobile, setWidth }}>
+            {children}
+        </Provider>
     );
 };
