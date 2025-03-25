@@ -1,15 +1,21 @@
 import { IGame } from "./games";
 import { ISessionFeedback } from "./sessionFeedbacks";
 
-export interface ISession {
-    id: string;
+export interface SessionBase {
     user_id: string;
-    //game_id: string;
-    game: IGame;
-    session_feedbacks: ISessionFeedback[];
     start_time: string;
-    end_time?: string | null;
     duration_minutes: number;
+}
+
+export interface ISession extends SessionBase {
+    id: string;
+    game: IGame;
+    session_feedbacks: Array<ISessionFeedback>;
+    end_time?: string | null;
     created_at: string;
-    updated_at: string;
+}
+
+export interface AddSessionDto extends SessionBase {
+    game_id: string;
+    end_time: string | null;
 }

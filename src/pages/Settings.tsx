@@ -12,7 +12,7 @@ import { useBreakpoint } from "../context/BreakpointContext";
 import useProfile from "../hooks/useProfile";
 import useSettings from "../hooks/useSettings";
 import { settingsSchema, SettingsSchemaType } from "../lib/types/settings";
-import { useSession } from "../context/SessionContext";
+import { useCurrentSession } from "../context/CurrentSessionContext";
 
 export default function Settings() {
     const { profileState, errorMessage: profileErrorMessage } = useProfile();
@@ -22,7 +22,7 @@ export default function Settings() {
         updateSettings,
     } = useSettings();
     const { isMobile } = useBreakpoint();
-    const { setSettingsShouldChange } = useSession();
+    const { setSettingsShouldChange } = useCurrentSession();
     const iconSize = isMobile ? 18 : 20;
 
     const {

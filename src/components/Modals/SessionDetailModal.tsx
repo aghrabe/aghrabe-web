@@ -3,11 +3,11 @@ import {
     Clock,
     Gamepad2Icon as GameController2,
 } from "lucide-react";
-import Button from "../components/Button";
-import Modal from "../components/Modal";
-import { useBreakpoint } from "../context/BreakpointContext";
-import useMoodMapper from "../hooks/useMoodMapper";
-import type { ISession } from "../lib/types/sessions";
+import Button from "../Button";
+import Modal from "./Modal";
+import { useBreakpoint } from "../../context/BreakpointContext";
+import useMoodMapper from "../../hooks/useMoodMapper";
+import type { ISession } from "../../lib/types/sessions";
 
 interface SessionDetailsModalProps {
     session: ISession;

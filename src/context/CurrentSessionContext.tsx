@@ -1,10 +1,13 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import useSettings from "../hooks/useSettings";
+import { useAuthContext } from "./AuthContext";
 import ContextGenerator from "./ContextGenerator";
+import { useCurrentGameContext } from "./CurrentGameContext";
+import { AddSessionDto } from "../lib/types/sessions";
 
 type TimerStatus = "idle" | "running" | "paused" | "ended";
 
-interface SessionContextType {
+interface CurrentSessionContextType {
     elapsed: number;
     message: string;
     status: TimerStatus;
@@ -20,10 +23,16 @@ interface SessionContextType {
     endSession: () => void;
 }
 
-const { Provider, useContextValue: useSession } =
-    ContextGenerator<SessionContextType>("Session");
+const { Provider, useContextValue: useCurrentSession } =
+    ContextGenerator<CurrentSessionContextType>("CurrentSession");
 
-export function SessionProvider({ children }: { children: React.ReactNode }) {
+export function CurrentSessionProvider({
+    children,
+}: {
+    children: React.ReactNode;
+}) {
+    const { user } = useAuthContext();
+    const { currentGame } = useCurrentGameContext();
     const { settingsState, refetch } = useSettings();
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     const [elapsed, setElapsed] = useState<number>(0);
@@ -130,6 +139,32 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem("sessionStatus");
         // TODO: send notification
         // TODO: save session data to db
+
+        // TODO: trigger select game modal
+        // TODO: trigger select session feedbacks
+        const endTime = new Date();
+        const startTime = new Date(endTime.getTime() - elapsed * 1000);
+
+        const start_time = startTime.toISOString();
+        const end_time = endTime.toISOString();
+
+        if (!user) {
+            console.error("unauthorized");
+            return;
+        }
+        if (!currentGame) {
+            console.error("select a game");
+            return;
+        }
+        const newSession: AddSessionDto = {
+            start_time: start_time,
+            end_time: end_time,
+            duration_minutes: Math.floor(elapsed / 60),
+            game_id: currentGame.id,
+            user_id: user.id,
+        };
+        console.log(newSession);
+        //addSession(newSession);
     }
 
     return (
@@ -155,4 +190,4 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     );
 }
 
-export { useSession };
+export { useCurrentSession };

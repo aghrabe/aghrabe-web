@@ -7,10 +7,11 @@ import Icon from "../components/Icon";
 import LoadingSpinner from "../components/LoadingSpinner";
 import SessionList from "../components/Session/SessionList";
 import SessionTracker from "../components/Session/SessionTracker";
-import SessionDetailsModal from "../components/SessionDetailModal";
+import SessionDetailsModal from "../components/Modals/SessionDetailModal";
 import { useBreakpoint } from "../context/BreakpointContext";
 import useSessions from "../hooks/useSessions";
 import type { ISession } from "../lib/types/sessions";
+import BeforeSessionModal from "../components/Modals/BeforeSessionModal";
 
 export default function Session() {
     const { sessionsState } = useSessions();
@@ -22,6 +23,7 @@ export default function Session() {
 
     function handleModalClose() {
         setSelectedSession(null);
+        // INFO: navigate back to the '/session' page before openning modal
         navigate("");
     }
 
@@ -94,6 +96,8 @@ export default function Session() {
                     onClose={handleModalClose}
                 />
             )}
+
+            <BeforeSessionModal isOpen={true} onClose={() => { }} />
         </div>
     );
 }

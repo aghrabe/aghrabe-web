@@ -10,7 +10,7 @@ interface NavItem {
 }
 
 export function getNavItems(userId: string): Array<NavItem> {
-    const navItems = [
+    return [
         {
             name: "Dashboard",
             href: `/${userId}/dashboard`,
@@ -27,5 +27,4 @@ export function getNavItems(userId: string): Array<NavItem> {
             IconComponent: SettingsIcon,
         },
     ];
-    return navItems;
 }

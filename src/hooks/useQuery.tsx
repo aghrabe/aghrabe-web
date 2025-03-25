@@ -24,12 +24,6 @@ const cache = new Map<string, IMapValue<unknown>>();
 /**
  * A custom React hook for fetching and caching data with automatic retries, stale time management, and cache invalidation.
  *
- * @template T The type of data returned by the query function.
- * @param {string} queryKey A unique key for identifying the cached data.
- * @param {() => Promise<T>} queryFn An asynchronous function that fetches the data.
- * @param {number} [staleTime=600000] The duration (in milliseconds) before cached data is considered stale. Default is 10 minutes.
- * @returns {IUseQueryReturn<T>} An object containing the query state, a refetch function, and a cache clearing function.
- *
  * @example
  *```typescript
  * // Basic usage

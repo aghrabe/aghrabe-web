@@ -1,5 +1,5 @@
 import { useBreakpoint } from "../../context/BreakpointContext";
-import { useSession } from "../../context/SessionContext";
+import { useCurrentSession } from "../../context/CurrentSessionContext";
 import useSettings from "../../hooks/useSettings";
 import Button from "../Button";
 import CircularProgress from "../CircularProgress";
@@ -15,7 +15,7 @@ export default function SessionTracker() {
         stopSession,
         continueSession,
         endSession,
-    } = useSession();
+    } = useCurrentSession();
     const { isMobile } = useBreakpoint();
 
     return (
