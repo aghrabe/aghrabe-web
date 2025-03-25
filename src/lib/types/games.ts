@@ -1,10 +1,7 @@
-export type Platform = "PC" | "PlayStation" | "Xbox" | "Switch" | "Mobile";
-
 export interface IGame {
     id: string;
     user_id: string;
     title: string;
-    platform: Platform;
     cover?: string;
     time_spent_total_minutes: number;
     time_spent_today_minutes: number;
