@@ -1,17 +1,7 @@
-import type { ComponentType } from "react";
 import { Link, useLocation } from "react-router-dom";
-import HomeIcon from "../../assets/icons/HomeIcon";
-import SessionIcon from "../../assets/icons/SessionIcon";
-import SettingsIcon from "../../assets/icons/SettingsIcon";
-import StatsIcon from "../../assets/icons/StatsIcon";
 import { useAuthContext } from "../../context/AuthContext";
+import { getNavItems } from "../../lib/constants/navbar";
 import Icon from "../Icon";
-
-interface NavItem {
-    name: string;
-    href: string;
-    IconComponent: ComponentType;
-}
 
 export default function MobileNavbar() {
     const { user } = useAuthContext();
@@ -21,28 +11,7 @@ export default function MobileNavbar() {
         return null;
     }
 
-    const navItems: Array<NavItem> = [
-        {
-            name: "Dashboard",
-            href: `/${user.id}/dashboard`,
-            IconComponent: HomeIcon,
-        },
-        {
-            name: "Session",
-            href: `/${user.id}/session`,
-            IconComponent: SessionIcon,
-        },
-        {
-            name: "Stats",
-            href: `/${user.id}/stats`,
-            IconComponent: StatsIcon,
-        },
-        {
-            name: "Settings",
-            href: `/${user.id}/settings`,
-            IconComponent: SettingsIcon,
-        },
-    ];
+    const navItems = getNavItems(user.id);
 
     return (
         <nav

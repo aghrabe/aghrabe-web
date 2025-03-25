@@ -12,8 +12,8 @@ interface SessionContextType {
     remainingTime: number;
     progress: number;
     timeString: string;
-    shouldChange: boolean;
-    setShouldChange: Dispatch<SetStateAction<boolean>>;
+    settingsShouldChange: boolean;
+    setSettingsShouldChange: Dispatch<SetStateAction<boolean>>;
     startSession: () => void;
     stopSession: () => void;
     continueSession: () => void;
@@ -30,14 +30,15 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     const [message, setMessage] = useState<string>("Enjoy the game!");
     const [status, setStatus] = useState<TimerStatus>("idle");
     const [totalSeconds, setTotalSeconds] = useState<number>(50 * 60);
-    const [shouldChange, setShouldChange] = useState<boolean>(false);
+    const [settingsShouldChange, setSettingsShouldChange] =
+        useState<boolean>(false);
 
     useEffect(() => {
-        if (shouldChange) {
+        if (settingsShouldChange) {
             refetch(true);
         }
-        setShouldChange(false);
-    }, [shouldChange, refetch]);
+        setSettingsShouldChange(false);
+    }, [settingsShouldChange, refetch]);
 
     useEffect(() => {
         if (settingsState.data?.session_limit_minutes) {
@@ -141,8 +142,8 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
                 remainingTime,
                 progress,
                 timeString,
-                shouldChange,
-                setShouldChange,
+                settingsShouldChange,
+                setSettingsShouldChange,
                 startSession,
                 stopSession,
                 continueSession,

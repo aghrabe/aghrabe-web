@@ -22,7 +22,7 @@ export default function Settings() {
         updateSettings,
     } = useSettings();
     const { isMobile } = useBreakpoint();
-    const { setShouldChange } = useSession();
+    const { setSettingsShouldChange } = useSession();
     const iconSize = isMobile ? 18 : 20;
 
     const {
@@ -50,8 +50,8 @@ export default function Settings() {
     }, [settingsState.data, reset]);
 
     async function onSubmit(data: SettingsSchemaType) {
-        setShouldChange(true);
         await updateSettings(data);
+        setSettingsShouldChange(true);
     }
 
     return (

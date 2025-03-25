@@ -7,7 +7,9 @@ import {
     useLocation,
 } from "react-router-dom";
 
+import { useEffect } from "react";
 import { useAuthContext } from "./context/AuthContext";
+import CheckEmail from "./pages/CheckEmail";
 import Dashboard from "./pages/Dashboard";
 import Layout from "./pages/Layout";
 import LoadingPage from "./pages/LoadingPage";
@@ -16,9 +18,6 @@ import NotFound from "./pages/NotFound";
 import Register from "./pages/Register";
 import Session from "./pages/Session";
 import Settings from "./pages/Settings";
-import Stats from "./pages/Stats";
-import CheckEmail from "./pages/CheckEmail";
-import { useEffect } from "react";
 
 function ScrollToTop() {
     const { pathname } = useLocation();
@@ -66,7 +65,6 @@ export default function Router() {
                     <Route path={"/:id/dashboard"} element={<Dashboard />} />
                     <Route path={"/:id/session"} element={<Session />} />
                     <Route path={"/:id/settings"} element={<Settings />} />
-                    <Route path={"/:id/stats"} element={<Stats />} />
                 </Route>
                 <Route path={"/login"} element={<Login />} />
                 <Route path={"/register"} element={<Register />} />
