@@ -20,8 +20,8 @@ interface Props {
 export default function BeforeSessionModal({ onClose, onStart }: Props) {
     const { getMoodIcon, getMoodText } = useMoodMapper();
     const { gamesState, addGame } = useGames();
+    const { currentGame } = useCurrentGameContext();
     const [moodBefore, setMoodBefore] = useState<number>(3);
-    const { currentGame, setCurrentGame } = useCurrentGameContext();
     const [selectedGame, setSelectedGame] = useState<IGame | null>(currentGame);
     const [journalBefore, setJournalBefore] = useState<string>("");
     const [isAddingNewGame, setIsAddingNewGame] = useState<boolean>(false);
