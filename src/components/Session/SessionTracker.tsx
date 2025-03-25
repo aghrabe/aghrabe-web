@@ -3,10 +3,9 @@ import { useSession } from "../../context/SessionContext";
 import useSettings from "../../hooks/useSettings";
 import Button from "../Button";
 import CircularProgress from "../CircularProgress";
-import LoadingSpinner from "../LoadingSpinner";
 
 export default function SessionTracker() {
-    const { settingsState, errorMessage } = useSettings();
+    const { errorMessage } = useSettings();
     const {
         message,
         status,
@@ -18,10 +17,6 @@ export default function SessionTracker() {
         endSession,
     } = useSession();
     const { isMobile } = useBreakpoint();
-
-    if (settingsState.isLoading || !settingsState.data?.session_limit_minutes) {
-        return <LoadingSpinner size={"large"} />;
-    }
 
     return (
         <div

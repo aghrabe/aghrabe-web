@@ -75,5 +75,6 @@ export default function useSettings() {
         settingsState,
         errorMessage,
         updateSettings,
+        refetch,
     };
 }

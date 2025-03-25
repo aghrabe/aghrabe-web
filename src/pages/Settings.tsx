@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Bell, Clock, Coffee, Mail, Palette, Timer } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-
 import Button from "../components/Button";
 import Header from "../components/Header";
 import InputField from "../components/InputField";
@@ -13,6 +12,7 @@ import { useBreakpoint } from "../context/BreakpointContext";
 import useProfile from "../hooks/useProfile";
 import useSettings from "../hooks/useSettings";
 import { settingsSchema, SettingsSchemaType } from "../lib/types/settings";
+import { useSession } from "../context/SessionContext";
 
 export default function Settings() {
     const { profileState, errorMessage: profileErrorMessage } = useProfile();
@@ -22,6 +22,7 @@ export default function Settings() {
         updateSettings,
     } = useSettings();
     const { isMobile } = useBreakpoint();
+    const { setShouldChange } = useSession();
     const iconSize = isMobile ? 18 : 20;
 
     const {
@@ -49,6 +50,7 @@ export default function Settings() {
     }, [settingsState.data, reset]);
 
     async function onSubmit(data: SettingsSchemaType) {
+        setShouldChange(true);
         await updateSettings(data);
     }
 

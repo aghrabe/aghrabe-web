@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import useSettings from "../hooks/useSettings";
 import ContextGenerator from "./ContextGenerator";
 
@@ -12,6 +12,8 @@ interface SessionContextType {
     remainingTime: number;
     progress: number;
     timeString: string;
+    shouldChange: boolean;
+    setShouldChange: Dispatch<SetStateAction<boolean>>;
     startSession: () => void;
     stopSession: () => void;
     continueSession: () => void;
@@ -22,13 +24,20 @@ const { Provider, useContextValue: useSession } =
     ContextGenerator<SessionContextType>("Session");
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
-    const { settingsState } = useSettings();
+    const { settingsState, refetch } = useSettings();
     const timerRef = useRef<NodeJS.Timeout | null>(null);
-
     const [elapsed, setElapsed] = useState<number>(0);
     const [message, setMessage] = useState<string>("Enjoy the game!");
     const [status, setStatus] = useState<TimerStatus>("idle");
     const [totalSeconds, setTotalSeconds] = useState<number>(50 * 60);
+    const [shouldChange, setShouldChange] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (shouldChange) {
+            refetch(true);
+        }
+        setShouldChange(false);
+    }, [shouldChange, refetch]);
 
     useEffect(() => {
         if (settingsState.data?.session_limit_minutes) {
@@ -132,6 +141,8 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
                 remainingTime,
                 progress,
                 timeString,
+                shouldChange,
+                setShouldChange,
                 startSession,
                 stopSession,
                 continueSession,

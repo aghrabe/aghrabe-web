@@ -9,14 +9,14 @@ import { BreakpointProvider } from "./context/BreakpointContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
-        <BreakpointProvider>
-            <ThemeProvider>
+        <ThemeProvider>
+            <BreakpointProvider>
                 <AuthProvider>
                     <SessionProvider>
                         <App />
                     </SessionProvider>
                 </AuthProvider>
-            </ThemeProvider>
-        </BreakpointProvider>
+            </BreakpointProvider>
+        </ThemeProvider>
     </StrictMode>,
 );
