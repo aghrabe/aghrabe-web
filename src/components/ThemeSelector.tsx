@@ -48,16 +48,15 @@ export default function ThemeSelector() {
                 <button
                     type={"button"}
                     key={theme.themeName}
-                    className={`flex flex-col items-center border-[2px] ${
-                        theme.themeName.toLowerCase() ===
-                        globalTheme.toLowerCase()
+                    className={`flex flex-col items-center border-[2px] ${theme.themeName.toLowerCase() ===
+                            globalTheme.toLowerCase()
                             ? "border-primary"
                             : "border-outline"
-                    } rounded-md p-2 md:p-4 transition-opacity duration-150 ease-in-out hover:border-icon cursor-pointer`}
+                        } rounded-md p-2 md:p-4 transition-opacity duration-150 ease-in-out hover:border-icon cursor-pointer`}
                     onClick={() => setGlobalTheme(theme.themeName)}
                 >
                     <h4 className={"text-md md:text-lg"}>{theme.themeName}</h4>
-                    <div className={"py-2 md:py-4 flex gap-2"}>
+                    <div className={"py-2 md:py-4 flex gap-1 md:gap-2"}>
                         {theme.colors.map((color) => (
                             <div
                                 key={color}
