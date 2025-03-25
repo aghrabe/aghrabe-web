@@ -13,16 +13,11 @@ import Button from "../Button";
 import Modal from "./Modal";
 
 interface Props {
-    isOpen: boolean;
     onClose: () => void;
-    onStart: (moodBefore: number, journalBefore: string) => void;
+    onStart: () => void;
 }
 
-export default function BeforeSessionModal({
-    isOpen,
-    onClose,
-    onStart,
-}: Props) {
+export default function BeforeSessionModal({ onClose, onStart }: Props) {
     const { getMoodIcon, getMoodText } = useMoodMapper();
     const { gamesState, addGame } = useGames();
     const [moodBefore, setMoodBefore] = useState<number>(3);
@@ -100,15 +95,8 @@ export default function BeforeSessionModal({
         // We'll select the new game in the next render when it's available
     };
 
-    const handleStartSession = () => {
-        if (selectedGame) {
-            setCurrentGame(selectedGame);
-            onStart(moodBefore, journalBefore);
-        }
-    };
-
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={true} onClose={onClose}>
             <div
                 className={
                     "max-h-[80vh] space-y-4 md:space-y-6 overflow-y-auto p-0 md:p-6"
@@ -270,7 +258,7 @@ export default function BeforeSessionModal({
                         Cancel
                     </Button>
                     <Button
-                        onClick={handleStartSession}
+                        onClick={onStart}
                         variant={"contained"}
                         size={"small"}
                         fullWidth

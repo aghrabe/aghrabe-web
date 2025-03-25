@@ -11,7 +11,7 @@ export default function SessionTracker() {
         status,
         progress,
         timeString,
-        startSession,
+        handleStatusOnStart,
         stopSession,
         continueSession,
         endSession,
@@ -44,7 +44,7 @@ export default function SessionTracker() {
             >
                 {(status === "idle" || status === "ended") && (
                     <Button
-                        onClick={startSession}
+                        onClick={handleStatusOnStart}
                         variant={"contained"}
                         size={isMobile ? "small" : "medium"}
                     >

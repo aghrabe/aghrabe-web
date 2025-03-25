@@ -5,7 +5,13 @@ import ContextGenerator from "./ContextGenerator";
 import { useCurrentGameContext } from "./CurrentGameContext";
 import { AddSessionDto } from "../lib/types/sessions";
 
-type TimerStatus = "idle" | "running" | "paused" | "ended";
+type TimerStatus =
+    | "idle"
+    | "wantToStart"
+    | "running"
+    | "paused"
+    | "wantToEnd"
+    | "ended";
 
 interface CurrentSessionContextType {
     elapsed: number;
@@ -17,6 +23,8 @@ interface CurrentSessionContextType {
     timeString: string;
     settingsShouldChange: boolean;
     setSettingsShouldChange: Dispatch<SetStateAction<boolean>>;
+    handleGetBackToIdle: () => void;
+    handleStatusOnStart: () => void;
     startSession: () => void;
     stopSession: () => void;
     continueSession: () => void;
@@ -108,6 +116,14 @@ export function CurrentSessionProvider({
         };
     }, [status, totalSeconds]);
 
+    function handleGetBackToIdle() {
+        setStatus("idle");
+    }
+
+    function handleStatusOnStart() {
+        setStatus("wantToStart");
+    }
+
     function startSession() {
         // TODO: send a notification if total limit reached and don't allow the startSession process
         setElapsed(0);
@@ -179,6 +195,8 @@ export function CurrentSessionProvider({
                 timeString,
                 settingsShouldChange,
                 setSettingsShouldChange,
+                handleGetBackToIdle,
+                handleStatusOnStart,
                 startSession,
                 stopSession,
                 continueSession,

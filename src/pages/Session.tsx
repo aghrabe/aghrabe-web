@@ -1,17 +1,20 @@
 import { CalendarDays } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MoreIcon from "../assets/icons/MoreIcon";
 import Header from "../components/Header";
 import Icon from "../components/Icon";
 import LoadingSpinner from "../components/LoadingSpinner";
+import BeforeSessionModal from "../components/Modals/BeforeSessionModal";
+import SessionDetailsModal from "../components/Modals/SessionDetailModal";
 import SessionList from "../components/Session/SessionList";
 import SessionTracker from "../components/Session/SessionTracker";
-import SessionDetailsModal from "../components/Modals/SessionDetailModal";
 import { useBreakpoint } from "../context/BreakpointContext";
+import { useCurrentSession } from "../context/CurrentSessionContext";
 import useSessions from "../hooks/useSessions";
 import type { ISession } from "../lib/types/sessions";
-import BeforeSessionModal from "../components/Modals/BeforeSessionModal";
+
+type ModalType = "SessionDetail" | "BeforeSession" | "StartSession";
 
 export default function Session() {
     const { sessionsState } = useSessions();
@@ -19,10 +22,39 @@ export default function Session() {
         null,
     );
     const { isMobile } = useBreakpoint();
+    const {
+        status: currentSessionStatus,
+        startSession,
+        handleGetBackToIdle,
+    } = useCurrentSession();
     const navigate = useNavigate();
 
-    function handleModalClose() {
-        setSelectedSession(null);
+    useEffect(() => {
+        if (currentSessionStatus === "wantToStart") {
+            navigate("?before-you-start");
+        }
+        if (currentSessionStatus === "idle") {
+            navigate("?session-card");
+        }
+    }, [currentSessionStatus, navigate]);
+
+    function handleModalClose(modalType: ModalType) {
+        switch (modalType) {
+            case "SessionDetail":
+                setSelectedSession(null);
+                break;
+
+            case "BeforeSession":
+                handleGetBackToIdle();
+                break;
+
+            case "StartSession":
+                startSession();
+                break;
+
+            default:
+                break;
+        }
         // INFO: navigate back to the '/session' page before openning modal
         navigate("");
     }
@@ -93,11 +125,16 @@ export default function Session() {
             {selectedSession && (
                 <SessionDetailsModal
                     session={selectedSession}
-                    onClose={handleModalClose}
+                    onClose={() => handleModalClose("SessionDetail")}
                 />
             )}
 
-            <BeforeSessionModal isOpen={true} onClose={() => { }} />
+            {currentSessionStatus === "wantToStart" && (
+                <BeforeSessionModal
+                    onStart={() => handleModalClose("StartSession")}
+                    onClose={() => handleModalClose("BeforeSession")}
+                />
+            )}
         </div>
     );
 }
