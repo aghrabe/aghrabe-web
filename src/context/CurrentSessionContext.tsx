@@ -5,6 +5,12 @@ import { CreateSessionDto, UpdateSessionDto } from "../lib/types/sessions";
 import { useAuthContext } from "./AuthContext";
 import ContextGenerator from "./ContextGenerator";
 import { useCurrentGameContext } from "./CurrentGameContext";
+import { useFeedbackContext } from "./FeedbackContext";
+import {
+    AfterSessionFeedbackDto,
+    BeforeSessionFeedbackDto,
+} from "../lib/types/sessionFeedbacks";
+import useSessionFeedback from "../hooks/useSessionFeedback";
 
 type TimerStatus =
     | "idle"
@@ -26,12 +32,13 @@ interface CurrentSessionContextType {
     setSettingsShouldChange: Dispatch<SetStateAction<boolean>>;
     handleGetBackToIdle: () => void;
     handleStatusOnStart: () => void;
+    handleStatusOnEnd: () => void;
     startSession: () => void;
     stopSession: () => void;
     continueSession: () => void;
     endSession: () => void;
-    createSession: () => void;
-    updateCurrentSession: () => void;
+    createSessionWithFeedbackInDB: () => void;
+    updateSessionWithFeedbackInDB: () => void;
 }
 
 const { Provider, useContextValue: useCurrentSession } =
@@ -44,9 +51,18 @@ export function CurrentSessionProvider({
 }) {
     const { user } = useAuthContext();
     const { currentGame, setCurrentGame } = useCurrentGameContext();
-    const { settingsState, refetch } = useSettings();
-    const { addSession, updateSession } = useSessions();
+    const { settingsState, refetch: refetchSettings } = useSettings();
+    const {
+        addSession,
+        updateSession,
+        refetch: refetchSessions,
+    } = useSessions();
+    const { beforeFeedback, afterFeedback } = useFeedbackContext();
+    const { addSessionFeedback, updateSessionFeedback } = useSessionFeedback();
     const [createdSessionID, setCreatedSessionID] = useState<string | null>(
+        null,
+    );
+    const [createdFeedbackID, setCreatedFeedbackID] = useState<string | null>(
         null,
     );
     const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -62,10 +78,10 @@ export function CurrentSessionProvider({
 
     useEffect(() => {
         if (settingsShouldChange) {
-            refetch(true);
+            refetchSettings(true);
             setSettingsShouldChange(false);
         }
-    }, [settingsShouldChange, refetch]);
+    }, [settingsShouldChange, refetchSettings]);
 
     useEffect(() => {
         if (settingsState.data?.session_limit_minutes) {
@@ -134,13 +150,17 @@ export function CurrentSessionProvider({
         setStatus("wantToStart");
     }
 
+    function handleStatusOnEnd() {
+        setStatus("wantToEnd");
+    }
+
     function startSession() {
         // TODO: send a notification if total limit reached and don't allow the startSession process
         setElapsed(0);
         setMessage(`Enjoy Playing ${currentGame?.title}!`);
         setStatus("running");
 
-        createSession();
+        createSessionWithFeedbackInDB();
     }
 
     function stopSession() {
@@ -168,10 +188,10 @@ export function CurrentSessionProvider({
         // TODO: send notification
         // TODO: save session data to db
 
-        updateCurrentSession();
+        updateSessionWithFeedbackInDB();
     }
 
-    async function createSession() {
+    async function createSessionWithFeedbackInDB() {
         if (!user) {
             alert("unAuthorized");
             return;
@@ -183,6 +203,7 @@ export function CurrentSessionProvider({
         }
 
         const startTime = new Date().toISOString();
+        setStartTimeState(startTime);
 
         const sessionData: CreateSessionDto = {
             user_id: user.id,
@@ -190,19 +211,34 @@ export function CurrentSessionProvider({
             start_time: startTime,
             end_time: null,
         };
-
-        setStartTimeState(startTime);
-        console.log("Session created:", sessionData);
-
-        const result = await addSession(sessionData);
-        if (!result) {
-            console.error("Creating session failed");
+        const sessionID = await addSession(sessionData);
+        if (!sessionID) {
+            console.error("Creating session failed, no sessionID");
             return;
         }
-        setCreatedSessionID(result);
+        setCreatedSessionID(sessionID);
+
+        if (!beforeFeedback) {
+            alert("before feedback is empty");
+            return;
+        }
+
+        const feedbackData: BeforeSessionFeedbackDto = {
+            user_id: user.id,
+            game_id: currentGame.id,
+            session_id: sessionID,
+            mood_before: beforeFeedback.mood_before,
+            journal_before: beforeFeedback.journal_before,
+        };
+        const feedbackID = await addSessionFeedback(feedbackData);
+        if (!feedbackID) {
+            console.error("Creating session failed, no feedbackID");
+            return;
+        }
+        setCreatedFeedbackID(feedbackID);
     }
 
-    async function updateCurrentSession() {
+    async function updateSessionWithFeedbackInDB() {
         if (!user) {
             alert("unAuthorized");
             return;
@@ -223,12 +259,22 @@ export function CurrentSessionProvider({
                     ? undefined
                     : Math.floor(elapsed / 60),
         };
-
-        console.log("triggering update row");
-
         await updateSession(createdSessionID!, sessionData);
 
-        console.log("Session updated:", sessionData);
+        if (!afterFeedback) {
+            alert("after feedback is empty");
+            return;
+        }
+        const feedbackData: AfterSessionFeedbackDto = {
+            user_id: user.id,
+            game_id: currentGame.id,
+            session_id: createdSessionID!,
+            mood_after: afterFeedback.mood_after,
+            journal_after: afterFeedback.journal_after,
+        };
+
+        await updateSessionFeedback(createdFeedbackID!, feedbackData);
+        await refetchSessions(true);
 
         setStartTimeState("");
         setCurrentGame(null);
@@ -248,12 +294,13 @@ export function CurrentSessionProvider({
                 setSettingsShouldChange,
                 handleGetBackToIdle,
                 handleStatusOnStart,
+                handleStatusOnEnd,
                 startSession,
                 stopSession,
                 continueSession,
                 endSession,
-                createSession,
-                updateCurrentSession,
+                createSessionWithFeedbackInDB,
+                updateSessionWithFeedbackInDB,
             }}
         >
             {children}

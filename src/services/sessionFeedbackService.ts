@@ -2,7 +2,7 @@ import supabase from "./supabaseClient";
 import safeExecute from "../lib/utils/safeExecute";
 import {
     ISessionFeedback,
-    NewSessionFeedbackDto,
+    BeforeSessionFeedbackDto,
 } from "../lib/types/sessionFeedbacks";
 
 export async function getSessionFeedbacksService(
@@ -26,13 +26,29 @@ export async function getSessionFeedbacksService(
 }
 
 export async function addSessionFeedbackService(
-    newFeedback: NewSessionFeedbackDto,
+    newFeedback: BeforeSessionFeedbackDto,
+): Promise<[ISessionFeedback | null, Error | null]> {
+    return await safeExecute(async () => {
+        const { data, error } = await supabase
+            .from("session_feedbacks")
+            .insert(newFeedback)
+            .select()
+            .single();
+
+        if (error) throw error;
+        return data;
+    });
+}
+
+export async function updateSessionFeedbackService(
+    feedbackId: string,
+    updatedFields: Partial<BeforeSessionFeedbackDto>,
 ): Promise<[void | null, Error | null]> {
     return await safeExecute(async () => {
         const result = await supabase
             .from("session_feedbacks")
-            .insert(newFeedback)
-            .single();
+            .update(updatedFields)
+            .eq("id", feedbackId);
         if (result.error) throw result.error;
         return;
     });

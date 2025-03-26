@@ -1,21 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useAuthContext } from "../context/AuthContext";
-import { ISession, CreateSessionDto } from "../lib/types/sessions";
-import useQuery from "./useQuery";
+import { CreateSessionDto, ISession } from "../lib/types/sessions";
 import {
-    getSessionsService,
     addSessionService,
-    updateSessionService,
+    getSessionsService,
     getSingleSessionService,
+    updateSessionService,
 } from "../services/sessionService";
+import useQuery from "./useQuery";
 
 export default function useSessions() {
     const { user } = useAuthContext();
     const [errorMessage, setErrorMessage] = useState<string>("");
-
-    useEffect(() => {
-        console.error(errorMessage);
-    }, [errorMessage]);
 
     const getSessions = useCallback(async (): Promise<Array<ISession>> => {
         if (!user?.id) return [];
@@ -86,5 +82,6 @@ export default function useSessions() {
         addSession,
         updateSession,
         getSingleSession,
+        refetch,
     };
 }

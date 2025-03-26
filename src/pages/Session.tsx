@@ -13,8 +13,14 @@ import { useBreakpoint } from "../context/BreakpointContext";
 import { useCurrentSession } from "../context/CurrentSessionContext";
 import useSessions from "../hooks/useSessions";
 import type { ISession } from "../lib/types/sessions";
+import AfterSessionModal from "../components/Modals/AfterSessionModal";
 
-type ModalType = "SessionDetail" | "BeforeSession" | "StartSession";
+type ModalType =
+    | "SessionDetail"
+    | "CancelSessionStart"
+    | "StartSession"
+    | "CancelSessionEnd"
+    | "EndSession";
 
 export default function Session() {
     const { sessionsState } = useSessions();
@@ -25,6 +31,7 @@ export default function Session() {
     const {
         status: currentSessionStatus,
         startSession,
+        endSession,
         handleGetBackToIdle,
     } = useCurrentSession();
     const navigate = useNavigate();
@@ -44,12 +51,20 @@ export default function Session() {
                 setSelectedSession(null);
                 break;
 
-            case "BeforeSession":
+            case "CancelSessionStart":
                 handleGetBackToIdle();
                 break;
 
             case "StartSession":
                 startSession();
+                break;
+
+            // TODO: handle
+            case "CancelSessionEnd":
+                break;
+
+            case "EndSession":
+                endSession();
                 break;
 
             default:
@@ -132,7 +147,14 @@ export default function Session() {
             {currentSessionStatus === "wantToStart" && (
                 <BeforeSessionModal
                     onStart={() => handleModalClose("StartSession")}
-                    onClose={() => handleModalClose("BeforeSession")}
+                    onClose={() => handleModalClose("CancelSessionStart")}
+                />
+            )}
+
+            {currentSessionStatus === "wantToEnd" && (
+                <AfterSessionModal
+                    onStart={() => handleModalClose("EndSession")}
+                    onClose={() => handleModalClose("CancelSessionEnd")}
                 />
             )}
         </div>

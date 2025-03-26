@@ -10,6 +10,7 @@ import useGames from "../../hooks/useGames";
 import useMoodMapper from "../../hooks/useMoodMapper";
 import Button from "../Button";
 import Modal from "./Modal";
+import { useFeedbackContext } from "../../context/FeedbackContext";
 
 interface Props {
     onClose: () => void;
@@ -20,10 +21,12 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
     const { getMoodIcon, getMoodText } = useMoodMapper();
     const { gamesState, addGame } = useGames();
     const { currentGame, setCurrentGame } = useCurrentGameContext();
-    const [moodBefore, setMoodBefore] = useState<number>(3);
-    const [journalBefore, setJournalBefore] = useState<string>("");
+    const { beforeFeedback, setBeforeFeedback } = useFeedbackContext();
     const [isAddingNewGame, setIsAddingNewGame] = useState<boolean>(false);
     const [newGameTitle, setNewGameTitle] = useState<string>("");
+
+    const moodBefore = beforeFeedback?.mood_before ?? 3;
+    const journalBefore = beforeFeedback?.journal_before ?? "";
 
     function renderMoodSelector(
         label: string,
@@ -39,7 +42,6 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
                 <div className={"flex justify-between items-center"}>
                     {[1, 2, 3, 4, 5].map((mood) => {
                         const isActive = mood === value;
-
                         return (
                             <div
                                 key={mood}
@@ -59,7 +61,9 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
                                     {getMoodIcon(mood)}
                                 </button>
                                 <p
-                                    className={`${isActive ? "opacity-100" : "opacity-0"} text-center text-xs md:text-sm`}
+                                    className={`${
+                                        isActive ? "opacity-100" : "opacity-0"
+                                    } text-center text-xs md:text-sm`}
                                 >
                                     {getMoodText(mood)}
                                 </p>
@@ -73,25 +77,33 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
 
     const handleGameChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const gameId = e.target.value;
-
         if (gameId === "add-new") {
             setIsAddingNewGame(true);
             return;
         }
-
         const game = gamesState.data?.find((g) => g.id === gameId) || null;
         setCurrentGame(game);
     };
 
     const handleAddNewGame = async () => {
         if (!newGameTitle.trim()) return;
-
         await addGame({ title: newGameTitle.trim() });
         setIsAddingNewGame(false);
         setNewGameTitle("");
+    };
 
-        // The game list will be refreshed by the addGame function
-        // We'll select the new game in the next render when it's available
+    const handleMoodChange = (newMood: number) => {
+        setBeforeFeedback({
+            mood_before: newMood,
+            journal_before: journalBefore,
+        });
+    };
+
+    const handleJournalChange = (text: string) => {
+        setBeforeFeedback({
+            mood_before: moodBefore,
+            journal_before: text,
+        });
     };
 
     return (
@@ -140,7 +152,6 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
                                         }
                                         autoFocus
                                     />
-
                                     <div
                                         className={"w-full flex flex-row gap-2"}
                                     >
@@ -213,9 +224,8 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
                         {renderMoodSelector(
                             "How do you feel before playing?",
                             moodBefore,
-                            setMoodBefore,
+                            handleMoodChange,
                         )}
-
                         <div className={"py-2"}>
                             <div className={"flex gap-3"}>
                                 <NotebookText
@@ -234,7 +244,7 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
                             <textarea
                                 value={journalBefore}
                                 onChange={(e) =>
-                                    setJournalBefore(e.target.value)
+                                    handleJournalChange(e.target.value)
                                 }
                                 placeholder={
                                     "How are you feeling before playing? (optional)"

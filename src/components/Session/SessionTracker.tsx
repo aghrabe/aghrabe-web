@@ -12,9 +12,9 @@ export default function SessionTracker() {
         progress,
         timeString,
         handleStatusOnStart,
+        handleStatusOnEnd,
         stopSession,
         continueSession,
-        endSession,
     } = useCurrentSession();
     const { isMobile } = useBreakpoint();
 
@@ -70,7 +70,7 @@ export default function SessionTracker() {
                             Continue
                         </Button>
                         <Button
-                            onClick={endSession}
+                            onClick={handleStatusOnEnd}
                             variant={"outlined"}
                             size={isMobile ? "small" : "medium"}
                             className={`${isMobile ? "mb-4" : ""}`}

@@ -7,6 +7,7 @@ import { ThemeProvider } from "./context/ThemeContext.tsx";
 import { CurrentSessionProvider } from "./context/CurrentSessionContext.tsx";
 import { BreakpointProvider } from "./context/BreakpointContext.tsx";
 import { CurrentGameProvider } from "./context/CurrentGameContext.tsx";
+import { FeedbackProvider } from "./context/FeedbackContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
@@ -14,9 +15,11 @@ createRoot(document.getElementById("root")!).render(
             <BreakpointProvider>
                 <AuthProvider>
                     <CurrentGameProvider>
-                        <CurrentSessionProvider>
-                            <App />
-                        </CurrentSessionProvider>
+                        <FeedbackProvider>
+                            <CurrentSessionProvider>
+                                <App />
+                            </CurrentSessionProvider>
+                        </FeedbackProvider>
                     </CurrentGameProvider>
                 </AuthProvider>
             </BreakpointProvider>

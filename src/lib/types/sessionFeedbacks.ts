@@ -11,7 +11,12 @@ export interface ISessionFeedback {
     updated_at: string;
 }
 
-export type NewSessionFeedbackDto = Omit<
+export type BeforeSessionFeedbackDto = Omit<
     ISessionFeedback,
-    "id" | "created_at" | "updated_at"
+    "id" | "created_at" | "updated_at" | "mood_after"
+>;
+
+export type AfterSessionFeedbackDto = Omit<
+    ISessionFeedback,
+    "id" | "created_at" | "updated_at" | "mood_before"
 >;

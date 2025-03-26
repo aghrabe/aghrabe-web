@@ -1,11 +1,12 @@
 import { useCallback, useState } from "react";
 import {
     ISessionFeedback,
-    NewSessionFeedbackDto,
+    BeforeSessionFeedbackDto,
 } from "../lib/types/sessionFeedbacks";
 import {
     getSessionFeedbacksService,
     addSessionFeedbackService,
+    updateSessionFeedbackService,
 } from "../services/sessionFeedbackService";
 import useQuery from "./useQuery";
 import { useAuthContext } from "../context/AuthContext";
@@ -36,8 +37,31 @@ export default function useSessionFeedback(sessionId?: string) {
     );
 
     const addSessionFeedback = useCallback(
-        async (newFeedback: NewSessionFeedbackDto): Promise<void> => {
-            const [, error] = await addSessionFeedbackService(newFeedback);
+        async (
+            newFeedback: BeforeSessionFeedbackDto,
+        ): Promise<string | undefined> => {
+            const [feedback, error] =
+                await addSessionFeedbackService(newFeedback);
+            if (error) {
+                setErrorMessage(error.message);
+                return;
+            } else {
+                refetch(true);
+                return feedback?.id || undefined;
+            }
+        },
+        [refetch],
+    );
+
+    const updateSessionFeedback = useCallback(
+        async (
+            feedbackId: string,
+            updatedFeedback: Partial<BeforeSessionFeedbackDto>,
+        ): Promise<void> => {
+            const [, error] = await updateSessionFeedbackService(
+                feedbackId,
+                updatedFeedback,
+            );
             if (error) {
                 setErrorMessage(error.message);
             } else {
@@ -51,6 +75,7 @@ export default function useSessionFeedback(sessionId?: string) {
         feedbackState,
         errorMessage,
         addSessionFeedback,
+        updateSessionFeedback,
         refetch,
     };
 }
