@@ -68,6 +68,7 @@ export default function useSessions() {
                 updatedFields,
             );
             if (error) {
+                console.error(error.message);
                 setErrorMessage(error.message);
             } else {
                 refetch(true);

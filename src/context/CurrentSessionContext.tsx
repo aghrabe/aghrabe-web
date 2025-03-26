@@ -132,7 +132,7 @@ export function CurrentSessionProvider({
                     clearInterval(timerRef.current!);
                     timerRef.current = null;
                     setMessage("Time's up!");
-                    setStatus("ended");
+                    handleStatusOnEnd();
                     return totalSeconds;
                 }
                 return prev + 1;
@@ -260,10 +260,6 @@ export function CurrentSessionProvider({
             game_id: currentGame.id,
             start_time: startTimeState,
             end_time: new Date().toISOString(),
-            duration_minutes:
-                Math.floor(elapsed / 60) === 0
-                    ? undefined
-                    : Math.floor(elapsed / 60),
         };
         await updateSession(createdSessionID!, sessionData);
 
@@ -271,6 +267,7 @@ export function CurrentSessionProvider({
             alert("after feedback is empty");
             return;
         }
+
         const feedbackData: AfterSessionFeedbackDto = {
             user_id: user.id,
             game_id: currentGame.id,

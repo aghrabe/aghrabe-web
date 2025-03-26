@@ -64,6 +64,7 @@ export default function useSessionFeedback(sessionId?: string) {
             );
             if (error) {
                 setErrorMessage(error.message);
+                console.error(error.message);
             } else {
                 refetch(true);
             }
