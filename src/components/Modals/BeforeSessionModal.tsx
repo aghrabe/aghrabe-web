@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useCurrentGameContext } from "../../context/CurrentGameContext";
 import useGames from "../../hooks/useGames";
 import useMoodMapper from "../../hooks/useMoodMapper";
@@ -16,6 +17,7 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
     const { gamesState, addGame } = useGames();
     const { currentGame, setCurrentGame } = useCurrentGameContext();
     const { beforeFeedback, setBeforeFeedback } = useFeedbackContext();
+    const [gameError, setGameError] = useState<string | undefined>(undefined);
 
     const moodBefore = beforeFeedback?.mood_before ?? 3;
     const journalBefore = beforeFeedback?.journal_before ?? "";
@@ -23,26 +25,36 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
     const handleGameChange = (gameId: string) => {
         const game = gamesState.data?.find((g) => g.id === gameId) || null;
         setCurrentGame(game);
+        setGameError(undefined);
     };
 
     const handleAddNewGame = async (title: string) => {
         await addGame({ title });
     };
 
+    const handleStartSession = () => {
+        if (!currentGame) {
+            setGameError("Please select a game before starting your session");
+            return;
+        }
+        onStart();
+    };
+
     return (
         <BaseSessionModal
             isOpen={true}
             onClose={onClose}
-            onSubmit={onStart}
+            onSubmit={handleStartSession}
             title={"Before You Start"}
             submitText={"Start Session"}
-            isSubmitDisabled={!currentGame}
+            isSubmitDisabled={false}
         >
             <GameSelectionSection
                 games={gamesState.data || []}
                 currentGameId={currentGame?.id || null}
                 onGameChange={handleGameChange}
                 onAddGame={handleAddNewGame}
+                error={gameError}
             />
 
             <FeedbackSection

@@ -7,6 +7,7 @@ interface GameSelectionSectionProps {
     currentGameId: string | null;
     onGameChange: (gameId: string) => void;
     onAddGame: (title: string) => Promise<void>;
+    error?: string;
 }
 
 export default function GameSelectionSection({
@@ -14,6 +15,7 @@ export default function GameSelectionSection({
     currentGameId,
     onGameChange,
     onAddGame,
+    error,
 }: GameSelectionSectionProps) {
     const [isAddingNewGame, setIsAddingNewGame] = useState<boolean>(false);
     const [newGameTitle, setNewGameTitle] = useState<string>("");
@@ -90,9 +92,11 @@ export default function GameSelectionSection({
                         <select
                             value={currentGameId || ""}
                             onChange={handleGameChange}
-                            className={
-                                "flex-1 bg-background border border-outline rounded-md px-3 py-2 text-sm"
-                            }
+                            className={`flex-1 bg-background border rounded-md px-3 py-2 text-sm ${
+                                error
+                                    ? "border-error focus:ring-error"
+                                    : "border-outline focus:ring-primary"
+                            }`}
                         >
                             <option value={""} disabled>
                                 Select a game
@@ -116,6 +120,7 @@ export default function GameSelectionSection({
                     </div>
                 )}
             </div>
+            {error && <p className={"text-error text-sm mt-2"}>{error}</p>}
         </div>
     );
 }
