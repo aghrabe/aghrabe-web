@@ -1,6 +1,7 @@
 import { Gamepad2Icon as GameController2, Plus } from "lucide-react";
 import { ChangeEvent, useState } from "react";
 import Button from "./Button";
+import FormErrorSection from "./FormErrorSection";
 
 interface GameSelectionSectionProps {
     games: Array<{ id: string; title: string }>;
@@ -54,6 +55,7 @@ export default function GameSelectionSection({
                     What you want to play?
                 </p>
             </div>
+            {error && <FormErrorSection error={error} />}
             <div className={"flex-1"}>
                 {isAddingNewGame ? (
                     <div className={"flex flex-col gap-2 mt-1"}>
@@ -120,7 +122,6 @@ export default function GameSelectionSection({
                     </div>
                 )}
             </div>
-            {error && <p className={"text-error text-sm mt-2"}>{error}</p>}
         </div>
     );
 }

@@ -255,7 +255,7 @@ export function CurrentSessionProvider({
             return;
         }
 
-        const sessionData: Partial<UpdateSessionDto> = {
+        const sessionData: UpdateSessionDto = {
             user_id: user.id,
             game_id: currentGame.id,
             start_time: startTimeState,

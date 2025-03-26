@@ -1,4 +1,5 @@
 import { InputHTMLAttributes, ReactElement } from "react";
+import FormErrorSection from "./FormErrorSection";
 
 interface Props extends InputHTMLAttributes<HTMLInputElement> {
     label?: string | ReactElement;
@@ -24,7 +25,7 @@ export default function InputField({ error, label, id, ref, ...props }: Props) {
                 className={`border rounded-md px-3 py-2 md:px-4 md:py-3 focus:ring-2 text-base md:text-xl placeholder:text-outline-variant transition outline-none ${error ? "border-error focus:ring-error focus:border-error" : "border-outline focus:ring-primary focus:border-primary"}`}
                 {...props}
             />
-            {error && <p className={"text-error text-sm"}>{error}</p>}
+            {error && <FormErrorSection error={error} />}
         </div>
     );
 }

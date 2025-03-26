@@ -22,5 +22,4 @@ export interface CreateSessionDto extends SessionBase {
 
 export interface UpdateSessionDto extends CreateSessionDto {
     end_time: string;
-    duration_minutes: number;
 }

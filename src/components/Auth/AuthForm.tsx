@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FieldErrors, useForm } from "react-hook-form";
-
 import {
     loginSchema,
     LoginSchemaType,
@@ -13,6 +12,7 @@ import Icon from "../Icon";
 import GoogleIcon from "../../assets/icons/GoogleIcon";
 import { OAuthResponse } from "@supabase/supabase-js";
 import { AuthProviderError } from "../../lib/constants/authErrors";
+import { useBreakpoint } from "../../context/BreakpointContext";
 
 interface AuthProps {
     onSubmit: (values: LoginSchemaType) => Promise<void>;
@@ -42,6 +42,7 @@ export default function AuthForm({ type, onSubmit, onOAuth }: Props) {
         resolver: zodResolver(schema),
         mode: "onBlur",
     });
+    const { isMobile } = useBreakpoint();
 
     async function submitHandler(data: LoginSchemaType | RegisterSchemaType) {
         try {
@@ -106,7 +107,7 @@ export default function AuthForm({ type, onSubmit, onOAuth }: Props) {
                 <div className={"space-y-2"}>
                     <Button
                         type={"submit"}
-                        size={"large"}
+                        size={isMobile ? "medium" : "large"}
                         loading={isSubmitting}
                         fullWidth
                     >
@@ -115,7 +116,7 @@ export default function AuthForm({ type, onSubmit, onOAuth }: Props) {
                     {type === "login" && (
                         <Button
                             type={"button"}
-                            size={"large"}
+                            size={isMobile ? "medium" : "large"}
                             variant={"text"}
                             fullWidth
                         >
@@ -136,7 +137,7 @@ export default function AuthForm({ type, onSubmit, onOAuth }: Props) {
                     type={"button"}
                     onClick={onOAuth}
                     variant={"contained"}
-                    size={"large"}
+                    size={isMobile ? "medium" : "large"}
                     className={
                         "bg-google-btn-bg text-google-btn-text border border-google-btn-border hover:bg-google-btn-hover-bg flex items-center justify-center gap-2"
                     }

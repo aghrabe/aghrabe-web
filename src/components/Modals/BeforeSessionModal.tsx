@@ -34,7 +34,7 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
 
     const handleStartSession = () => {
         if (!currentGame) {
-            setGameError("Please select a game before starting your session");
+            setGameError("Please select a game before starting");
             return;
         }
         onStart();
