@@ -26,7 +26,7 @@ export default function MobileNavbar() {
                         <Link
                             key={name}
                             to={href}
-                            className={`flex flex-col items-center ${isActive ? "text-on-surface" : "text-outline-variant"}`}
+                            className={`basis-1/3 flex flex-col items-center ${isActive ? "text-on-surface" : "text-outline-variant"}`}
                         >
                             <Icon size={"medium"}>
                                 <IconComponent />
