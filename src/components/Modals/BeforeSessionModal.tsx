@@ -39,18 +39,16 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
                     <Brain className={"h-5 w-5 md:h-6 md:w-6 text-primary"} />
                     <p className={"text-sm md:text-lg font-medium"}>{label}</p>
                 </div>
-                <div className={"flex justify-between items-center"}>
+                <div className="flex justify-between items-center">
                     {[1, 2, 3, 4, 5].map((mood) => {
                         const isActive = mood === value;
                         return (
                             <div
                                 key={mood}
-                                className={
-                                    "min-w-16 sm:min-w-20 flex flex-col justify-center items-center gap-1 md:gap-2"
-                                }
+                                className="min-w-14 sm:min-w-20 flex flex-col justify-center items-center gap-1 md:gap-2"
                             >
                                 <button
-                                    type={"button"}
+                                    type="button"
                                     onClick={() => onChange(mood)}
                                     className={`p-2 rounded-full transition-all ${
                                         isActive
@@ -61,7 +59,7 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
                                     {getMoodIcon(mood)}
                                 </button>
                                 <p
-                                    className={`${
+                                    className={`whitespace-nowrap ${
                                         isActive ? "opacity-100" : "opacity-0"
                                     } text-center text-xs md:text-sm`}
                                 >

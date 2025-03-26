@@ -57,7 +57,12 @@ export function CurrentSessionProvider({
         updateSession,
         refetch: refetchSessions,
     } = useSessions();
-    const { beforeFeedback, afterFeedback } = useFeedbackContext();
+    const {
+        beforeFeedback,
+        setBeforeFeedback,
+        afterFeedback,
+        setAfterFeedback,
+    } = useFeedbackContext();
     const { addSessionFeedback, updateSessionFeedback } = useSessionFeedback();
     const [createdSessionID, setCreatedSessionID] = useState<string | null>(
         null,
@@ -236,6 +241,7 @@ export function CurrentSessionProvider({
             return;
         }
         setCreatedFeedbackID(feedbackID);
+        setBeforeFeedback(null);
     }
 
     async function updateSessionWithFeedbackInDB() {
@@ -278,6 +284,7 @@ export function CurrentSessionProvider({
 
         setStartTimeState("");
         setCurrentGame(null);
+        setAfterFeedback(null);
     }
 
     return (
