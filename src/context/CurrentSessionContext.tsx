@@ -53,8 +53,8 @@ export function CurrentSessionProvider({
     useEffect(() => {
         if (settingsShouldChange) {
             refetch(true);
+            setSettingsShouldChange(false);
         }
-        setSettingsShouldChange(false);
     }, [settingsShouldChange, refetch]);
 
     useEffect(() => {
@@ -164,6 +164,7 @@ export function CurrentSessionProvider({
         const start_time = startTime.toISOString();
         const end_time = endTime.toISOString();
 
+        // TODO: this needs changing
         if (!user) {
             console.error("unauthorized");
             return;

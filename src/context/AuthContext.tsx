@@ -1,14 +1,19 @@
-import { AuthError, OAuthResponse } from "@supabase/supabase-js";
+import { OAuthResponse } from "@supabase/supabase-js";
 import { useCallback, useEffect, useState } from "react";
-
 import {
     AuthProviderError,
     BaseError,
     ERROR_MESSAGES,
 } from "../lib/constants/authErrors";
-import safeExecute from "../lib/utils/safeExecute";
 import { IUser } from "../lib/types/auth";
 import { ContextProviderProps } from "../lib/types/context";
+import {
+    getUserService,
+    loginService,
+    logoutService,
+    registerService,
+    signInWithGoogleService,
+} from "../services/authService";
 import supabase from "../services/supabaseClient";
 import ContextGenerator from "./ContextGenerator";
 
@@ -36,29 +41,14 @@ export default function AuthProvider({ children }: ContextProviderProps) {
     const [user, setUser] = useState<IUser | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
-    function normalizeAuthError(err: unknown): AuthProviderError {
-        if (err instanceof AuthError) return err;
-        return {
-            message: ERROR_MESSAGES.NETWORK_REQUEST_FAILED,
-            cause: err,
-        } as BaseError;
-    }
-
     const getUser = useCallback(async () => {
         setIsLoading(true);
-        const [result, error] = await safeExecute(
-            () => supabase.auth.getUser(),
-            normalizeAuthError,
-        );
-
-        if (error || !result?.data?.user) {
+        const [result, error] = await getUserService();
+        if (error || !result) {
             console.error("Error fetching user:", error);
             setUser(null);
         } else {
-            setUser({
-                id: result.data.user.id,
-                email: result.data.user.email!,
-            });
+            setUser(result);
         }
         setIsLoading(false);
     }, []);
@@ -91,17 +81,7 @@ export default function AuthProvider({ children }: ContextProviderProps) {
     async function signInWithGoogle(): Promise<
         AuthProviderError | OAuthResponse | null
     > {
-        const [result, error] = await safeExecute(
-            () =>
-                supabase.auth.signInWithOAuth({
-                    provider: "google",
-                    options: {
-                        redirectTo: `${window.location.origin}/`,
-                    },
-                }),
-            normalizeAuthError,
-        );
-
+        const [result, error] = await signInWithGoogleService();
         if (error) {
             return error;
         }
@@ -112,16 +92,10 @@ export default function AuthProvider({ children }: ContextProviderProps) {
         email: string,
         password: string,
     ): Promise<AuthProviderError | void> {
-        const [result, error] = await safeExecute(
-            () => supabase.auth.signInWithPassword({ email, password }),
-            normalizeAuthError,
-        );
-
-        if (error || (result && result.error)) {
-            const err = error || result!.error;
-            return err!;
+        const [, error] = await loginService(email, password);
+        if (error) {
+            return error;
         }
-
         await getUser();
     }
 
@@ -133,30 +107,15 @@ export default function AuthProvider({ children }: ContextProviderProps) {
         if (password !== passwordConfirm) {
             return { message: ERROR_MESSAGES.PASSWORD_MISMATCH } as BaseError;
         }
-
-        const [result, error] = await safeExecute(
-            () =>
-                supabase.auth.signUp({
-                    email,
-                    password,
-                }),
-            normalizeAuthError,
-        );
-
-        if (error || (result && result.error)) {
-            const err = error || result!.error;
-            return err!;
+        const [, error] = await registerService(email, password);
+        if (error) {
+            return error;
         }
-
         await getUser();
     }
 
     async function logout(): Promise<AuthProviderError | void> {
-        const [error] = await safeExecute(
-            () => supabase.auth.signOut(),
-            normalizeAuthError,
-        );
-
+        const [, error] = await logoutService();
         if (error) {
             return {
                 message: ERROR_MESSAGES.LOGOUT_FAILED,
