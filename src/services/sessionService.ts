@@ -1,6 +1,6 @@
 import supabase from "./supabaseClient";
 import safeExecute from "../lib/utils/safeExecute";
-import { ISession, AddSessionDto } from "../lib/types/sessions";
+import { ISession, CreateSessionDto } from "../lib/types/sessions";
 
 export async function getSessionsService(
     userId: string,
@@ -16,19 +16,37 @@ export async function getSessionsService(
     });
 }
 
+export async function getSingleSessionService(
+    sessionId: string,
+): Promise<[ISession | null, Error | null]> {
+    return safeExecute(async () => {
+        const { data, error } = await supabase
+            .from("sessions")
+            .select("*")
+            .eq("id", sessionId)
+            .single();
+
+        if (error) throw error;
+        return data;
+    });
+}
+
 export async function addSessionService(
     userId: string,
-    newSession: AddSessionDto,
-): Promise<[void | null, Error | null]> {
-    return await safeExecute(async () => {
-        const result = await supabase
+    newSession: CreateSessionDto,
+): Promise<[ISession | null, Error | null]> {
+    return safeExecute(async () => {
+        const { data, error } = await supabase
             .from("sessions")
             .insert({
                 ...newSession,
                 user_id: userId,
             })
+            .select()
             .single();
-        if (result.error) throw result.error;
+
+        if (error) throw error;
+        return data;
     });
 }
 

@@ -10,3 +10,8 @@ export interface ISessionFeedback {
     created_at: string;
     updated_at: string;
 }
+
+export type NewSessionFeedbackDto = Omit<
+    ISessionFeedback,
+    "id" | "created_at" | "updated_at"
+>;

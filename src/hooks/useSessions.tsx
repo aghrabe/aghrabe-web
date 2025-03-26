@@ -1,16 +1,21 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAuthContext } from "../context/AuthContext";
-import { ISession, AddSessionDto } from "../lib/types/sessions";
+import { ISession, CreateSessionDto } from "../lib/types/sessions";
 import useQuery from "./useQuery";
 import {
     getSessionsService,
     addSessionService,
     updateSessionService,
+    getSingleSessionService,
 } from "../services/sessionService";
 
 export default function useSessions() {
     const { user } = useAuthContext();
     const [errorMessage, setErrorMessage] = useState<string>("");
+
+    useEffect(() => {
+        console.error(errorMessage);
+    }, [errorMessage]);
 
     const getSessions = useCallback(async (): Promise<Array<ISession>> => {
         if (!user?.id) return [];
@@ -28,14 +33,30 @@ export default function useSessions() {
         30 * 60 * 1000, // 30 min
     );
 
+    const getSingleSession = useCallback(
+        async (sessionId: string): Promise<ISession | null> => {
+            const [session, error] = await getSingleSessionService(sessionId);
+            if (error) {
+                setErrorMessage(error.message);
+                return null;
+            }
+            return session;
+        },
+        [],
+    );
+
     const addSession = useCallback(
-        async (newSession: AddSessionDto): Promise<void> => {
+        async (newSession: CreateSessionDto): Promise<string | undefined> => {
             if (!user?.id) return;
-            const [, error] = await addSessionService(user.id, newSession);
+            const [result, error] = await addSessionService(
+                user.id,
+                newSession,
+            );
             if (error) {
                 setErrorMessage(error.message);
             } else {
                 refetch(true);
+                return result?.id;
             }
         },
         [refetch, user?.id],
@@ -64,5 +85,6 @@ export default function useSessions() {
         errorMessage,
         addSession,
         updateSession,
+        getSingleSession,
     };
 }

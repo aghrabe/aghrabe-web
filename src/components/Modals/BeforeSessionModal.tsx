@@ -8,7 +8,6 @@ import { useState } from "react";
 import { useCurrentGameContext } from "../../context/CurrentGameContext";
 import useGames from "../../hooks/useGames";
 import useMoodMapper from "../../hooks/useMoodMapper";
-import type { IGame } from "../../lib/types/games";
 import Button from "../Button";
 import Modal from "./Modal";
 
@@ -20,9 +19,8 @@ interface Props {
 export default function BeforeSessionModal({ onClose, onStart }: Props) {
     const { getMoodIcon, getMoodText } = useMoodMapper();
     const { gamesState, addGame } = useGames();
-    const { currentGame } = useCurrentGameContext();
+    const { currentGame, setCurrentGame } = useCurrentGameContext();
     const [moodBefore, setMoodBefore] = useState<number>(3);
-    const [selectedGame, setSelectedGame] = useState<IGame | null>(currentGame);
     const [journalBefore, setJournalBefore] = useState<string>("");
     const [isAddingNewGame, setIsAddingNewGame] = useState<boolean>(false);
     const [newGameTitle, setNewGameTitle] = useState<string>("");
@@ -52,10 +50,11 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
                                 <button
                                     type={"button"}
                                     onClick={() => onChange(mood)}
-                                    className={`p-2 rounded-full transition-all ${isActive
+                                    className={`p-2 rounded-full transition-all ${
+                                        isActive
                                             ? "bg-outline"
                                             : "bg-card hover:bg-outline cursor-pointer"
-                                        }`}
+                                    }`}
                                 >
                                     {getMoodIcon(mood)}
                                 </button>
@@ -81,7 +80,7 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
         }
 
         const game = gamesState.data?.find((g) => g.id === gameId) || null;
-        setSelectedGame(game);
+        setCurrentGame(game);
     };
 
     const handleAddNewGame = async () => {
@@ -169,7 +168,7 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
                             ) : (
                                 <div className={"flex flex-col gap-2 mt-1"}>
                                     <select
-                                        value={selectedGame?.id || ""}
+                                        value={currentGame?.id || ""}
                                         onChange={handleGameChange}
                                         className={
                                             "flex-1 bg-background border border-outline rounded-md px-3 py-2 text-sm"
@@ -262,7 +261,7 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
                         variant={"contained"}
                         size={"small"}
                         fullWidth
-                        disabled={!selectedGame}
+                        disabled={!currentGame}
                     >
                         Start Session
                     </Button>

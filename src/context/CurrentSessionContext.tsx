@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import useSessions from "../hooks/useSessions";
 import useSettings from "../hooks/useSettings";
+import { CreateSessionDto, UpdateSessionDto } from "../lib/types/sessions";
 import { useAuthContext } from "./AuthContext";
 import ContextGenerator from "./ContextGenerator";
 import { useCurrentGameContext } from "./CurrentGameContext";
-import { AddSessionDto } from "../lib/types/sessions";
 
 type TimerStatus =
     | "idle"
@@ -29,6 +30,8 @@ interface CurrentSessionContextType {
     stopSession: () => void;
     continueSession: () => void;
     endSession: () => void;
+    createSession: () => void;
+    updateCurrentSession: () => void;
 }
 
 const { Provider, useContextValue: useCurrentSession } =
@@ -40,11 +43,18 @@ export function CurrentSessionProvider({
     children: React.ReactNode;
 }) {
     const { user } = useAuthContext();
-    const { currentGame } = useCurrentGameContext();
+    const { currentGame, setCurrentGame } = useCurrentGameContext();
     const { settingsState, refetch } = useSettings();
+    const { addSession, updateSession } = useSessions();
+    const [createdSessionID, setCreatedSessionID] = useState<string | null>(
+        null,
+    );
     const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const [startTimeState, setStartTimeState] = useState<string>("");
     const [elapsed, setElapsed] = useState<number>(0);
-    const [message, setMessage] = useState<string>("Enjoy the game!");
+    const [message, setMessage] = useState<string>(
+        "Wanna Start a New Session?",
+    );
     const [status, setStatus] = useState<TimerStatus>("idle");
     const [totalSeconds, setTotalSeconds] = useState<number>(50 * 60);
     const [settingsShouldChange, setSettingsShouldChange] =
@@ -127,8 +137,10 @@ export function CurrentSessionProvider({
     function startSession() {
         // TODO: send a notification if total limit reached and don't allow the startSession process
         setElapsed(0);
-        setMessage("Enjoy the game!");
+        setMessage(`Enjoy Playing ${currentGame?.title}!`);
         setStatus("running");
+
+        createSession();
     }
 
     function stopSession() {
@@ -156,32 +168,70 @@ export function CurrentSessionProvider({
         // TODO: send notification
         // TODO: save session data to db
 
-        // TODO: trigger select game modal
-        // TODO: trigger select session feedbacks
-        const endTime = new Date();
-        const startTime = new Date(endTime.getTime() - elapsed * 1000);
+        updateCurrentSession();
+    }
 
-        const start_time = startTime.toISOString();
-        const end_time = endTime.toISOString();
-
-        // TODO: this needs changing
+    async function createSession() {
         if (!user) {
-            console.error("unauthorized");
+            alert("unAuthorized");
             return;
         }
+
         if (!currentGame) {
-            console.error("select a game");
+            alert("select a game");
             return;
         }
-        const newSession: AddSessionDto = {
-            start_time: start_time,
-            end_time: end_time,
-            duration_minutes: Math.floor(elapsed / 60),
-            game_id: currentGame.id,
+
+        const startTime = new Date().toISOString();
+
+        const sessionData: CreateSessionDto = {
             user_id: user.id,
+            game_id: currentGame.id,
+            start_time: startTime,
+            end_time: null,
         };
-        console.log(newSession);
-        //addSession(newSession);
+
+        setStartTimeState(startTime);
+        console.log("Session created:", sessionData);
+
+        const result = await addSession(sessionData);
+        if (!result) {
+            console.error("Creating session failed");
+            return;
+        }
+        setCreatedSessionID(result);
+    }
+
+    async function updateCurrentSession() {
+        if (!user) {
+            alert("unAuthorized");
+            return;
+        }
+
+        if (!currentGame) {
+            alert("select a game");
+            return;
+        }
+
+        const sessionData: Partial<UpdateSessionDto> = {
+            user_id: user.id,
+            game_id: currentGame.id,
+            start_time: startTimeState,
+            end_time: new Date().toISOString(),
+            duration_minutes:
+                Math.floor(elapsed / 60) === 0
+                    ? undefined
+                    : Math.floor(elapsed / 60),
+        };
+
+        console.log("triggering update row");
+
+        await updateSession(createdSessionID!, sessionData);
+
+        console.log("Session updated:", sessionData);
+
+        setStartTimeState("");
+        setCurrentGame(null);
     }
 
     return (
@@ -202,6 +252,8 @@ export function CurrentSessionProvider({
                 stopSession,
                 continueSession,
                 endSession,
+                createSession,
+                updateCurrentSession,
             }}
         >
             {children}
