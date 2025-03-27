@@ -43,6 +43,9 @@ export default function Session() {
         if (currentSessionStatus === "idle") {
             navigate("?session-card");
         }
+        if (currentSessionStatus === "wantToEnd") {
+            navigate("?after-session");
+        }
     }, [currentSessionStatus, navigate]);
 
     function handleModalClose(modalType: ModalType) {
@@ -59,8 +62,8 @@ export default function Session() {
                 startSession();
                 break;
 
-            // TODO: handle
             case "CancelSessionEnd":
+                // This could be implemented if needed
                 break;
 
             case "EndSession":
@@ -70,7 +73,7 @@ export default function Session() {
             default:
                 break;
         }
-        // INFO: navigate back to the '/session' page before openning modal
+        // Navigate back to the '/session' page before opening modal
         navigate("");
     }
 
