@@ -40,7 +40,9 @@ function SessionNote({ title, content }: { title: string; content: string }) {
     return (
         <div className={"space-y-2 text-sm md:text-lg"}>
             <h3 className={"font-bold"}>{title}</h3>
-            <p className={"rounded-md p-3 text-sm"}>{content}</p>
+            <p className={"rounded-md p-3 text-sm max-w-[100vw] overflow-auto"}>
+                {content}
+            </p>
         </div>
     );
 }
@@ -55,37 +57,36 @@ export default function SessionDetailsModal({
         <Modal isOpen={true} onClose={onClose}>
             <div
                 className={
+                    "sticky top-0 z-10 bg-surface flex items-start justify-between md:px-6 pb-6"
+                }
+            >
+                <div className={"flex flex-col items-start gap-2"}>
+                    <h2 className={"text-lg md:text-xl font-bold"}>
+                        Session Details
+                    </h2>
+                    <div
+                        className={
+                            "rounded-full text-base md:text-lg font-medium"
+                        }
+                    >
+                        ID: {session.id.substring(0, 8)}...
+                    </div>
+                </div>
+                <button
+                    onClick={onClose}
+                    className={
+                        "p-2 rounded-full hover:bg-outline transition-colors cursor-pointer"
+                    }
+                    aria-label={"Close modal"}
+                >
+                    <X className={"h-5 w-5"} />
+                </button>
+            </div>
+            <div
+                className={
                     "max-h-[80vh] space-y-4 md:space-y-6 overflow-y-auto p-0 md:p-6 relative"
                 }
             >
-                <div
-                    className={
-                        "sticky top-0 z-10 bg-surface flex items-start justify-between"
-                    }
-                >
-                    <div className={"flex flex-col items-start gap-2"}>
-                        <h2 className={"text-lg md:text-xl font-bold"}>
-                            Session Details
-                        </h2>
-                        <div
-                            className={
-                                "rounded-full text-base md:text-lg font-medium"
-                            }
-                        >
-                            ID: {session.id.substring(0, 8)}...
-                        </div>
-                    </div>
-                    <button
-                        onClick={onClose}
-                        className={
-                            "p-1 rounded-full hover:bg-outline transition-colors"
-                        }
-                        aria-label={"Close modal"}
-                    >
-                        <X className={"h-5 w-5"} />
-                    </button>
-                </div>
-
                 <div className={"grid gap-4 md:gap-6 md:grid-cols-2"}>
                     <div
                         className={

@@ -93,11 +93,7 @@ export default function GameSelectionSection({
                 <GameController2
                     className={"h-5 w-5 md:h-6 md:w-6 text-primary"}
                 />
-                <p
-                    className={
-                        "text-muted-foreground font-bold text-sm md:text-base"
-                    }
-                >
+                <p className={"text-on-surface font-bold text-sm md:text-base"}>
                     What you want to play?
                 </p>
             </div>
@@ -151,15 +147,14 @@ export default function GameSelectionSection({
                                         ? currentGame.title
                                         : "Search for a game"
                                 }
-                                className={`w-full bg-background border rounded-md px-9 py-2 text-sm md:text-base ${
-                                    error
+                                className={`w-full bg-background border rounded-md px-9 py-2 text-sm md:text-base placeholder:text-outline-variant ${error
                                         ? "border-error focus:ring-error"
                                         : "border-outline focus:ring-primary"
-                                }`}
+                                    }`}
                             />
                             <Search
                                 className={
-                                    "absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                                    "absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-outline-variant"
                                 }
                             />
                             {searchQuery && (
@@ -171,7 +166,7 @@ export default function GameSelectionSection({
                                         searchInputRef.current?.focus();
                                     }}
                                     className={
-                                        "absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground hover:text-foreground"
+                                        "absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-outline-variant hover:text-foreground"
                                     }
                                     aria-label={"Clear search"}
                                 >
@@ -195,11 +190,10 @@ export default function GameSelectionSection({
                                                 onClick={() =>
                                                     handleGameSelect(game.id)
                                                 }
-                                                className={`px-3 py-2 cursor-pointer hover:bg-muted text-sm ${
-                                                    currentGameId === game.id
+                                                className={`px-3 py-2 cursor-pointer hover:bg-muted text-sm ${currentGameId === game.id
                                                         ? "bg-primary/10 font-medium"
                                                         : ""
-                                                }`}
+                                                    }`}
                                             >
                                                 {game.title}
                                             </div>
@@ -210,7 +204,7 @@ export default function GameSelectionSection({
                                 {searchQuery.trim() && (
                                     <div
                                         className={
-                                            "px-3 py-2 cursor-pointer hover:bg-muted text-sm border-t border-outline flex items-center gap-2 text-primary"
+                                            "px-3 py-2 cursor-pointer hover:bg-primary/10 text-sm border-t border-outline flex items-center gap-2 text-primary"
                                         }
                                         onClick={() => {
                                             setNewGameTitle(searchQuery);
@@ -226,7 +220,7 @@ export default function GameSelectionSection({
                                     !searchQuery.trim() && (
                                         <div
                                             className={
-                                                "px-3 py-2 text-sm text-muted-foreground"
+                                                "px-3 py-2 text-sm text-on-background"
                                             }
                                         >
                                             No games found. Start typing to

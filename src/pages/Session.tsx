@@ -82,7 +82,7 @@ export default function Session() {
             <div className={"flex h-full w-full items-center justify-center"}>
                 <div className={"flex flex-col items-center gap-4"}>
                     <LoadingSpinner />
-                    <p className={"text-muted-foreground"}>
+                    <p className={"text-on-background"}>
                         Loading your sessions...
                     </p>
                 </div>
@@ -122,7 +122,7 @@ export default function Session() {
                     ) : (
                         <div
                             className={
-                                "flex h-full flex-col items-center justify-center text-center text-muted-foreground"
+                                "flex h-full flex-col items-center justify-center text-center text-on-background"
                             }
                         >
                             <CalendarDays

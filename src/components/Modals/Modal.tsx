@@ -46,9 +46,8 @@ export default function Modal({ isOpen, onClose, children }: Props) {
         <div className={"fixed inset-0 z-50 flex items-center justify-center"}>
             {/* overlay */}
             <div
-                className={`fixed inset-0 bg-black transition-opacity duration-300 ${
-                    isOpen ? "opacity-70" : "opacity-0"
-                }`}
+                className={`fixed inset-0 bg-black transition-opacity duration-300 ${isOpen ? "opacity-70" : "opacity-0"
+                    }`}
                 onClick={onClose}
             ></div>
             {/* modal Content */}
