@@ -2,12 +2,12 @@ import {
     CalendarDays,
     Clock,
     Gamepad2Icon as GameController2,
+    X,
 } from "lucide-react";
-import Button from "../Button";
-import Modal from "./Modal";
-import { useBreakpoint } from "../../context/BreakpointContext";
+import type React from "react";
 import useMoodMapper from "../../hooks/useMoodMapper";
 import type { ISession } from "../../lib/types/sessions";
+import Modal from "./Modal";
 
 interface SessionDetailsModalProps {
     session: ISession;
@@ -29,7 +29,7 @@ function SessionDetailItem({
             <div
                 className={"text-sm md:text-base flex flex-col gap-0 md:gap-0"}
             >
-                <p className={"text-muted-foreground font-bold"}>{label}</p>
+                <p className={"text-on-surface font-bold"}>{label}</p>
                 <p className={""}>{value}</p>
             </div>
         </div>
@@ -49,27 +49,41 @@ export default function SessionDetailsModal({
     session,
     onClose,
 }: SessionDetailsModalProps) {
-    const { isMobile } = useBreakpoint();
     const { getMoodIcon, getMoodText } = useMoodMapper();
 
     return (
         <Modal isOpen={true} onClose={onClose}>
             <div
                 className={
-                    "max-h-[80vh] space-y-4 md:space-y-6 overflow-y-auto p-0 md:p-6"
+                    "max-h-[80vh] space-y-4 md:space-y-6 overflow-y-auto p-0 md:p-6 relative"
                 }
             >
-                <div className={"flex items-center justify-between"}>
-                    <h2 className={"text-xl md:text-2xl font-bold"}>
-                        Session Details
-                    </h2>
-                    <div
-                        className={
-                            "rounded-full px-3 py-1 text-base md:text-lg font-medium"
-                        }
-                    >
-                        ID: {session.id.substring(0, 8)}...
+                <div
+                    className={
+                        "sticky top-0 z-10 bg-surface flex items-start justify-between"
+                    }
+                >
+                    <div className={"flex flex-col items-start gap-2"}>
+                        <h2 className={"text-lg md:text-xl font-bold"}>
+                            Session Details
+                        </h2>
+                        <div
+                            className={
+                                "rounded-full text-base md:text-lg font-medium"
+                            }
+                        >
+                            ID: {session.id.substring(0, 8)}...
+                        </div>
                     </div>
+                    <button
+                        onClick={onClose}
+                        className={
+                            "p-1 rounded-full hover:bg-outline transition-colors"
+                        }
+                        aria-label={"Close modal"}
+                    >
+                        <X className={"h-5 w-5"} />
+                    </button>
                 </div>
 
                 <div className={"grid gap-4 md:gap-6 md:grid-cols-2"}>
@@ -182,6 +196,7 @@ export default function SessionDetailsModal({
                     />
                 </div>
 
+                {/*
                 <div className={"mt-6"}>
                     <Button
                         onClick={onClose}
@@ -192,6 +207,7 @@ export default function SessionDetailsModal({
                         Close
                     </Button>
                 </div>
+                */}
             </div>
         </Modal>
     );

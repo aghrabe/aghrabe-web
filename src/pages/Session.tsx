@@ -73,7 +73,7 @@ export default function Session() {
             default:
                 break;
         }
-        // Navigate back to the '/session' page before opening modal
+        // navigate back to the '/session' page before opening modal
         navigate("");
     }
 
