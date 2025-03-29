@@ -8,11 +8,12 @@ import {
 import useSessionManager from "../hooks/useSessionManager";
 import useSessions from "../hooks/useSessions";
 import useSettings from "../hooks/useSettings";
-import useTimer, { type TimerStatus } from "../hooks/useTimer";
+import useTimer from "../hooks/useTimer";
 import { useAuthContext } from "./AuthContext";
 import ContextGenerator from "./ContextGenerator";
 import { useCurrentGameContext } from "./CurrentGameContext";
 import { useFeedbackContext } from "./FeedbackContext";
+import { TimerStatus } from "../lib/types/timer";
 
 interface CurrentSessionContextType {
     elapsed: number;
@@ -24,9 +25,9 @@ interface CurrentSessionContextType {
     timeString: string;
     settingsShouldChange: boolean;
     setSettingsShouldChange: Dispatch<SetStateAction<boolean>>;
-    handleGetBackToIdle: () => void;
-    handleStatusOnStart: () => void;
-    handleStatusOnEnd: () => void;
+    resetToIdle: () => void;
+    prepareForStart: () => void;
+    prepareForEnd: () => void;
     startSession: () => void;
     stopSession: () => void;
     continueSession: () => void;
@@ -63,13 +64,13 @@ export function CurrentSessionProvider({ children }: { children: ReactNode }) {
         timeString,
         progress,
         remainingTime,
-        setElapsed,
-        handleGetBackToIdle,
-        handleStatusOnStart,
-        handleStatusOnEnd,
-        startTimer,
-        stopTimer,
-        continueTimer,
+        updateElapsedTime,
+        resetToIdle,
+        prepareForStart,
+        prepareForEnd,
+        beginTimer,
+        pauseTimer,
+        resumeTimer,
         endTimer,
     } = useTimer(totalSeconds);
 
@@ -106,18 +107,18 @@ export function CurrentSessionProvider({ children }: { children: ReactNode }) {
     }, [settingsState.data?.session_limit_minutes]);
 
     function startSession() {
-        setElapsed(0);
+        updateElapsedTime(0);
         setMessage(`Enjoy Playing ${currentGame?.title}!`);
-        startTimer();
+        beginTimer();
         createSessionWithFeedbackInDB();
     }
 
     function stopSession() {
-        stopTimer();
+        pauseTimer();
     }
 
     function continueSession() {
-        continueTimer();
+        resumeTimer();
     }
 
     function endSession() {
@@ -146,9 +147,9 @@ export function CurrentSessionProvider({ children }: { children: ReactNode }) {
                 timeString,
                 settingsShouldChange,
                 setSettingsShouldChange,
-                handleGetBackToIdle,
-                handleStatusOnStart,
-                handleStatusOnEnd,
+                resetToIdle,
+                prepareForStart,
+                prepareForEnd,
                 startSession,
                 stopSession,
                 continueSession,

@@ -32,7 +32,7 @@ export default function Session() {
         status: currentSessionStatus,
         startSession,
         endSession,
-        handleGetBackToIdle,
+        resetToIdle,
     } = useCurrentSession();
     const navigate = useNavigate();
 
@@ -55,7 +55,7 @@ export default function Session() {
                 break;
 
             case "CancelSessionStart":
-                handleGetBackToIdle();
+                resetToIdle();
                 break;
 
             case "StartSession":

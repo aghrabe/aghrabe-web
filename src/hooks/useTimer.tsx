@@ -1,39 +1,48 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import { useReducer, useEffect, useRef, RefObject } from "react";
+import {
+    TimerAction,
+    TimerContextState,
+    TimerControlActions,
+    TimerStatus,
+} from "../lib/types/timer";
 
-export type TimerStatus =
-    | "idle"
-    | "wantToStart"
-    | "running"
-    | "paused"
-    | "wantToEnd"
-    | "ended";
-
-export interface TimerState {
-    elapsed: number;
-    status: TimerStatus;
-    remainingTime: number;
-    progress: number;
-    timeString: string;
+function timerStateReducer(
+    state: TimerContextState,
+    action: TimerAction,
+): TimerContextState {
+    switch (action.type) {
+        case "INIT":
+            return { ...state, ...action.payload };
+        case "INCREMENT":
+            return { ...state, elapsed: state.elapsed + 1 };
+        case "SET_ELAPSED":
+            return { ...state, elapsed: action.payload };
+        case "SET_STATUS":
+            return { ...state, status: action.payload };
+        case "RESET":
+            return {
+                elapsed: action.payload.elapsed,
+                status: action.payload.status,
+            };
+        default:
+            return state;
+    }
 }
 
-export interface TimerActions {
-    setElapsed: (elapsed: number | ((prev: number) => number)) => void;
-    setStatus: (status: TimerStatus) => void;
-    handleGetBackToIdle: () => void;
-    handleStatusOnStart: () => void;
-    handleStatusOnEnd: () => void;
-    startTimer: () => void;
-    stopTimer: () => void;
-    continueTimer: () => void;
-    endTimer: () => void;
-}
-
-export default function useTimer(
-    totalSeconds: number,
-): TimerState & TimerActions & { timerRef: RefObject<NodeJS.Timeout | null> } {
+export default function useTimer(totalSeconds: number): TimerContextState &
+    TimerControlActions & {
+        timerRef: RefObject<NodeJS.Timeout | null>;
+        timeString: string;
+        progress: number;
+        remainingTime: number;
+    } {
     const timerRef = useRef<NodeJS.Timeout | null>(null);
-    const [elapsed, setElapsed] = useState(0);
-    const [status, setStatus] = useState<TimerStatus>("idle");
+    const [state, dispatch] = useReducer(timerStateReducer, {
+        elapsed: 0,
+        status: "idle",
+    });
+
+    const { elapsed, status } = state;
 
     const remainingTime = totalSeconds - elapsed;
     const progress = (elapsed / totalSeconds) * 100;
@@ -51,11 +60,14 @@ export default function useTimer(
         const storedStatus = localStorage.getItem(
             "sessionStatus",
         ) as TimerStatus;
-        if (storedElapsed) {
-            setElapsed(Number.parseInt(storedElapsed, 10));
-        }
-        if (storedStatus) {
-            setStatus(storedStatus);
+        if (storedElapsed || storedStatus) {
+            dispatch({
+                type: "RESET",
+                payload: {
+                    elapsed: storedElapsed ? parseInt(storedElapsed, 10) : 0,
+                    status: storedStatus || "idle",
+                },
+            });
         }
     }, []);
 
@@ -65,17 +77,15 @@ export default function useTimer(
     }, [elapsed, status]);
 
     useEffect(() => {
-        if (status !== "running") return;
+        if (status !== "running") {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+            }
+            return;
+        }
         timerRef.current = setInterval(() => {
-            setElapsed((prev) => {
-                if (prev >= totalSeconds) {
-                    clearInterval(timerRef.current!);
-                    timerRef.current = null;
-                    handleStatusOnEnd();
-                    return totalSeconds;
-                }
-                return prev + 1;
-            });
+            dispatch({ type: "INCREMENT" });
         }, 1000);
 
         return () => {
@@ -86,38 +96,47 @@ export default function useTimer(
         };
     }, [status, totalSeconds]);
 
-    function handleGetBackToIdle() {
-        setStatus("idle");
+    useEffect(() => {
+        if (elapsed >= totalSeconds && status === "running") {
+            if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+            }
+            dispatch({ type: "SET_ELAPSED", payload: totalSeconds });
+            dispatch({ type: "SET_STATUS", payload: "wantToEnd" });
+        }
+    }, [elapsed, totalSeconds, status]);
+
+    function resetToIdle() {
+        dispatch({ type: "SET_STATUS", payload: "idle" });
     }
 
-    function handleStatusOnStart() {
-        setStatus("wantToStart");
+    function prepareForStart() {
+        dispatch({ type: "SET_STATUS", payload: "wantToStart" });
     }
 
-    function handleStatusOnEnd() {
-        setStatus("wantToEnd");
+    function prepareForEnd() {
+        dispatch({ type: "SET_STATUS", payload: "wantToEnd" });
     }
 
-    function startTimer() {
-        setElapsed(0);
-        setStatus("running");
+    function beginTimer() {
+        dispatch({ type: "RESET", payload: { elapsed: 0, status: "running" } });
     }
 
-    function stopTimer() {
-        setStatus("paused");
+    function pauseTimer() {
+        dispatch({ type: "SET_STATUS", payload: "paused" });
         if (timerRef.current) {
             clearInterval(timerRef.current);
             timerRef.current = null;
         }
     }
 
-    function continueTimer() {
-        setStatus("running");
+    function resumeTimer() {
+        dispatch({ type: "SET_STATUS", payload: "running" });
     }
 
     function endTimer() {
-        setStatus("ended");
-        setElapsed(0);
+        dispatch({ type: "RESET", payload: { elapsed: 0, status: "ended" } });
         if (timerRef.current) {
             clearInterval(timerRef.current);
             timerRef.current = null;
@@ -128,19 +147,19 @@ export default function useTimer(
 
     return {
         elapsed,
+        updateElapsedTime: (elapsed: number) =>
+            dispatch({ type: "SET_ELAPSED", payload: elapsed }),
         status,
         timeString,
         progress,
         remainingTime,
-        setElapsed,
-        setStatus,
         timerRef,
-        handleStatusOnEnd,
-        handleGetBackToIdle,
-        handleStatusOnStart,
-        startTimer,
-        stopTimer,
-        continueTimer,
+        resetToIdle,
+        prepareForStart,
+        prepareForEnd,
+        beginTimer,
+        pauseTimer,
+        resumeTimer,
         endTimer,
     };
 }

@@ -11,8 +11,8 @@ export default function SessionTracker() {
         status,
         progress,
         timeString,
-        handleStatusOnStart,
-        handleStatusOnEnd,
+        prepareForStart,
+        prepareForEnd,
         stopSession,
         continueSession,
     } = useCurrentSession();
@@ -44,7 +44,7 @@ export default function SessionTracker() {
             >
                 {(status === "idle" || status === "ended") && (
                     <Button
-                        onClick={handleStatusOnStart}
+                        onClick={prepareForStart}
                         variant={"contained"}
                         size={isMobile ? "small" : "medium"}
                     >
@@ -70,7 +70,7 @@ export default function SessionTracker() {
                             Continue
                         </Button>
                         <Button
-                            onClick={handleStatusOnEnd}
+                            onClick={prepareForEnd}
                             variant={"outlined"}
                             size={isMobile ? "small" : "medium"}
                             className={`${isMobile ? "mb-4" : ""}`}

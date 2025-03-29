@@ -9,10 +9,10 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import Switch from "../components/Switch";
 import ThemeSelector from "../components/ThemeSelector";
 import { useBreakpoint } from "../context/BreakpointContext";
+import { useCurrentSession } from "../context/CurrentSessionContext";
 import useProfile from "../hooks/useProfile";
 import useSettings from "../hooks/useSettings";
 import { settingsSchema, SettingsSchemaType } from "../lib/types/settings";
-import { useCurrentSession } from "../context/CurrentSessionContext";
 
 export default function Settings() {
     const { profileState, errorMessage: profileErrorMessage } = useProfile();
