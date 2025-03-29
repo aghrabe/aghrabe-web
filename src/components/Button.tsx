@@ -25,6 +25,7 @@ export default function Button({
     const colors = {
         primary: {
             contained: {
+                border: "border-primary",
                 bg: "bg-primary",
                 hover: "hover:bg-primary-hover",
                 active: "active:bg-primary-800",
@@ -42,6 +43,7 @@ export default function Button({
         },
         success: {
             contained: {
+                border: "border-success",
                 bg: "bg-success",
                 hover: "hover:bg-success-hover",
                 active: "active:bg-success-800",
@@ -59,6 +61,7 @@ export default function Button({
         },
         error: {
             contained: {
+                border: "border-error",
                 bg: "bg-error",
                 hover: "hover:bg-error-hover",
                 active: "active:bg-error-800",
@@ -76,6 +79,7 @@ export default function Button({
         },
         info: {
             contained: {
+                border: "border-info",
                 bg: "bg-info",
                 hover: "hover:bg-info-hover",
                 active: "active:bg-info-800",
@@ -100,25 +104,26 @@ export default function Button({
                 "inline-flex items-center justify-center",
                 fullWidth && "w-full",
                 !customColor &&
-                variant === "contained" && [
-                    colors[color].contained.bg,
-                    colors[color].contained.text,
-                    colors[color].contained.hover,
-                    colors[color].contained.active,
-                    "shadow-md",
-                ],
+                    variant === "contained" && [
+                        colors[color].contained.border,
+                        colors[color].contained.bg,
+                        colors[color].contained.text,
+                        colors[color].contained.hover,
+                        colors[color].contained.active,
+                        "shadow-md",
+                    ],
                 !customColor &&
-                variant === "outlined" && [
-                    colors[color].outlined.border,
-                    colors[color].outlined.text,
-                    colors[color].outlined.hover,
-                    "border",
-                ],
+                    variant === "outlined" && [
+                        colors[color].outlined.border,
+                        colors[color].outlined.text,
+                        colors[color].outlined.hover,
+                        "border",
+                    ],
                 !customColor &&
-                variant === "text" && [
-                    colors[color].text.text,
-                    colors[color].text.hover,
-                ],
+                    variant === "text" && [
+                        colors[color].text.text,
+                        colors[color].text.hover,
+                    ],
                 size === "small" && "px-6 py-2 text-base",
                 size === "medium" && "px-8 py-2 text-lg",
                 size === "large" && "px-12 py-3 text-xl",

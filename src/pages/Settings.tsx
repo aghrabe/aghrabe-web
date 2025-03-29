@@ -1,20 +1,34 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Bell, Clock, Coffee, Mail, Palette, Timer } from "lucide-react";
-import { useEffect } from "react";
+import {
+    Bell,
+    Clock,
+    Coffee,
+    LogOut,
+    Mail,
+    Palette,
+    Save,
+    Timer,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "../components/Button";
 import Header from "../components/Header";
 import InputField from "../components/InputField";
 import LoadingSpinner from "../components/LoadingSpinner";
+import Modal from "../components/Modals/Modal";
 import Switch from "../components/Switch";
 import ThemeSelector from "../components/ThemeSelector";
+import { useAuthContext } from "../context/AuthContext";
 import { useBreakpoint } from "../context/BreakpointContext";
 import { useCurrentSession } from "../context/CurrentSessionContext";
 import useProfile from "../hooks/useProfile";
 import useSettings from "../hooks/useSettings";
-import { settingsSchema, SettingsSchemaType } from "../lib/types/settings";
+import { settingsSchema, type SettingsSchemaType } from "../lib/types/settings";
 
 export default function Settings() {
+    const { logout } = useAuthContext();
     const { profileState, errorMessage: profileErrorMessage } = useProfile();
     const {
         settingsState,
@@ -24,6 +38,7 @@ export default function Settings() {
     const { isMobile } = useBreakpoint();
     const { setSettingsShouldChange } = useCurrentSession();
     const iconSize = isMobile ? 18 : 20;
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
     const {
         register,
@@ -53,6 +68,19 @@ export default function Settings() {
         await updateSettings(data);
         setSettingsShouldChange(true);
     }
+
+    const handleLogoutClick = () => {
+        setIsLogoutModalOpen(true);
+    };
+
+    const handleLogout = () => {
+        setIsLogoutModalOpen(false);
+        logout();
+    };
+
+    const closeLogoutModal = () => {
+        setIsLogoutModalOpen(false);
+    };
 
     return (
         <>
@@ -90,7 +118,7 @@ export default function Settings() {
                         id={"daily-limit"}
                         type={"number"}
                         label={
-                            <span className="flex items-center gap-2">
+                            <span className={"flex items-center gap-2"}>
                                 <Clock size={iconSize} />
                                 Daily Limit (minutes)
                             </span>
@@ -105,7 +133,7 @@ export default function Settings() {
                         id={"session-limit"}
                         type={"number"}
                         label={
-                            <span className="flex items-center gap-2">
+                            <span className={"flex items-center gap-2"}>
                                 <Timer size={iconSize} />
                                 Session Limit (minutes)
                             </span>
@@ -120,7 +148,7 @@ export default function Settings() {
                         id={"break-duration"}
                         type={"number"}
                         label={
-                            <span className="flex items-center gap-2">
+                            <span className={"flex items-center gap-2"}>
                                 <Coffee size={iconSize} />
                                 Break Duration (minutes)
                             </span>
@@ -158,19 +186,66 @@ export default function Settings() {
                         />
                     </div>
 
-                    <div className={"flex gap-4"}>
+                    <div className={"flex flex-col gap-4"}>
                         <Button
                             type={"submit"}
                             variant={"contained"}
                             disabled={isSubmitting}
                             loading={isSubmitting}
                             size={isMobile ? "small" : "medium"}
+                            className={"flex items-center gap-1"}
                             fullWidth
                         >
+                            <Save size={iconSize - 2} />
                             Save Changes
+                        </Button>
+
+                        <Button
+                            type={"button"}
+                            variant={"outlined"}
+                            color={"error"}
+                            onClick={handleLogoutClick}
+                            size={isMobile ? "small" : "medium"}
+                            className={"flex items-center gap-1"}
+                        >
+                            <LogOut size={iconSize - 2} />
+                            Logout
                         </Button>
                     </div>
                 </form>
+            )}
+
+            {isLogoutModalOpen && (
+                <Modal isOpen={true} onClose={closeLogoutModal}>
+                    <div className={"space-y-6"}>
+                        <div className={"space-y-2"}>
+                            <p className={"text-lg md:text-xl"}>
+                                Are you sure you want to log out?
+                            </p>
+                        </div>
+                        <div className={"space-y-2"}>
+                            <Button
+                                type={"button"}
+                                variant={"outlined"}
+                                color={"error"}
+                                onClick={handleLogout}
+                                size={isMobile ? "small" : "medium"}
+                                fullWidth
+                            >
+                                Confirm Logout
+                            </Button>
+                            <Button
+                                type={"button"}
+                                variant={"contained"}
+                                onClick={closeLogoutModal}
+                                size={isMobile ? "small" : "medium"}
+                                fullWidth
+                            >
+                                Cancel
+                            </Button>
+                        </div>
+                    </div>
+                </Modal>
             )}
         </>
     );
