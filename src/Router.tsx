@@ -10,13 +10,13 @@ import {
 import { useEffect } from "react";
 import { useAuthContext } from "./context/AuthContext";
 import CheckEmail from "./pages/CheckEmail";
-import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
 import Layout from "./pages/Layout";
 import LoadingPage from "./pages/LoadingPage";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Register from "./pages/Register";
-import Session from "./pages/Session";
+import Stats from "./pages/Stats";
 import Settings from "./pages/Settings";
 
 function ScrollToTop() {
@@ -45,14 +45,14 @@ function ProtectedRoute() {
     );
 }
 
-function RedirectToDashboard() {
+function RedirectToHome() {
     const { user, isLoading } = useAuthContext();
 
     if (isLoading) {
         return <LoadingPage />;
     }
 
-    return <Navigate to={`/${user?.id}/dashboard`} replace />;
+    return <Navigate to={`/${user?.id}/home`} replace />;
 }
 
 export default function Router() {
@@ -61,9 +61,9 @@ export default function Router() {
             <ScrollToTop />
             <Routes>
                 <Route element={<ProtectedRoute />}>
-                    <Route path={"/"} element={<RedirectToDashboard />} />
-                    <Route path={"/:id/dashboard"} element={<Dashboard />} />
-                    <Route path={"/:id/session"} element={<Session />} />
+                    <Route path={"/"} element={<RedirectToHome />} />
+                    <Route path={"/:id/home"} element={<Home />} />
+                    <Route path={"/:id/stats"} element={<Stats />} />
                     <Route path={"/:id/settings"} element={<Settings />} />
                 </Route>
                 <Route path={"/login"} element={<Login />} />

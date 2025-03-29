@@ -31,7 +31,7 @@ export default function AuthPage({ type }: AuthPageProps) {
     useEffect(() => {
         if (!isLoading && user) {
             setIsRedirecting(true);
-            navigate(`/${user.id}/dashboard`);
+            navigate(`/${user.id}/home`);
         }
     }, [user, isLoading, navigate]);
 

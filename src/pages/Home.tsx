@@ -22,7 +22,7 @@ type ModalType =
     | "CancelSessionEnd"
     | "EndSession";
 
-export default function Session() {
+export default function Home() {
     const { sessionsState } = useSessions();
     const [selectedSession, setSelectedSession] = useState<ISession | null>(
         null,
@@ -41,7 +41,7 @@ export default function Session() {
             navigate("?before-you-start");
         }
         if (currentSessionStatus === "idle") {
-            navigate("?session-card");
+            navigate("");
         }
         if (currentSessionStatus === "wantToEnd") {
             navigate("?after-session");

@@ -1,7 +1,7 @@
 import { ComponentType } from "react";
 import HomeIcon from "../../assets/icons/HomeIcon";
-import SessionIcon from "../../assets/icons/SessionIcon";
 import SettingsIcon from "../../assets/icons/SettingsIcon";
+import StatsIcon from "../../assets/icons/StatsIcon";
 
 interface NavItem {
     name: string;
@@ -12,14 +12,14 @@ interface NavItem {
 export function getNavItems(userId: string): Array<NavItem> {
     return [
         {
-            name: "Dashboard",
-            href: `/${userId}/dashboard`,
+            name: "Home",
+            href: `/${userId}/home`,
             IconComponent: HomeIcon,
         },
         {
-            name: "Session",
-            href: `/${userId}/session`,
-            IconComponent: SessionIcon,
+            name: "Stats",
+            href: `/${userId}/stats`,
+            IconComponent: StatsIcon,
         },
         {
             name: "Settings",
