@@ -17,7 +17,7 @@ import Button from "../components/Button";
 import Header from "../components/Header";
 import InputField from "../components/InputField";
 import LoadingSpinner from "../components/LoadingSpinner";
-import Modal from "../components/Modals/Modal";
+import LogoutModal from "../components/Modals/LogoutModal";
 import Switch from "../components/Switch";
 import ThemeSelector from "../components/ThemeSelector";
 import { useAuthContext } from "../context/AuthContext";
@@ -37,8 +37,8 @@ export default function Settings() {
     } = useSettings();
     const { isMobile } = useBreakpoint();
     const { setSettingsShouldChange } = useCurrentSession();
-    const iconSize = isMobile ? 18 : 20;
     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+    const iconSize = isMobile ? 18 : 20;
 
     const {
         register,
@@ -216,36 +216,10 @@ export default function Settings() {
             )}
 
             {isLogoutModalOpen && (
-                <Modal isOpen={true} onClose={closeLogoutModal}>
-                    <div className={"space-y-6"}>
-                        <div className={"space-y-2"}>
-                            <p className={"text-lg md:text-xl"}>
-                                Are you sure you want to log out?
-                            </p>
-                        </div>
-                        <div className={"space-y-2"}>
-                            <Button
-                                type={"button"}
-                                variant={"outlined"}
-                                color={"error"}
-                                onClick={handleLogout}
-                                size={isMobile ? "small" : "medium"}
-                                fullWidth
-                            >
-                                Confirm Logout
-                            </Button>
-                            <Button
-                                type={"button"}
-                                variant={"contained"}
-                                onClick={closeLogoutModal}
-                                size={isMobile ? "small" : "medium"}
-                                fullWidth
-                            >
-                                Cancel
-                            </Button>
-                        </div>
-                    </div>
-                </Modal>
+                <LogoutModal
+                    onClose={closeLogoutModal}
+                    onLogout={handleLogout}
+                />
             )}
         </>
     );

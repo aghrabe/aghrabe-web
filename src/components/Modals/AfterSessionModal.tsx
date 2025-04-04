@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useCurrentGameContext } from "../../context/CurrentGameContext";
 import { useFeedbackContext } from "../../context/FeedbackContext";
 import useMoodMapper from "../../hooks/useMoodMapper";
@@ -10,6 +11,15 @@ interface Props {
 }
 
 export default function AfterSessionModal({ onClose, onStart }: Props) {
+    useEffect(() => {
+        const notificationSound = new Audio(
+            "/sounds/mixkit-achievement-bell-600.mp3",
+        );
+        notificationSound.play().catch((error) => {
+            console.error("Failed to play notification sound:", error);
+        });
+    }, []);
+
     const { getMoodIcon, getMoodText } = useMoodMapper();
     const { currentGame } = useCurrentGameContext();
     const { afterFeedback, setAfterFeedback } = useFeedbackContext();

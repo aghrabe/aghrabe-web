@@ -57,7 +57,7 @@ export default function SessionDetailsModal({
         <Modal isOpen={true} onClose={onClose}>
             <div
                 className={
-                    "sticky top-0 z-10 bg-surface flex items-start justify-between md:px-6 pb-6"
+                    "sticky top-0 z-10 bg-surface flex items-start justify-between md:px-6 pb-4 md:pb-0"
                 }
             >
                 <div className={"flex flex-col items-start gap-2"}>
