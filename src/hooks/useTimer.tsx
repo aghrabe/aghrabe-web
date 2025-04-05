@@ -1,33 +1,10 @@
 import { useReducer, useEffect, useRef, RefObject } from "react";
 import {
-    TimerAction,
     TimerContextState,
     TimerControlActions,
     TimerStatus,
 } from "../lib/types/timer";
-
-function timerStateReducer(
-    state: TimerContextState,
-    action: TimerAction,
-): TimerContextState {
-    switch (action.type) {
-        case "INIT":
-            return { ...state, ...action.payload };
-        case "INCREMENT":
-            return { ...state, elapsed: state.elapsed + 1 };
-        case "SET_ELAPSED":
-            return { ...state, elapsed: action.payload };
-        case "SET_STATUS":
-            return { ...state, status: action.payload };
-        case "RESET":
-            return {
-                elapsed: action.payload.elapsed,
-                status: action.payload.status,
-            };
-        default:
-            return state;
-    }
-}
+import timerReducer from "../lib/reducers/timerReducer";
 
 export default function useTimer(totalSeconds: number): TimerContextState &
     TimerControlActions & {
@@ -37,7 +14,7 @@ export default function useTimer(totalSeconds: number): TimerContextState &
         remainingTime: number;
     } {
     const timerRef = useRef<NodeJS.Timeout | null>(null);
-    const [state, dispatch] = useReducer(timerStateReducer, {
+    const [state, dispatch] = useReducer(timerReducer, {
         elapsed: 0,
         status: "idle",
     });

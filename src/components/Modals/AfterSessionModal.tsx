@@ -11,6 +11,14 @@ interface Props {
 }
 
 export default function AfterSessionModal({ onClose, onStart }: Props) {
+    const { getMoodIcon, getMoodText } = useMoodMapper();
+    const { currentGame } = useCurrentGameContext();
+    const { afterFeedback, setAfterFeedback } = useFeedbackContext();
+
+    const moodAfter = afterFeedback?.mood_after ?? 3;
+    const journalAfter = afterFeedback?.journal_after ?? "";
+
+    // TODO: make an entire notification hook that handles notification sound and pushes it to the device as well
     useEffect(() => {
         const notificationSound = new Audio(
             "/sounds/mixkit-achievement-bell-600.mp3",
@@ -19,13 +27,6 @@ export default function AfterSessionModal({ onClose, onStart }: Props) {
             console.error("Failed to play notification sound:", error);
         });
     }, []);
-
-    const { getMoodIcon, getMoodText } = useMoodMapper();
-    const { currentGame } = useCurrentGameContext();
-    const { afterFeedback, setAfterFeedback } = useFeedbackContext();
-
-    const moodAfter = afterFeedback?.mood_after ?? 3;
-    const journalAfter = afterFeedback?.journal_after ?? "";
 
     return (
         <BaseSessionModal

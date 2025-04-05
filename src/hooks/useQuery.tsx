@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 
 interface IQueryState<T> {
     data: T | null;
@@ -21,35 +21,61 @@ interface IUseQueryReturn<T> {
 
 const cache = new Map<string, IMapValue<unknown>>();
 
-/**
- * A custom React hook for fetching and caching data with automatic retries, stale time management, and cache invalidation.
- *
- * @example
- *```typescript
- * // Basic usage
- * const { state, refetch, clearCache } = useQuery("userData", fetchUserData, 5 * 60 * 1000);
- *
- * console.log(state.data); // Retrieved user data
- * console.log(state.isLoading); // Indicates if the query is loading
- *
- * // Manually refetching data and invalidating cache
- * await refetch(true);
- *
- * // Clearing the cache for a specific query
- * clearCache("userData");
- * ```
- */
+type Action<T> =
+    | { type: "START_FETCH" }
+    | { type: "FETCH_FROM_CACHE"; payload: T }
+    | { type: "FETCH_SUCCESS"; payload: T }
+    | { type: "FETCH_ERROR"; payload: Error };
+
+function reducer<T>(state: IQueryState<T>, action: Action<T>): IQueryState<T> {
+    switch (action.type) {
+        case "START_FETCH":
+            return {
+                ...state,
+                isFetching: true,
+                isLoading: state.data === null,
+            };
+        case "FETCH_FROM_CACHE":
+            return {
+                ...state,
+                data: action.payload,
+                isLoading: false,
+                isFetching: false,
+                error: null,
+            };
+        case "FETCH_SUCCESS":
+            return {
+                ...state,
+                data: action.payload,
+                error: null,
+                isLoading: false,
+                isFetching: false,
+            };
+        case "FETCH_ERROR":
+            return {
+                ...state,
+                error: action.payload,
+                isLoading: false,
+                isFetching: false,
+            };
+        default:
+            return state;
+    }
+}
+
 export default function useQuery<T>(
     queryKey: string,
     queryFn: () => Promise<T>,
-    staleTime: number = 10 * 60 * 1000, // Default: 10 minutes
+    staleTime: number = 10 * 60 * 1000,
 ): IUseQueryReturn<T> {
-    const [state, setState] = useState<IQueryState<T>>({
+    const initialState: IQueryState<T> = {
         data: null,
         error: null,
         isLoading: true,
         isFetching: false,
-    });
+    };
+
+    const [state, dispatch] = useReducer(reducer<T>, initialState);
 
     const fetchData = useCallback(
         async (invalidateCache = false) => {
@@ -61,43 +87,25 @@ export default function useQuery<T>(
                 cachedData &&
                 nowTimeStamp - cachedData.timeStamp <= cachedData.staleTime
             ) {
-                setState((prev) => ({
-                    ...prev,
-                    data: cachedData.data,
-                    isLoading: false,
-                    isFetching: false,
-                }));
+                dispatch({
+                    type: "FETCH_FROM_CACHE",
+                    payload: cachedData.data,
+                });
                 return;
             }
 
-            setState((prev) => ({
-                ...prev,
-                isFetching: true,
-                isLoading: prev.data === null,
-            }));
+            dispatch({ type: "START_FETCH" });
 
             try {
                 const result = await queryFn();
-
-                setState({
-                    data: result,
-                    error: null,
-                    isLoading: false,
-                    isFetching: false,
-                });
-
+                dispatch({ type: "FETCH_SUCCESS", payload: result });
                 cache.set(queryKey, {
                     data: result,
                     timeStamp: nowTimeStamp,
                     staleTime,
                 });
             } catch (err) {
-                setState((prev) => ({
-                    ...prev,
-                    error: err as Error,
-                    isLoading: false,
-                    isFetching: false,
-                }));
+                dispatch({ type: "FETCH_ERROR", payload: err as Error });
             }
         },
         [queryKey, queryFn, staleTime],
@@ -113,12 +121,10 @@ export default function useQuery<T>(
                 } catch (err) {
                     retries--;
                     if (retries === 0) {
-                        setState((prev) => ({
-                            ...prev,
-                            error: err as Error,
-                            isLoading: false,
-                            isFetching: false,
-                        }));
+                        dispatch({
+                            type: "FETCH_ERROR",
+                            payload: err as Error,
+                        });
                     } else {
                         await new Promise((resolve) =>
                             setTimeout(resolve, 1000),
