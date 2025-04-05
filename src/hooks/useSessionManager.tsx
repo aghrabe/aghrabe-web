@@ -106,6 +106,14 @@ export default function useSessionManager({
             console.error("No session ID to update");
             return false;
         }
+        if (!afterFeedback) {
+            console.error("After feedback is empty");
+            return false;
+        }
+        if (!createdFeedbackID) {
+            console.error("No feedback ID to update");
+            return false;
+        }
 
         const sessionData: UpdateSessionDto = {
             user_id: userId,
@@ -115,16 +123,6 @@ export default function useSessionManager({
         };
 
         await updateSession(createdSessionID, sessionData);
-
-        if (!afterFeedback) {
-            console.error("After feedback is empty");
-            return false;
-        }
-
-        if (!createdFeedbackID) {
-            console.error("No feedback ID to update");
-            return false;
-        }
 
         const feedbackData: AfterSessionFeedbackDto = {
             user_id: userId,

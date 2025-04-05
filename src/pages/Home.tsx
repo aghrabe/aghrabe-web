@@ -23,7 +23,7 @@ type ModalType =
     | "EndSession";
 
 export default function Home() {
-    const { sessionsState } = useSessions();
+    const { sessionsState, refetch: refetchSessions } = useSessions();
     const [selectedSession, setSelectedSession] = useState<ISession | null>(
         null,
     );
@@ -67,7 +67,10 @@ export default function Home() {
                 break;
 
             case "EndSession":
-                endSession();
+                {
+                    endSession();
+                    refetchSessions(true);
+                }
                 break;
 
             default:
