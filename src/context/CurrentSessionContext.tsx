@@ -14,6 +14,7 @@ import ContextGenerator from "./ContextGenerator";
 import { useCurrentGameContext } from "./CurrentGameContext";
 import { useFeedbackContext } from "./FeedbackContext";
 import { TimerStatus } from "../lib/types/timer";
+import useGames from "../hooks/useGames";
 
 interface CurrentSessionContextType {
     elapsed: number;
@@ -42,6 +43,7 @@ const { Provider, useContextValue: useCurrentSession } =
 export function CurrentSessionProvider({ children }: { children: ReactNode }) {
     const { user } = useAuthContext();
     const { currentGame, setCurrentGame } = useCurrentGameContext();
+    const { updateGame } = useGames();
     const { settingsState, refetch: refetchSettings } = useSettings();
     const { refetch: refetchSessions } = useSessions();
     const {
@@ -107,7 +109,27 @@ export function CurrentSessionProvider({ children }: { children: ReactNode }) {
     }, [settingsState.data?.session_limit_minutes]);
 
     function startSession() {
+        //if (!currentGame) {
+        //    setMessage("No game selected.");
+        //    return;
+        //}
+        //
+        //if (!settingsState.data) {
+        //    setMessage("No Settings loaded.");
+        //    return;
+        //}
+        //
+        //const dailyLimit = settingsState.data.daily_limit_minutes;
+        //
+        //if (currentGame.time_spent_today_minutes >= dailyLimit) {
+        //    setMessage(
+        //        "Daily session limit reached. Please try again tomorrow.",
+        //    );
+        //    return;
+        //}
+
         updateElapsedTime(0);
+        updateGameTimeSpent();
         setMessage(`Enjoy Playing ${currentGame?.title}!`);
         beginTimer();
         createSessionWithFeedbackInDB();
@@ -124,7 +146,33 @@ export function CurrentSessionProvider({ children }: { children: ReactNode }) {
     function endSession() {
         endTimer();
         setMessage("Time's up!");
+        updateGameTimeSpent();
         updateSessionWithFeedbackInDB();
+    }
+
+    async function updateGameTimeSpent() {
+        const sessionMinutes = Math.floor(elapsed / 60);
+
+        // if user reached this state, they have already done the daily limit check
+        // so we add sessionMinutes to both total_minutes and today_minutes
+        if (currentGame) {
+            const updatedTotal =
+                currentGame.time_spent_total_minutes + sessionMinutes;
+            const updatedToday =
+                currentGame.time_spent_today_minutes + sessionMinutes;
+            const updatedGame = {
+                ...currentGame,
+                time_spent_total_minutes: updatedTotal,
+                time_spent_today_minutes: updatedToday,
+            };
+
+            setCurrentGame(updatedGame);
+
+            updateGame(currentGame.id, {
+                time_spent_total_minutes: updatedTotal,
+                time_spent_today_minutes: updatedToday,
+            });
+        }
     }
 
     async function createSessionWithFeedbackInDB() {

@@ -6,6 +6,7 @@ import { useFeedbackContext } from "../../context/FeedbackContext";
 import { FeedbackSection } from "../FeedbackSection";
 import GameSelectionSection from "../GameSelectionSection";
 import BaseSessionModal from "./BaseSessionModal";
+import useSettings from "../../hooks/useSettings";
 
 interface Props {
     onClose: () => void;
@@ -15,6 +16,7 @@ interface Props {
 export default function BeforeSessionModal({ onClose, onStart }: Props) {
     const { getMoodIcon, getMoodText } = useMoodMapper();
     const { gamesState, addGame } = useGames();
+    const { settingsState } = useSettings();
     const { currentGame, setCurrentGame } = useCurrentGameContext();
     const { beforeFeedback, setBeforeFeedback } = useFeedbackContext();
     const [gameError, setGameError] = useState<string | undefined>(undefined);
@@ -35,6 +37,20 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
     const handleStartSession = () => {
         if (!currentGame) {
             setGameError("Please select a game before starting");
+            return;
+        }
+
+        if (!settingsState.data) {
+            setGameError("No Settings loaded.");
+            return;
+        }
+
+        const dailyLimit = settingsState.data.daily_limit_minutes;
+
+        if (currentGame.time_spent_today_minutes >= dailyLimit) {
+            setGameError(
+                "Daily session limit reached. Please try again tomorrow.",
+            );
             return;
         }
         onStart();
