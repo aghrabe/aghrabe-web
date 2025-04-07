@@ -66,9 +66,11 @@ const mockData = {
 
 const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
         legend: {
-            position: "top",
+            display: false,
+            position: "bottom",
         },
         title: {
             display: false,
@@ -102,6 +104,26 @@ const options = {
 //    ],
 //};
 
+interface StatCardProps {
+    title: string;
+    value: string;
+}
+
+function StatCard({ title, value }: StatCardProps) {
+    return (
+        <div
+            className={
+                "flex flex-col items-center justify-center text-center bg-surface p-4 rounded-md text-on-surface gap-2"
+            }
+        >
+            <h4 className={"text-primary font-bold md:text-xl text-md"}>
+                {title}
+            </h4>
+            <p className={"text-sm md:text-lg"}>{value}</p>
+        </div>
+    );
+}
+
 export default function Stats() {
     const { gamesState } = useGames();
 
@@ -119,65 +141,22 @@ export default function Stats() {
 
             <div className={"grid grid-cols-2 lg:grid-cols-4 gap-4"}>
                 {gamesState.data && (
-                    <div
-                        className={
-                            "flex flex-col items-center justify-center text-center bg-surface p-4 rounded-md text-on-surface gap-2"
-                        }
-                    >
-                        <h4
-                            className={
-                                "text-primary font-bold md:text-xl text-md"
-                            }
-                        >
-                            Top Game
-                        </h4>
-                        <p className={"text-sm md:text-lg"}>
-                            {gamesState.data[0].title}
-                        </p>
-                    </div>
+                    <StatCard
+                        title={"Top Game"}
+                        value={gamesState.data[0].title}
+                    />
                 )}
-
-                <div
-                    className={
-                        "flex flex-col items-center justify-center text-center bg-surface p-4 rounded-md text-on-surface gap-2"
-                    }
-                >
-                    <h4 className={"text-primary font-bold md:text-xl text-md"}>
-                        Top This Week
-                    </h4>
-                    <p className={"text-sm md:text-lg"}>Elden Ring</p>
-                </div>
-
-                <div
-                    className={
-                        "flex flex-col items-center text-center bg-surface p-4 rounded-md text-on-surface gap-2"
-                    }
-                >
-                    <h4 className={"text-primary font-bold md:text-xl text-md"}>
-                        Total Time
-                    </h4>
-                    <p className={"text-sm md:text-lg"}>300h30m</p>
-                </div>
-
-                <div
-                    className={
-                        "flex flex-col items-center text-center bg-surface p-4 rounded-md text-on-surface gap-2"
-                    }
-                >
-                    <h4 className={"text-primary font-bold md:text-xl text-md"}>
-                        This Week
-                    </h4>
-                    <p className={"text-sm md:text-lg"}>12h30m</p>
-                </div>
+                <StatCard title={"Top This Week"} value={"Elden Ring"} />
+                <StatCard title={"Total Time"} value={"300h30m"} />
+                <StatCard title={"This Week"} value={"12h30m"} />
             </div>
 
             <div className={"w-full xl:flex xl:justify-between"}>
-                <div className="w-full h-full md:h-[400px]">
+                <div className="chart-container w-full h-[40vh] md:h-[400px]">
                     <Line data={mockData} options={options} />
                 </div>
 
                 {/*
-
                 <div className="w-full max-w-xs mx-auto">
                     <Doughnut data={doughnutData} />
                 </div>
