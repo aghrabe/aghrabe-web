@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import avatar from "../../assets/photo_2023-04-19_07-10-35.jpg";
+//import avatar from "../../assets/photo_2023-04-19_07-10-35.jpg";
 
 import SyncIcon from "../../assets/icons/SyncIcon";
 import { useAuthContext } from "../../context/AuthContext";
@@ -41,10 +41,13 @@ export default function Sidebar() {
             }
         >
             <div className="space-y-8">
+                {/*
                 <img
                     src={avatar}
                     className={"w-12 h-12 rounded-md object-cover"}
                 />
+
+                */}
                 <IconGroup direction={"col"} spacing={"normal"}>
                     {navItems.map(({ name, href, IconComponent }) => {
                         const isActive = location.pathname === href;

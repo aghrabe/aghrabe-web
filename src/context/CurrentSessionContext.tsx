@@ -109,25 +109,6 @@ export function CurrentSessionProvider({ children }: { children: ReactNode }) {
     }, [settingsState.data?.session_limit_minutes]);
 
     function startSession() {
-        //if (!currentGame) {
-        //    setMessage("No game selected.");
-        //    return;
-        //}
-        //
-        //if (!settingsState.data) {
-        //    setMessage("No Settings loaded.");
-        //    return;
-        //}
-        //
-        //const dailyLimit = settingsState.data.daily_limit_minutes;
-        //
-        //if (currentGame.time_spent_today_minutes >= dailyLimit) {
-        //    setMessage(
-        //        "Daily session limit reached. Please try again tomorrow.",
-        //    );
-        //    return;
-        //}
-
         updateElapsedTime(0);
         updateGameTimeSpent();
         setMessage(`Enjoy Playing ${currentGame?.title}!`);

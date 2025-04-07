@@ -51,19 +51,27 @@ export default function Home() {
     function handleModalClose(modalType: ModalType) {
         switch (modalType) {
             case "SessionDetail":
-                setSelectedSession(null);
+                {
+                    setSelectedSession(null);
+                }
                 break;
 
             case "CancelSessionStart":
-                resetToIdle();
+                {
+                    resetToIdle();
+                }
                 break;
 
             case "StartSession":
-                startSession();
+                {
+                    startSession();
+                }
                 break;
 
             case "CancelSessionEnd":
-                // This could be implemented if needed
+                {
+                    // This could be implemented if needed
+                }
                 break;
 
             case "EndSession":

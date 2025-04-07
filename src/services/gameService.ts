@@ -10,7 +10,7 @@ export async function getAllGamesService(
             .from("games")
             .select("*")
             .eq("user_id", userId)
-            .order("created_at", { ascending: false });
+            .order("time_spent_total_minutes", { ascending: false });
         if (result.error) throw result.error;
         return result.data || [];
     });
