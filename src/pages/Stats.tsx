@@ -17,6 +17,8 @@ import Header from "../components/Header";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useTheme } from "../context/ThemeContext";
 import useGames from "../hooks/useGames";
+import useSessions from "../hooks/useSessions";
+import { useTotalTime } from "../hooks/useTotalTime";
 
 ChartJS.register(
     CategoryScale,
@@ -101,15 +103,21 @@ export default function Stats() {
         return themeColors;
     }, [globalTheme]);
 
+    function formatMinutesToTimeString(minutes: number): string {
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+        return `${hours}h${remainingMinutes}m`;
+    }
+
+    const { getTotalTimeAllTime, getTotalTimeLastWeek } = useSessions();
+    const totalTimeAllTime = useTotalTime(getTotalTimeAllTime);
+    const totalTimeLastWeek = useTotalTime(getTotalTimeLastWeek);
+
     const [themeColors, setThemeColors] = useState(getThemeColors());
 
     useEffect(() => {
         setThemeColors(getThemeColors());
     }, [globalTheme, getThemeColors]);
-
-    useEffect(() => {
-        console.log(themeColors);
-    }, [themeColors]);
 
     const mockData = useMemo(
         () => ({
@@ -173,32 +181,7 @@ export default function Stats() {
         },
     } as ChartOptions<"line">;
 
-    //const totalPlayed = mockData.datasets[0].data.reduce((a, b) => a + b, 0);
-    //const totalMoodBefore = mockData.datasets[1].data.reduce((a, b) => a + b, 0);
-    //const totalMoodAfter = mockData.datasets[2].data.reduce((a, b) => a + b, 0);
-
-    //const doughnutData = {
-    //    labels: ["Played Time", "Mood Before", "Mood After"],
-    //    datasets: [
-    //        {
-    //            label: "Total Summary",
-    //            data: [totalPlayed, totalMoodBefore, totalMoodAfter],
-    //            backgroundColor: [
-    //                "rgba(75,192,192,0.6)",
-    //                "rgba(192,75,192,0.6)",
-    //                "rgba(192,192,75,0.6)",
-    //            ],
-    //            borderColor: [
-    //                "rgba(75,192,192,1)",
-    //                "rgba(192,75,192,1)",
-    //                "rgba(192,192,75,1)",
-    //            ],
-    //            borderWidth: 1,
-    //        },
-    //    ],
-    //};
-
-    if (gamesState.isLoading) {
+    if (gamesState.isLoading || !totalTimeLastWeek || !totalTimeAllTime) {
         return (
             <div className={"min-h-screen flex items-center justify-center"}>
                 <LoadingSpinner />
@@ -207,7 +190,7 @@ export default function Stats() {
     }
 
     return (
-        <div className="w-full flex flex-col gap-8 px-4">
+        <div className={"w-full flex flex-col gap-8 px-4"}>
             <Header header={"Stats"}></Header>
 
             <div className={"grid grid-cols-2 lg:grid-cols-4 gap-4"}>
@@ -218,8 +201,18 @@ export default function Stats() {
                     />
                 )}
                 <StatCard title={"Top This Week"} value={"Elden Ring"} />
-                <StatCard title={"Total Time"} value={"300h30m"} />
-                <StatCard title={"This Week"} value={"12h30m"} />
+                {totalTimeAllTime && (
+                    <StatCard
+                        title={"This Week"}
+                        value={`${formatMinutesToTimeString(totalTimeAllTime)}`}
+                    />
+                )}
+                {totalTimeLastWeek && (
+                    <StatCard
+                        title={"This Week"}
+                        value={`${formatMinutesToTimeString(totalTimeLastWeek)}`}
+                    />
+                )}
             </div>
 
             <div className={"w-full xl:flex xl:justify-between"}>

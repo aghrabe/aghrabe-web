@@ -139,19 +139,19 @@ export function CurrentSessionProvider({ children }: { children: ReactNode }) {
         if (currentGame) {
             const updatedTotal =
                 currentGame.time_spent_total_minutes + sessionMinutes;
-            const updatedToday =
-                currentGame.time_spent_today_minutes + sessionMinutes;
+            //const updatedToday =
+            //    currentGame.time_spent_today_minutes + sessionMinutes;
             const updatedGame = {
                 ...currentGame,
                 time_spent_total_minutes: updatedTotal,
-                time_spent_today_minutes: updatedToday,
+                //time_spent_today_minutes: updatedToday,
             };
 
             setCurrentGame(updatedGame);
 
             updateGame(currentGame.id, {
                 time_spent_total_minutes: updatedTotal,
-                time_spent_today_minutes: updatedToday,
+                //time_spent_today_minutes: updatedToday,
             });
         }
     }
