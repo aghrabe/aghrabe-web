@@ -16,6 +16,25 @@ export async function getSessionsService(
     });
 }
 
+export async function getSessionsFromTodayService(
+    userId: string,
+): Promise<[Array<ISession> | null, Error | null]> {
+    return await safeExecute(async () => {
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+
+        const result = await supabase
+            .from("sessions")
+            .select("*, session_feedbacks(*), game:games (id, title)")
+            .eq("user_id", userId)
+            .gte("start_time", todayStart.toISOString())
+            .order("start_time", { ascending: false });
+
+        if (result.error) throw result.error;
+        return result.data || [];
+    });
+}
+
 export async function getSessionsFromLastWeekService(
     userId: string,
 ): Promise<[Array<ISession> | null, Error | null]> {

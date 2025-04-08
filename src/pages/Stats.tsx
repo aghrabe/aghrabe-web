@@ -181,7 +181,11 @@ export default function Stats() {
         },
     } as ChartOptions<"line">;
 
-    if (gamesState.isLoading || !totalTimeLastWeek || !totalTimeAllTime) {
+    if (
+        gamesState.isLoading ||
+        totalTimeLastWeek.isLoading ||
+        totalTimeAllTime.isLoading
+    ) {
         return (
             <div className={"min-h-screen flex items-center justify-center"}>
                 <LoadingSpinner />
@@ -194,23 +198,25 @@ export default function Stats() {
             <Header header={"Stats"}></Header>
 
             <div className={"grid grid-cols-2 lg:grid-cols-4 gap-4"}>
-                {gamesState.data && (
-                    <StatCard
-                        title={"Top Game"}
-                        value={gamesState.data[0].title}
-                    />
-                )}
+                <StatCard
+                    title={"Top Game"}
+                    value={
+                        gamesState.data && gamesState.data.length > 0
+                            ? gamesState.data[0].title
+                            : "Nothing Yet"
+                    }
+                />
                 <StatCard title={"Top This Week"} value={"Elden Ring"} />
                 {totalTimeAllTime && (
                     <StatCard
                         title={"This Week"}
-                        value={`${formatMinutesToTimeString(totalTimeAllTime)}`}
+                        value={`${formatMinutesToTimeString(totalTimeAllTime.totalTime || 0)}`}
                     />
                 )}
                 {totalTimeLastWeek && (
                     <StatCard
                         title={"This Week"}
-                        value={`${formatMinutesToTimeString(totalTimeLastWeek)}`}
+                        value={`${formatMinutesToTimeString(totalTimeLastWeek.totalTime || 0)}`}
                     />
                 )}
             </div>

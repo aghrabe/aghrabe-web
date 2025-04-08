@@ -4,6 +4,7 @@ import { CreateSessionDto, ISession } from "../lib/types/sessions";
 import {
     addSessionService,
     getSessionsFromLastWeekService,
+    getSessionsFromTodayService,
     getSessionsService,
     getSingleSessionService,
     updateSessionService,
@@ -35,6 +36,16 @@ export default function useSessions() {
         getSessions,
         30 * 60 * 1000, // 30 min
     );
+
+    const getTotalTimeToday = useCallback(async (): Promise<number> => {
+        if (!user?.id) return 0;
+        const [sessions, error] = await getSessionsFromTodayService(user.id);
+        if (error) {
+            setErrorMessage(error.message);
+            return 0;
+        }
+        return sumSessionDurations(sessions || []);
+    }, [user?.id]);
 
     const getTotalTimeAllTime = useCallback(async (): Promise<number> => {
         if (!user?.id) return 0;
@@ -124,6 +135,7 @@ export default function useSessions() {
         updateSession,
         getTotalTimeAllTime,
         getSessionsFromLastWeek,
+        getTotalTimeToday,
         getTotalTimeLastWeek,
         getSingleSession,
         refetch,

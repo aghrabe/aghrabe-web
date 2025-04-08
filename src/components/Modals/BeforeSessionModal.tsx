@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useCurrentGameContext } from "../../context/CurrentGameContext";
+import { useFeedbackContext } from "../../context/FeedbackContext";
 import useGames from "../../hooks/useGames";
 import useMoodMapper from "../../hooks/useMoodMapper";
-import { useFeedbackContext } from "../../context/FeedbackContext";
+import useSettings from "../../hooks/useSettings";
 import { FeedbackSection } from "../FeedbackSection";
 import GameSelectionSection from "../GameSelectionSection";
 import BaseSessionModal from "./BaseSessionModal";
-import useSettings from "../../hooks/useSettings";
+import useSessions from "../../hooks/useSessions";
+import { useTotalTime } from "../../hooks/useTotalTime";
 
 interface Props {
     onClose: () => void;
@@ -16,6 +18,8 @@ interface Props {
 export default function BeforeSessionModal({ onClose, onStart }: Props) {
     const { getMoodIcon, getMoodText } = useMoodMapper();
     const { gamesState, addGame } = useGames();
+    const { getTotalTimeToday } = useSessions();
+    const { totalTime } = useTotalTime(getTotalTimeToday);
     const { settingsState } = useSettings();
     const { currentGame, setCurrentGame } = useCurrentGameContext();
     const { beforeFeedback, setBeforeFeedback } = useFeedbackContext();
@@ -47,7 +51,9 @@ export default function BeforeSessionModal({ onClose, onStart }: Props) {
 
         const dailyLimit = settingsState.data.daily_limit_minutes;
 
-        if (currentGame.time_spent_today_minutes >= dailyLimit) {
+        const totalTimeInMinutes = totalTime || 0;
+
+        if (totalTimeInMinutes >= dailyLimit) {
             setGameError(
                 "Daily session limit reached. Please try again tomorrow.",
             );
