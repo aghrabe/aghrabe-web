@@ -19,6 +19,8 @@ import { useTheme } from "../context/ThemeContext";
 import useGames from "../hooks/useGames";
 import useSessions from "../hooks/useSessions";
 import { useTotalTime } from "../hooks/useTotalTime";
+import useSettings from "../hooks/useSettings";
+import ProgressBar from "../components/ProgressBar";
 
 ChartJS.register(
     CategoryScale,
@@ -109,9 +111,26 @@ export default function Stats() {
         return `${hours}h${remainingMinutes}m`;
     }
 
-    const { getTotalTimeAllTime, getTotalTimeLastWeek } = useSessions();
+    const { getTotalTimeAllTime, getTotalTimeLastWeek, getTotalTimeToday } =
+        useSessions();
     const totalTimeAllTime = useTotalTime(getTotalTimeAllTime);
     const totalTimeLastWeek = useTotalTime(getTotalTimeLastWeek);
+    const totalTimeToday = useTotalTime(getTotalTimeToday);
+
+    const { settingsState } = useSettings();
+
+    // TODO: TEMP
+    const dayProgress = 50;
+
+    // WHY logging happens on resize?
+    useEffect(() => {
+        console.log("totalTimeToday.totalTime:", totalTimeToday.totalTime);
+        console.log(
+            "settingsState.data.daily_limit_minutes:",
+            settingsState.data?.daily_limit_minutes,
+        );
+        console.log(dayProgress);
+    }, [settingsState.data?.daily_limit_minutes, totalTimeToday, dayProgress]);
 
     const [themeColors, setThemeColors] = useState(getThemeColors());
 
@@ -184,7 +203,9 @@ export default function Stats() {
     if (
         gamesState.isLoading ||
         totalTimeLastWeek.isLoading ||
-        totalTimeAllTime.isLoading
+        totalTimeAllTime.isLoading ||
+        totalTimeToday.isLoading ||
+        settingsState.isLoading
     ) {
         return (
             <div className={"min-h-screen flex items-center justify-center"}>
@@ -209,7 +230,7 @@ export default function Stats() {
                 <StatCard title={"Top This Week"} value={"Elden Ring"} />
                 {totalTimeAllTime && (
                     <StatCard
-                        title={"This Week"}
+                        title={"Total Time"}
                         value={`${formatMinutesToTimeString(totalTimeAllTime.totalTime || 0)}`}
                     />
                 )}
@@ -220,6 +241,8 @@ export default function Stats() {
                     />
                 )}
             </div>
+
+            <ProgressBar progress={dayProgress} />
 
             <div className={"w-full xl:flex xl:justify-between"}>
                 <div className="chart-container w-full h-[40vh] md:h-[400px]">
