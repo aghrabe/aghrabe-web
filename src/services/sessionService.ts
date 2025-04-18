@@ -4,13 +4,21 @@ import { ISession, CreateSessionDto } from "../lib/types/sessions";
 
 export async function getSessionsService(
     userId: string,
+    page: number = 1,
+    pageSize: number = 10,
 ): Promise<[Array<ISession> | null, Error | null]> {
     return await safeExecute(async () => {
+        const from = (page - 1) * pageSize;
+        const to = from + pageSize - 1;
+
         const result = await supabase
             .from("sessions")
-            .select("*, session_feedbacks(*), game:games (id, title)")
+            .select("*, session_feedbacks(*), game:games (id, title)", {
+                count: "exact",
+            })
             .eq("user_id", userId)
-            .order("start_time", { ascending: false });
+            .order("start_time", { ascending: false })
+            .range(from, to);
         if (result.error) throw result.error;
         return result.data || [];
     });

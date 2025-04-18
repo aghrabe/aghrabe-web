@@ -35,6 +35,9 @@ export async function addGameService(
     newGame: Partial<IGame>,
 ): Promise<[void | null, Error | null]> {
     return await safeExecute(async () => {
+        //
+        //const id = ulid();
+        //
         const result = await supabase
             .from("games")
             .insert({

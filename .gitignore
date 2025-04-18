@@ -27,4 +27,4 @@ pb_data/*
 TODO.md
 *.env
 .env
-scripts/obsidian_logs.md
+scripts/addingData/obsidian_logs.md

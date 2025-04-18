@@ -17,77 +17,88 @@ function sumSessionDurations(sessions: Array<ISession>): number {
     }, 0);
 }
 
-export default function useSessions() {
+function handleError<T>(
+    error: Error | null,
+    fallback: T,
+    set: (msg: string) => void,
+): T {
+    if (error) {
+        set(error.message);
+        return fallback;
+    }
+    return fallback;
+}
+
+export default function useSessions(
+    currentPage: number = 1,
+    pageSize: number = 10,
+) {
     const { user } = useAuthContext();
     const [errorMessage, setErrorMessage] = useState<string>("");
 
     const getSessions = useCallback(async (): Promise<Array<ISession>> => {
         if (!user?.id) return [];
-        const [sessions, error] = await getSessionsService(user.id);
+        const [sessions, error] = await getSessionsService(
+            user.id,
+            currentPage,
+            pageSize,
+        );
         if (error) {
             setErrorMessage(error.message);
             return [];
         }
         return sessions!;
-    }, [user?.id]);
+    }, [user?.id, currentPage, pageSize]);
 
     const { state: sessionsState, refetch } = useQuery<Array<ISession>>(
-        `sessions.${user?.id}`,
+        `sessions.${user?.id}.page.${currentPage}.size.${pageSize}`,
         getSessions,
         30 * 60 * 1000, // 30 min
     );
 
-    const getTotalTimeToday = useCallback(async (): Promise<number> => {
-        if (!user?.id) return 0;
-        const [sessions, error] = await getSessionsFromTodayService(user.id);
-        if (error) {
-            setErrorMessage(error.message);
-            return 0;
-        }
-        return sumSessionDurations(sessions || []);
-    }, [user?.id]);
-
-    const getTotalTimeAllTime = useCallback(async (): Promise<number> => {
-        if (!user?.id) return 0;
-        const [sessions, error] = await getSessionsService(user.id);
-        if (error) {
-            setErrorMessage(error.message);
-            return 0;
-        }
-        return sumSessionDurations(sessions || []);
-    }, [user?.id]);
+    const getTotalTime = useCallback(
+        async (
+            getterFunction: (
+                userId: string,
+            ) => Promise<[Array<ISession> | null, Error | null]>,
+        ): Promise<number> => {
+            if (!user?.id) return 0;
+            const [sessions, error] = await getterFunction(user.id);
+            return (
+                handleError(error, 0, setErrorMessage) ||
+                sumSessionDurations(sessions || [])
+            );
+        },
+        [user?.id],
+    );
 
     const getSessionsFromLastWeek = useCallback(async (): Promise<
         Array<ISession>
     > => {
         if (!user?.id) return [];
         const [sessions, error] = await getSessionsFromLastWeekService(user.id);
-        if (error) {
-            setErrorMessage(error.message);
-            return [];
-        }
-        return sessions!;
+        return (handleError(error, [], setErrorMessage) || sessions) ?? [];
     }, [user?.id]);
 
-    const getTotalTimeLastWeek = useCallback(async (): Promise<number> => {
-        if (!user?.id) return 0;
-        const [sessions, error] = await getSessionsFromLastWeekService(user.id);
-        if (error) {
-            setErrorMessage(error.message);
-            return 0;
-        }
-        const totalDuration = sumSessionDurations(sessions || []);
-        return totalDuration;
-    }, [user?.id]);
+    const getTotalTimeToday = useCallback(
+        () => getTotalTime(getSessionsFromTodayService),
+        [getTotalTime],
+    );
+
+    const getTotalTimeAllTime = useCallback(
+        () => getTotalTime(getSessionsService),
+        [getTotalTime],
+    );
+
+    const getTotalTimeLastWeek = useCallback(
+        () => getTotalTime(getSessionsFromLastWeekService),
+        [getTotalTime],
+    );
 
     const getSingleSession = useCallback(
         async (sessionId: string): Promise<ISession | null> => {
             const [session, error] = await getSingleSessionService(sessionId);
-            if (error) {
-                setErrorMessage(error.message);
-                return null;
-            }
-            return session;
+            return handleError(error, null, setErrorMessage) || session;
         },
         [],
     );

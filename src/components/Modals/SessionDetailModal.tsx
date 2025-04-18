@@ -40,13 +40,12 @@ function SessionNote({ title, content }: { title: string; content: string }) {
     return (
         <div className={"space-y-2 text-sm md:text-lg"}>
             <h3 className={"font-bold"}>{title}</h3>
-            <p className={"rounded-md p-3 text-sm max-w-[100vw] overflow-auto"}>
-                {content.split("\n").map((line, idx) => (
-                    <span key={idx}>
-                        {line}
-                        <br />
-                    </span>
-                ))}
+            <p
+                className={
+                    "rounded-md p-3 text-sm max-w-[100vw] overflow-auto whitespace-pre-line"
+                }
+            >
+                {content}
             </p>
         </div>
     );

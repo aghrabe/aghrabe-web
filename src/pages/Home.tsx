@@ -122,7 +122,11 @@ export default function Home() {
                     "flex h-full flex-1 flex-col gap-4 border-t-2 border-outline py-4 md:pt-0 md:px-6 md:basis-2/5 md:border-l-2 md:border-t-0"
                 }
             >
-                <Header header={"History"} />
+                <Header header={"History"}>
+                    <p className={"md:text-base text-sm text-center"}>
+                        Total: {sessionsState.data.length}
+                    </p>
+                </Header>
 
                 <div className={"flex-1 overflow-y-auto rounded-lg"}>
                     {sessionsState.data.length > 0 ? (

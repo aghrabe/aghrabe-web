@@ -15,12 +15,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Line } from "react-chartjs-2";
 import Header from "../components/Header";
 import LoadingSpinner from "../components/LoadingSpinner";
+import ProgressBar from "../components/ProgressBar";
 import { useTheme } from "../context/ThemeContext";
 import useGames from "../hooks/useGames";
 import useSessions from "../hooks/useSessions";
 import { useTotalTime } from "../hooks/useTotalTime";
-import useSettings from "../hooks/useSettings";
-import ProgressBar from "../components/ProgressBar";
 
 ChartJS.register(
     CategoryScale,
@@ -55,7 +54,7 @@ function StatCard({ title, value }: StatCardProps) {
 }
 
 export default function Stats() {
-    const { gamesState } = useGames();
+    const { gamesState, getTotalTimeAllTimeFromGames } = useGames();
     const { globalTheme } = useTheme();
 
     const getThemeColors = useCallback(() => {
@@ -111,26 +110,13 @@ export default function Stats() {
         return `${hours}h${remainingMinutes}m`;
     }
 
-    const { getTotalTimeAllTime, getTotalTimeLastWeek, getTotalTimeToday } =
-        useSessions();
-    const totalTimeAllTime = useTotalTime(getTotalTimeAllTime);
+    const { getTotalTimeLastWeek, getTotalTimeToday } = useSessions();
+    const totalTimeAllTime = useTotalTime(getTotalTimeAllTimeFromGames);
     const totalTimeLastWeek = useTotalTime(getTotalTimeLastWeek);
     const totalTimeToday = useTotalTime(getTotalTimeToday);
 
-    const { settingsState } = useSettings();
-
     // TODO: TEMP
     const dayProgress = 50;
-
-    // WHY logging happens on resize?
-    useEffect(() => {
-        console.log("totalTimeToday.totalTime:", totalTimeToday.totalTime);
-        console.log(
-            "settingsState.data.daily_limit_minutes:",
-            settingsState.data?.daily_limit_minutes,
-        );
-        console.log(dayProgress);
-    }, [settingsState.data?.daily_limit_minutes, totalTimeToday, dayProgress]);
 
     const [themeColors, setThemeColors] = useState(getThemeColors());
 
@@ -200,12 +186,37 @@ export default function Stats() {
         },
     } as ChartOptions<"line">;
 
+    useEffect(() => {
+        console.log("gamesState.isLoading:", gamesState.isLoading);
+        console.log("gamesState.data:", gamesState.data);
+        console.log(
+            "totalTimeLastWeek.isLoading:",
+            totalTimeLastWeek.isLoading,
+        );
+        console.log(
+            "totalTimeLastWeek.totalTime:",
+            totalTimeLastWeek.totalTime,
+        );
+        console.log("totalTimeAllTime.isLoading:", totalTimeAllTime.isLoading);
+        console.log("totalTimeAllTime.totalTime:", totalTimeAllTime.totalTime);
+        console.log("totalTimeToday.isLoading:", totalTimeToday.isLoading);
+        console.log("totalTimeToday.totalTime:", totalTimeToday.totalTime);
+    }, [
+        gamesState.isLoading,
+        gamesState.data,
+        totalTimeLastWeek.isLoading,
+        totalTimeLastWeek.totalTime,
+        totalTimeAllTime.isLoading,
+        totalTimeAllTime.totalTime,
+        totalTimeToday.isLoading,
+        totalTimeToday.totalTime,
+    ]);
+
     if (
         gamesState.isLoading ||
         totalTimeLastWeek.isLoading ||
         totalTimeAllTime.isLoading ||
-        totalTimeToday.isLoading ||
-        settingsState.isLoading
+        totalTimeToday.isLoading
     ) {
         return (
             <div className={"min-h-screen flex items-center justify-center"}>
@@ -245,7 +256,7 @@ export default function Stats() {
             <ProgressBar progress={dayProgress} />
 
             <div className={"w-full xl:flex xl:justify-between"}>
-                <div className="chart-container w-full h-[40vh] md:h-[400px]">
+                <div className={"chart-container w-full h-[40vh] md:h-[400px]"}>
                     <Line data={mockData} options={options} />
                 </div>
 

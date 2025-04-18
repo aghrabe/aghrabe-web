@@ -1,13 +1,13 @@
 import { useCallback, useState } from "react";
 import { useAuthContext } from "../context/AuthContext";
 import { IGame } from "../lib/types/games";
-import useQuery from "./useQuery";
 import {
+    addGameService,
     getAllGamesService,
     getSingleGameService,
-    addGameService,
     updateGameService,
 } from "../services/gameService";
+import useQuery from "./useQuery";
 
 export default function useGames() {
     const { user } = useAuthContext();
@@ -70,11 +70,22 @@ export default function useGames() {
         [refetch, user?.id],
     );
 
+    const getTotalTimeAllTimeFromGames =
+        useCallback(async (): Promise<number> => {
+            const games = gamesState.data;
+            if (!games?.length) return 0;
+            return games.reduce(
+                (sum, game) => sum + (game.time_spent_total_minutes || 0),
+                0,
+            );
+        }, [gamesState.data]);
+
     return {
         gamesState,
         errorMessage,
         getSingleGame,
         addGame,
         updateGame,
+        getTotalTimeAllTimeFromGames,
     };
 }
