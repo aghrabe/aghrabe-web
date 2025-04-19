@@ -1,5 +1,3 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Bell,
@@ -104,14 +102,28 @@ export default function Settings() {
                     }
                     onSubmit={handleSubmit(onSubmit)}
                 >
-                    <div className={"space-y-1"}>
-                        <label
-                            className={"font-medium flex items-center gap-2"}
+                    <div className={"flex justify-between items-end"}>
+                        <div className={"space-y-1"}>
+                            <label
+                                className={
+                                    "font-medium flex items-center gap-2"
+                                }
+                            >
+                                <Mail size={iconSize} />
+                                Email
+                            </label>
+                            <p className={""}>{profileState.data?.email}</p>
+                        </div>
+                        <button
+                            type={"button"}
+                            onClick={handleLogoutClick}
+                            className={
+                                "p-2 rounded-md transition-colors cursor-pointer text-error border border-error hover:bg-error-container"
+                            }
+                            aria-label={"Logout Button"}
                         >
-                            <Mail size={iconSize} />
-                            Email
-                        </label>
-                        <p className={""}>{profileState.data?.email}</p>
+                            <LogOut size={iconSize - 2} />
+                        </button>
                     </div>
 
                     <InputField
@@ -200,6 +212,7 @@ export default function Settings() {
                             Save Changes
                         </Button>
 
+                        {/*
                         <Button
                             type={"button"}
                             variant={"outlined"}
@@ -211,6 +224,7 @@ export default function Settings() {
                             <LogOut size={iconSize - 2} />
                             Logout
                         </Button>
+                            */}
                     </div>
                 </form>
             )}
