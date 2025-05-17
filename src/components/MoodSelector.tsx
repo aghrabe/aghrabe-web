@@ -8,13 +8,7 @@ interface MoodSelectorProps {
     getMoodText: (mood: number) => string;
 }
 
-export function MoodSelector({
-    label,
-    value,
-    onChange,
-    getMoodIcon,
-    getMoodText,
-}: MoodSelectorProps) {
+export function MoodSelector({ label, value, onChange, getMoodIcon, getMoodText }: MoodSelectorProps) {
     return (
         <div className={"space-y-2 md:space-y-4"}>
             <div className={"flex gap-3"}>
@@ -27,25 +21,19 @@ export function MoodSelector({
                     return (
                         <div
                             key={mood}
-                            className={
-                                "min-w-14 sm:min-w-20 flex flex-col justify-center items-center gap-1 md:gap-2"
-                            }
+                            className={"min-w-14 sm:min-w-20 flex flex-col justify-center items-center gap-1 md:gap-2"}
                         >
                             <button
                                 type={"button"}
                                 onClick={() => onChange(mood)}
-                                className={`p-2 rounded-full transition-all ${
-                                    isActive
-                                        ? "bg-outline"
-                                        : "bg-card hover:bg-outline cursor-pointer"
-                                }`}
+                                className={`p-2 rounded-full transition-all ${isActive ? "bg-outline" : "bg-card hover:bg-outline cursor-pointer"
+                                    }`}
                             >
                                 {getMoodIcon(mood)}
                             </button>
                             <p
-                                className={`whitespace-nowrap ${
-                                    isActive ? "opacity-100" : "opacity-0"
-                                } text-center text-xs md:text-sm`}
+                                className={`whitespace-nowrap ${isActive ? "opacity-100" : "opacity-0"
+                                    } text-center text-xs md:text-sm`}
                             >
                                 {getMoodText(mood)}
                             </p>

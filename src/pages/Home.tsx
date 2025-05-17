@@ -15,25 +15,13 @@ import useSessions from "../hooks/useSessions";
 import type { ISession } from "../lib/types/sessions";
 import AfterSessionModal from "../components/Modals/AfterSessionModal";
 
-type ModalType =
-    | "SessionDetail"
-    | "CancelSessionStart"
-    | "StartSession"
-    | "CancelSessionEnd"
-    | "EndSession";
+type ModalType = "SessionDetail" | "CancelSessionStart" | "StartSession" | "CancelSessionEnd" | "EndSession";
 
 export default function Home() {
     const { sessionsState, refetch: refetchSessions } = useSessions();
-    const [selectedSession, setSelectedSession] = useState<ISession | null>(
-        null,
-    );
+    const [selectedSession, setSelectedSession] = useState<ISession | null>(null);
     const { isMobile } = useBreakpoint();
-    const {
-        status: currentSessionStatus,
-        startSession,
-        endSession,
-        resetToIdle,
-    } = useCurrentSession();
+    const { status: currentSessionStatus, startSession, endSession, resetToIdle } = useCurrentSession();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -93,9 +81,7 @@ export default function Home() {
             <div className={"flex h-full w-full items-center justify-center"}>
                 <div className={"flex flex-col items-center gap-4"}>
                     <LoadingSpinner />
-                    <p className={"text-on-background"}>
-                        Loading your sessions...
-                    </p>
+                    <p className={"text-on-background"}>Loading your sessions...</p>
                 </div>
             </div>
         );
@@ -103,11 +89,7 @@ export default function Home() {
 
     return (
         <div className={"flex h-full w-full flex-col md:flex-row md:gap-8"}>
-            <div
-                className={
-                    "basis-3/5 h-full flex flex-col gap-4 md:gap-0 justify-between"
-                }
-            >
+            <div className={"basis-3/5 h-full flex flex-col gap-4 md:gap-0 justify-between"}>
                 <Header header={"Session"}>
                     <Icon size={"medium"}>
                         <MoreIcon />
@@ -123,32 +105,22 @@ export default function Home() {
                 }
             >
                 <Header header={"History"}>
-                    <p className={"md:text-base text-sm text-center"}>
-                        Total: {sessionsState.data.length}
-                    </p>
+                    <p className={"md:text-base text-sm text-center"}>Total: {sessionsState.data.length}</p>
                 </Header>
 
                 <div className={"flex-1 overflow-y-auto rounded-lg"}>
                     {sessionsState.data.length > 0 ? (
-                        <SessionList
-                            sessions={sessionsState.data}
-                            onSessionClick={setSelectedSession}
-                        />
+                        <SessionList sessions={sessionsState.data} onSessionClick={setSelectedSession} />
                     ) : (
                         <div
                             className={
                                 "flex h-full flex-col items-center justify-center text-center text-on-background"
                             }
                         >
-                            <CalendarDays
-                                className={"mb-2 h-12 w-12 opacity-50"}
-                            />
-                            <h3 className={"text-lg font-medium"}>
-                                No sessions yet
-                            </h3>
+                            <CalendarDays className={"mb-2 h-12 w-12 opacity-50"} />
+                            <h3 className={"text-lg font-medium"}>No sessions yet</h3>
                             <p className={"mt-1 max-w-md text-sm"}>
-                                Start a new gaming session to track your time
-                                and mood
+                                Start a new gaming session to track your time and mood
                             </p>
                         </div>
                     )}
@@ -156,10 +128,7 @@ export default function Home() {
             </div>
 
             {selectedSession && (
-                <SessionDetailsModal
-                    session={selectedSession}
-                    onClose={() => handleModalClose("SessionDetail")}
-                />
+                <SessionDetailsModal session={selectedSession} onClose={() => handleModalClose("SessionDetail")} />
             )}
 
             {currentSessionStatus === "wantToStart" && (

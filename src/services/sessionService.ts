@@ -24,9 +24,7 @@ export async function getSessionsService(
     });
 }
 
-export async function getSessionsFromTodayService(
-    userId: string,
-): Promise<[Array<ISession> | null, Error | null]> {
+export async function getSessionsFromTodayService(userId: string): Promise<[Array<ISession> | null, Error | null]> {
     return await safeExecute(async () => {
         const todayStart = new Date();
         todayStart.setHours(0, 0, 0, 0);
@@ -43,13 +41,9 @@ export async function getSessionsFromTodayService(
     });
 }
 
-export async function getSessionsFromLastWeekService(
-    userId: string,
-): Promise<[Array<ISession> | null, Error | null]> {
+export async function getSessionsFromLastWeekService(userId: string): Promise<[Array<ISession> | null, Error | null]> {
     return await safeExecute(async () => {
-        const lastWeek = new Date(
-            Date.now() - 7 * 24 * 60 * 60 * 1000,
-        ).toISOString();
+        const lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
         const result = await supabase
             .from("sessions")
             .select("*, session_feedbacks(*), game:games (id, title)")
@@ -61,15 +55,9 @@ export async function getSessionsFromLastWeekService(
     });
 }
 
-export async function getSingleSessionService(
-    sessionId: string,
-): Promise<[ISession | null, Error | null]> {
+export async function getSingleSessionService(sessionId: string): Promise<[ISession | null, Error | null]> {
     return safeExecute(async () => {
-        const { data, error } = await supabase
-            .from("sessions")
-            .select("*")
-            .eq("id", sessionId)
-            .single();
+        const { data, error } = await supabase.from("sessions").select("*").eq("id", sessionId).single();
 
         if (error) throw error;
         return data;
@@ -100,10 +88,7 @@ export async function updateSessionService(
     updatedFields: Partial<ISession>,
 ): Promise<[void | null, Error | null]> {
     return await safeExecute(async () => {
-        const result = await supabase
-            .from("sessions")
-            .update(updatedFields)
-            .eq("id", sessionId);
+        const result = await supabase.from("sessions").update(updatedFields).eq("id", sessionId);
         if (result.error) throw result.error;
         return;
     });

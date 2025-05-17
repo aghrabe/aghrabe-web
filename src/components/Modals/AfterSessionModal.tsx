@@ -20,9 +20,7 @@ export default function AfterSessionModal({ onClose, onStart }: Props) {
 
     // TODO: make an entire notification hook that handles notification sound and pushes it to the device as well
     useEffect(() => {
-        const notificationSound = new Audio(
-            "/sounds/mixkit-achievement-bell-600.mp3",
-        );
+        const notificationSound = new Audio("/sounds/mixkit-achievement-bell-600.mp3");
         notificationSound.play().catch((error) => {
             console.error("Failed to play notification sound:", error);
         });
